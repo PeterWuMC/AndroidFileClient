@@ -9,7 +9,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -44,6 +44,7 @@ public class MainActivity extends ListActivity {
         
     	filesAdapter = new ArrayAdapter<FileItem>(this, android.R.layout.simple_list_item_1, filesList);
     	setListAdapter(filesAdapter);
+    	
     }
     
     @Override
@@ -56,8 +57,19 @@ public class MainActivity extends ListActivity {
         	longToast("Action is not supported yet");
         }
     }
-
     
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+        	if (!currentKey.equals(goBack.key)) {
+        		performSearch(goBack.key);
+        	} else {
+                return super.onKeyDown(keyCode, event);
+        	}
+        }
+        return true;
+    }
+
 	
 
 	public void longToast(CharSequence message) {
@@ -69,13 +81,14 @@ public class MainActivity extends ListActivity {
     	currentKey = key;
 
     	goBack.key = previousKeys.get(currentKey);
-    	Log.e("PETER", goBack.key);
     	
     	progressDialog = ProgressDialog.show(MainActivity.this, "Please wait...", "Retrieving data...", true, true);
 
     	PerformFileListSearchTask task = new PerformFileListSearchTask();
 		task.execute(key);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
+		
+		
     }
     
     private class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList<FileItem>> {
@@ -109,6 +122,7 @@ public class MainActivity extends ListActivity {
     
     private class CancelTaskOnCancelListener implements OnCancelListener {
     	private AsyncTask<?, ?, ?> task;
+    	
     	public CancelTaskOnCancelListener(AsyncTask<?, ?, ?> task) {
     		this.task = task;
     	}
