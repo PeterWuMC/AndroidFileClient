@@ -11,17 +11,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.androidfileclient.models.FileItem;
 import com.example.androidfileclient.services.FileLister;
+import com.example.androidfileclient.ui.FileItemsListAdapter;
 
 public class MainActivity extends ListActivity {
 
 	private ArrayList<FileItem> filesList = new ArrayList<FileItem>();
-	private ArrayAdapter<FileItem> filesAdapter;
+	private FileItemsListAdapter filesAdapter;
 	private ProgressDialog progressDialog;
 	private FileItem goBack = new FileItem();
 	private HashMap<String, String> previousKeys;
@@ -42,7 +42,7 @@ public class MainActivity extends ListActivity {
         if (filesList == null) filesList = new ArrayList<FileItem>();
         if (filesList.isEmpty()) performSearch("initial");
         
-    	filesAdapter = new ArrayAdapter<FileItem>(this, android.R.layout.simple_list_item_1, filesList);
+    	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
     	setListAdapter(filesAdapter);
     	
     }
