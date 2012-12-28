@@ -1,4 +1,4 @@
-package com.example.androidfileclient.services;
+package com.wu.androidfileclient.services;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -6,8 +6,8 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.example.androidfileclient.HttpRetriever;
-import com.example.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.HttpRetriever;
+import com.wu.androidfileclient.models.FileItem;
 
 public class FileDownloader extends Base {
 

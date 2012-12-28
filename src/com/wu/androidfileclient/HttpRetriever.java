@@ -1,4 +1,4 @@
-package com.example.androidfileclient;
+package com.wu.androidfileclient;
 
 import java.io.IOException;
 import java.io.InputStream;

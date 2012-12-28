@@ -1,4 +1,4 @@
-package com.example.androidfileclient.models;
+package com.wu.androidfileclient.models;
 
 import java.io.Serializable;
 

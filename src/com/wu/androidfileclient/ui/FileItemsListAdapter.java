@@ -1,4 +1,4 @@
-package com.example.androidfileclient.ui;
+package com.wu.androidfileclient.ui;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.androidfileclient.R;
-import com.example.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.FileItem;
 
 public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 	private ArrayList<FileItem> fileItems;

@@ -1,4 +1,4 @@
-package com.example.androidfileclient;
+package com.wu.androidfileclient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,9 +14,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.androidfileclient.models.FileItem;
-import com.example.androidfileclient.services.FileLister;
-import com.example.androidfileclient.ui.FileItemsListAdapter;
+import com.example.androidfileclient.R;
+import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.services.FileLister;
+import com.wu.androidfileclient.ui.FileItemsListAdapter;
 
 public class MainActivity extends ListActivity {
 
