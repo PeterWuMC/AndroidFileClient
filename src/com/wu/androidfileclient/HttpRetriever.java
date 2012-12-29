@@ -13,9 +13,10 @@ import org.apache.http.util.EntityUtils;
 import android.util.Log;
 
 public class HttpRetriever {
-	private DefaultHttpClient client = new DefaultHttpClient();
+	private DefaultHttpClient client;
 	
 	public String retrieve(String url) {
+		client = new DefaultHttpClient();
 		HttpGet getRequest = new HttpGet(url);
 		
 		try {
@@ -32,17 +33,18 @@ public class HttpRetriever {
 			if (getResponseEntity != null) {
 				return EntityUtils.toString(getResponseEntity);
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			getRequest.abort();
 			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
 			
+		} finally {
+			client.getConnectionManager().shutdown();
 		}
-		
 		return null;
 	}
 	
 	public InputStream retrieveStream(String url) {
+		client = new DefaultHttpClient();
 		HttpGet getRequest = new HttpGet(url);
 		
 		try {
@@ -56,10 +58,11 @@ public class HttpRetriever {
 			
 			HttpEntity getResponseEntity = getResponse.getEntity();
 			return getResponseEntity.getContent();
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			getRequest.abort();
 			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
+		} finally {
+			client.getConnectionManager().shutdown();
 		}
 		
 		return null;
