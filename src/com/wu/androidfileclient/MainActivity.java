@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.androidfileclient.R;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.services.FileLister;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 
@@ -41,7 +42,7 @@ public class MainActivity extends ListActivity {
         
         filesList = (ArrayList<FileItem>) getIntent().getSerializableExtra("files");
         if (filesList == null) filesList = new ArrayList<FileItem>();
-        if (filesList.isEmpty()) performSearch("initial");
+        if (filesList.isEmpty()) loadFilesList("initial");
         
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
     	setListAdapter(filesAdapter);
@@ -53,8 +54,9 @@ public class MainActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
         FileItem file = filesAdapter.getItem(position);
         if (file.type.equals("folder") || file.type.equals("action")) {
-        	performSearch(file.key);
+        	loadFilesList(file.key);
         } else {
+//        	downloadFile(file.key);
         	longToast("Action is not supported yet");
         }
     }
@@ -63,7 +65,7 @@ public class MainActivity extends ListActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
         	if (!currentKey.equals(goBack.key)) {
-        		performSearch(goBack.key);
+        		loadFilesList(goBack.key);
         	} else {
                 return super.onKeyDown(keyCode, event);
         	}
@@ -77,7 +79,16 @@ public class MainActivity extends ListActivity {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
 	
-    public void performSearch(String key) {
+	public void downloadFile(String key) {
+		progressDialog = ProgressDialog.show(MainActivity.this, "Please wait...", "Retrieving data...", true, true);
+		
+		PerformFileDownloadTask task = new PerformFileDownloadTask();
+		task.execute(key);
+		
+		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
+	}
+	
+    public void loadFilesList(String key) {
     	if (!previousKeys.containsKey(key)) previousKeys.put(key, currentKey);
     	currentKey = key;
 
@@ -92,13 +103,37 @@ public class MainActivity extends ListActivity {
 		
     }
     
+    private class PerformFileDownloadTask extends AsyncTask<String, Void, FileItem> {
+    	private FileDownloader fileDownloader;
+    	@Override
+    	protected FileItem doInBackground(String... params) {
+    		String key = params[0];
+    		fileDownloader = new FileDownloader();
+            return fileDownloader.retrieveFile(key);
+    	}
+    	
+    	@Override
+    	protected void onPostExecute(final FileItem result) {
+    		runOnUiThread(new Runnable() {
+    			@Override
+    			public void run() {
+    				if (progressDialog != null) {
+    					progressDialog.dismiss();
+    					progressDialog = null;
+    				}
+    				longToast(result.getContent());
+    			}
+    		});
+    	}
+    }
+    
     private class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList<FileItem>> {
     	private FileLister fileLister;
     	@Override
     	protected ArrayList<FileItem> doInBackground(String... params) {
-    		String query = params[0];
+    		String key = params[0];
             fileLister = new FileLister();
-            return fileLister.retrieveFilesList(query);
+            return fileLister.retrieveFilesList(key);
     	}
     	
     	@Override

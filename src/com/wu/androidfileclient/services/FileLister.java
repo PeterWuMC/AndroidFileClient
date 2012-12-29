@@ -17,6 +17,7 @@ public class FileLister extends Base {
 	
 	protected static final String OBJECT = "folder";
 	protected static final String ACTION = "list";
+	protected static final String FORMAT = ".json";
 	
 	private FileItem file;
 	
@@ -28,6 +29,10 @@ public class FileLister extends Base {
 	
 	protected String getAction() {
 		return ACTION;
+	}
+	
+	protected String getFormat() {
+		return FORMAT;
 	}
 	
 	

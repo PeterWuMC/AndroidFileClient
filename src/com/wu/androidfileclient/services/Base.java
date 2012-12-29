@@ -6,10 +6,10 @@ public abstract class Base {
 
 	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087/";
 	protected static final String SLASH = "/";
-	protected static final String FORMAT = ".json";
 
 	protected abstract String getObjectUrl();
 	protected abstract String getAction();
+	protected abstract String getFormat();
 
 	protected String constructSearchUrl(String key) {
 		StringBuffer sb = new StringBuffer();
@@ -19,7 +19,7 @@ public abstract class Base {
 		sb.append(key);
 		sb.append(SLASH);
 		sb.append(getAction());
-		sb.append(FORMAT);
+		sb.append(getFormat());
 		return sb.toString();
 	}
 	

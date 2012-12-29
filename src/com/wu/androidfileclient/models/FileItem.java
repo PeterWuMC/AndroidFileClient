@@ -20,7 +20,8 @@ public class FileItem implements Serializable {
 	}
 
 	public void setContent(String content) {
-		this.content = Base64.decode(content, Base64.DEFAULT).toString();
+		byte[] decodedContent = Base64.decode(content, Base64.DEFAULT);
+		this.content = new String(decodedContent);
 	}
 
 	@Override
