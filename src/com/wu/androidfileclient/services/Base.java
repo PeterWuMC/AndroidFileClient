@@ -1,7 +1,5 @@
 package com.wu.androidfileclient.services;
 
-import java.net.URLEncoder;
-
 import com.wu.androidfileclient.HttpRetriever;
 
 public abstract class Base {

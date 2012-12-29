@@ -1,6 +1,5 @@
 package com.wu.androidfileclient.services;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -9,7 +8,6 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-import com.wu.androidfileclient.HttpRetriever;
 import com.wu.androidfileclient.models.FileItem;
 
 
@@ -19,7 +17,6 @@ public class FileLister extends Base {
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
 
-	private FileItem file;
 
 	protected String getObjectUrl() {
 		return OBJECT;
@@ -33,24 +30,23 @@ public class FileLister extends Base {
 		return FORMAT;
 	}
 
-
 	public ArrayList<FileItem> retrieveFilesList(String key) {
+		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
 		String url                    = constructSearchUrl(key);
 		String response               = httpRetriever.retrieve(url);
-		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
 
 		Log.d(getClass().getSimpleName(), response);
-
 
 		try {
 			JSONArray files = new JSONArray(response);
 			for (int i = 0; i < files.length(); ++i) {
-				file = new FileItem();
                 JSONObject rec = files.getJSONObject(i);
+                FileItem file  = new FileItem();
+                
                 file.type = rec.getString("type");
                 file.name = rec.getString("name");
                 file.path = rec.getString("path");
-                file.key =  rec.getString("key");
+                file.key  = rec.getString("key");
                 fileArray.add(file);
 			}
 			return fileArray;
