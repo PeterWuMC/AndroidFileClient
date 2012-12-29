@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.androidfileclient.R;
+import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.models.FileItem;
 
 public class FileItemsListAdapter extends ArrayAdapter<FileItem> {

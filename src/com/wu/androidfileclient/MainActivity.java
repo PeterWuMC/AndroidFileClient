@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.androidfileclient.R;
+import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.services.FileLister;
