@@ -2,6 +2,8 @@ package com.wu.androidfileclient.services;
 
 import java.net.URLEncoder;
 
+import com.wu.androidfileclient.HttpRetriever;
+
 public abstract class Base {
 
 	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087/";
@@ -10,6 +12,8 @@ public abstract class Base {
 	protected abstract String getObjectUrl();
 	protected abstract String getAction();
 	protected abstract String getFormat();
+
+	protected HttpRetriever httpRetriever = new HttpRetriever();
 
 	protected String constructSearchUrl(String key) {
 		StringBuffer sb = new StringBuffer();
@@ -22,5 +26,5 @@ public abstract class Base {
 		sb.append(getFormat());
 		return sb.toString();
 	}
-	
+
 }

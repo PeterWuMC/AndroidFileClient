@@ -14,34 +14,34 @@ import com.wu.androidfileclient.models.FileItem;
 
 
 public class FileLister extends Base {
-	
+
 	protected static final String OBJECT = "folder";
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
-	
+
 	private FileItem file;
-	
-	protected HttpRetriever httpRetriever = new HttpRetriever();
-	
+
 	protected String getObjectUrl() {
 		return OBJECT;
 	}
-	
+
 	protected String getAction() {
 		return ACTION;
 	}
-	
+
 	protected String getFormat() {
 		return FORMAT;
 	}
-	
-	
+
+
 	public ArrayList<FileItem> retrieveFilesList(String key) {
-		String url = constructSearchUrl(key);
-		String response = httpRetriever.retrieve(url);
-		Log.d(getClass().getSimpleName(), response);
+		String url                    = constructSearchUrl(key);
+		String response               = httpRetriever.retrieve(url);
 		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
-		
+
+		Log.d(getClass().getSimpleName(), response);
+
+
 		try {
 			JSONArray files = new JSONArray(response);
 			for (int i = 0; i < files.length(); ++i) {

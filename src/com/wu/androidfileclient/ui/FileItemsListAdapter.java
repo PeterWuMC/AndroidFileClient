@@ -18,13 +18,13 @@ import com.wu.androidfileclient.models.FileItem;
 public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 	private ArrayList<FileItem> fileItems;
 	private Activity context;
-	
+
 	public FileItemsListAdapter(Activity context, int textViewResourceId, ArrayList<FileItem> fileItems) {
 		super(context, textViewResourceId, fileItems);
 		this.context = context;
 		this.fileItems = fileItems;
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
@@ -33,7 +33,7 @@ public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 			view = vi.inflate(R.layout.file_list_row, null);
 		}
 		FileItem fileItem = fileItems.get(position);
-		
+
 		if (fileItem != null) {
 			int icon = 0;
 			if (fileItem.type.equals("action") && fileItem.name.equalsIgnoreCase("back")) icon = android.R.drawable.ic_menu_revert;
@@ -41,11 +41,11 @@ public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 			else if (fileItem.type.equals("file")) icon = android.R.drawable.ic_menu_set_as;
 			ImageView typeImage = (ImageView) view.findViewById(R.id.icon);
 			typeImage.setImageResource(icon);
-			
+
 			TextView nameTextView = (TextView) view.findViewById(R.id.name);
 			nameTextView.setText(fileItem.name);
 		}
-		
+
 		return view;
 	}
 }

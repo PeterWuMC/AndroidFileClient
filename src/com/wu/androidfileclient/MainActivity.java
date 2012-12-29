@@ -36,19 +36,19 @@ public class MainActivity extends ListActivity {
 		goBack.type = "action";
 		currentKey  = "initial";
 		previousKeys = new HashMap<String, String>();
-		
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+
         filesList = (ArrayList<FileItem>) getIntent().getSerializableExtra("files");
         if (filesList == null) filesList = new ArrayList<FileItem>();
         if (filesList.isEmpty()) loadFilesList("initial");
-        
+
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
     	setListAdapter(filesAdapter);
-    	
+
     }
-    
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -60,7 +60,7 @@ public class MainActivity extends ListActivity {
         	longToast("Action is not supported yet");
         }
     }
-    
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
@@ -73,36 +73,36 @@ public class MainActivity extends ListActivity {
         return true;
     }
 
-	
+
 
 	public void longToast(CharSequence message) {
 		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 	}
-	
+
 	public void downloadFile(String key) {
 		progressDialog = ProgressDialog.show(MainActivity.this, "Please wait...", "Retrieving data...", true, true);
-		
+
 		PerformFileDownloadTask task = new PerformFileDownloadTask();
 		task.execute(key);
-		
+
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
 	}
-	
+
     public void loadFilesList(String key) {
     	if (!previousKeys.containsKey(key)) previousKeys.put(key, currentKey);
     	currentKey = key;
 
     	goBack.key = previousKeys.get(currentKey);
-    	
+
     	progressDialog = ProgressDialog.show(MainActivity.this, "Please wait...", "Retrieving data...", true, true);
 
     	PerformFileListSearchTask task = new PerformFileListSearchTask();
 		task.execute(key);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
-		
-		
+
+
     }
-    
+
     private class PerformFileDownloadTask extends AsyncTask<String, Void, FileItem> {
     	private FileDownloader fileDownloader;
     	@Override
@@ -111,7 +111,7 @@ public class MainActivity extends ListActivity {
     		fileDownloader = new FileDownloader();
             return fileDownloader.retrieveFile(key);
     	}
-    	
+
     	@Override
     	protected void onPostExecute(final FileItem result) {
     		runOnUiThread(new Runnable() {
@@ -126,7 +126,7 @@ public class MainActivity extends ListActivity {
     		});
     	}
     }
-    
+
     private class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList<FileItem>> {
     	private FileLister fileLister;
     	@Override
@@ -135,7 +135,7 @@ public class MainActivity extends ListActivity {
             fileLister = new FileLister();
             return fileLister.retrieveFilesList(key);
     	}
-    	
+
     	@Override
     	protected void onPostExecute(final ArrayList<FileItem> result) {
     		runOnUiThread(new Runnable() {
@@ -155,10 +155,10 @@ public class MainActivity extends ListActivity {
     		});
     	}
     }
-    
+
     private class CancelTaskOnCancelListener implements OnCancelListener {
     	private AsyncTask<?, ?, ?> task;
-    	
+
     	public CancelTaskOnCancelListener(AsyncTask<?, ?, ?> task) {
     		this.task = task;
     	}
@@ -169,5 +169,5 @@ public class MainActivity extends ListActivity {
         	}
 		}
     }
-    
+
 }

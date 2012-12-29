@@ -3,12 +3,11 @@ package com.wu.androidfileclient.models;
 import java.io.Serializable;
 
 import android.util.Base64;
-import android.util.Log;
 
 public class FileItem implements Serializable {
-	
+
 	private static final long serialVersionUID = -3056032740471401976L;
-	
+
 	public String type;
 	public String path;
 	public String key;
