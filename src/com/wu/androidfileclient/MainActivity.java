@@ -105,7 +105,7 @@ public class MainActivity extends ListActivity {
 
     }
 
-    private class PerformFileDownloadTask extends AsyncTask<String, Integer, String> {
+    private class PerformFileDownloadTask extends AsyncTask<String, String, String> {
     	@Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -145,7 +145,7 @@ public class MainActivity extends ListActivity {
      
                 while ((count = inputStream.read(data)) != -1) {
                     total += count;
-                    publishProgress((int)((total*100)/lenghtOfFile));
+                    publishProgress(""+(int)((total*100)/lenghtOfFile));
      
                     outputStream.write(data, 0, count);
                 }
@@ -166,7 +166,6 @@ public class MainActivity extends ListActivity {
     		return fileLocation + fileName;
     	}
     	
-    	@SuppressWarnings("unused")
 		protected void onProgressUpdate(String... params) {
             progressDialog.setProgress(Integer.parseInt(params[0]));
        }
@@ -253,7 +252,6 @@ public class MainActivity extends ListActivity {
                 ext = ext.substring(0,ext.indexOf("/"));
             }
             return ext.toLowerCase();
-
         }
     }
 
