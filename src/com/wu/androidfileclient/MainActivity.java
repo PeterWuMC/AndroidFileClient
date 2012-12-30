@@ -166,7 +166,8 @@ public class MainActivity extends ListActivity {
     		return fileLocation + fileName;
     	}
     	
-    	protected void onProgressUpdate(String... params) {
+    	@SuppressWarnings("unused")
+		protected void onProgressUpdate(String... params) {
             progressDialog.setProgress(Integer.parseInt(params[0]));
        }
 
