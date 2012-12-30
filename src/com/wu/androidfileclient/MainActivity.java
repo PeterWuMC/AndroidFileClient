@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wu.androidfileclient.models.FileItem;
@@ -131,39 +132,43 @@ public class MainActivity extends ListActivity {
 			
     		HttpRetriever httpRetreiever = new HttpRetriever(url);
     		InputStream inputStream      = new BufferedInputStream(httpRetreiever.retrieveStream(), 8192);
-    		
-    		try {
-    			File folder = new File(fileLocation);
-    			if (!folder.exists()) folder.mkdir();
-    			
-    			lenghtOfFile = (Long) httpRetreiever.retrieveContentSize();
-    			outputStream = new BufferedOutputStream(new FileOutputStream(fileLocation + fileName));
-    			
-    			byte data[] = new byte[1024];
-    			 
-                long total = 0;
-     
-                while ((count = inputStream.read(data)) != -1) {
-                    total += count;
-                    publishProgress(""+(int)((total*100)/lenghtOfFile));
-     
-                    outputStream.write(data, 0, count);
-                }
-
-                outputStream.flush();
-                outputStream.close();
-    		
-    	    } catch (Exception e) {
-                Log.e("Error: ", e.getMessage());
-    	    } finally {
-    	    	try{
-                    inputStream.close();
-    	    		inputStream.close();
-        	    	httpRetreiever.closeConnect();
-        	    }
-    	    	catch (Exception e) { Log.e("Error: ", e.getMessage()); }
-    	    }
-    		return fileLocation + fileName;
+    		if (inputStream != null) {
+	    		
+	    		try {
+	    			File folder = new File(fileLocation);
+	    			if (!folder.exists()) folder.mkdir();
+	    			
+	    			lenghtOfFile = (Long) httpRetreiever.retrieveContentSize();
+	    			outputStream = new BufferedOutputStream(new FileOutputStream(fileLocation + fileName));
+	    			
+	    			byte data[] = new byte[1024];
+	    			 
+	                long total = 0;
+	     
+	                while ((count = inputStream.read(data)) != -1) {
+	                    total += count;
+	                    publishProgress(""+(int)((total*100)/lenghtOfFile));
+	     
+	                    outputStream.write(data, 0, count);
+	                }
+	
+	                outputStream.flush();
+	                outputStream.close();
+	    		
+	    	    } catch (Exception e) {
+	                Log.e("Error: ", e.getMessage());
+	    	    } finally {
+	    	    	try{
+	                    inputStream.close();
+	    	    		inputStream.close();
+	        	    	httpRetreiever.closeConnect();
+	        	    }
+	    	    	catch (Exception e) { Log.e("Error: ", e.getMessage()); }
+	    	    }
+	    		return fileLocation + fileName;
+    		} else {
+    			return null;
+    		}
     	}
     	
 		protected void onProgressUpdate(String... params) {
@@ -178,17 +183,21 @@ public class MainActivity extends ListActivity {
 
     		Intent fileViewIntent = new Intent();
     		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
-    		File file = new File(file_location);
-
-    		String mimeType = myMime.getMimeTypeFromExtension(fileExt(file.toString()).substring(1));
-    		
-    	       
-    		fileViewIntent.setDataAndType(Uri.fromFile(file), mimeType);
-    		try {
-    			startActivity(fileViewIntent);
-    		} catch (android.content.ActivityNotFoundException e) {
-    			longToast("No Application found to open this file");
-    			Log.e(getClass().getSimpleName(), "Activity Not Found");
+    		if (file_location != null) {
+	    		File file = new File(file_location);
+	
+	    		String mimeType = myMime.getMimeTypeFromExtension(fileExt(file.toString()).substring(1));
+	    		
+	    	       
+	    		fileViewIntent.setDataAndType(Uri.fromFile(file), mimeType);
+	    		try {
+	    			startActivity(fileViewIntent);
+	    		} catch (android.content.ActivityNotFoundException e) {
+	    			longToast("No Application found to open this file");
+	    			Log.e(getClass().getSimpleName(), "Activity Not Found");
+	    		}
+    		} else {
+    			longToast("Something wrong with your connection...");
     		}
     	}
     }
@@ -211,12 +220,16 @@ public class MainActivity extends ListActivity {
     					progressDialog.dismiss();
     					progressDialog = null;
     				}
-    				filesList.clear();
-    				for (int i = 0; i < result.size(); i++) {
-    					filesList.add(result.get(i));
+    				if (result != null) {
+	    				filesList.clear();
+	    				for (int i = 0; i < result.size(); i++) {
+	    					filesList.add(result.get(i));
+	    				}
+	    				if (!currentKey.equals(goBack.key)) filesList.add(0, goBack);
+	    		        filesAdapter.notifyDataSetChanged();
+    				} else {
+    					longToast("Something wrong with your connection...");
     				}
-    				if (!currentKey.equals(goBack.key)) filesList.add(0, goBack);
-    		        filesAdapter.notifyDataSetChanged();
     			}
     		});
     	}

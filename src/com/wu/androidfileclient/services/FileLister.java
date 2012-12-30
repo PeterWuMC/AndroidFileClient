@@ -38,26 +38,28 @@ public class FileLister extends Base {
 
 		try {
 			String response = httpRetriever.retrieveEntireResponse();
-
-			Log.d(getClass().getSimpleName(), response);
-			JSONArray files = new JSONArray(response);
-			for (int i = 0; i < files.length(); ++i) {
-                JSONObject rec = files.getJSONObject(i);
-                FileItem file  = new FileItem();
-                
-                file.type = rec.getString("type");
-                file.name = rec.getString("name");
-                file.path = rec.getString("path");
-                file.key  = rec.getString("key");
-                fileArray.add(file);
+			if (response != null) {
+				Log.d(getClass().getSimpleName(), response);
+				JSONArray files = new JSONArray(response);
+				for (int i = 0; i < files.length(); ++i) {
+	                JSONObject rec = files.getJSONObject(i);
+	                FileItem file  = new FileItem();
+	                
+	                file.type = rec.getString("type");
+	                file.name = rec.getString("name");
+	                file.path = rec.getString("path");
+	                file.key  = rec.getString("key");
+	                fileArray.add(file);
+				}
+				return fileArray;
 			}
-			return fileArray;
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
 		} finally {
 			httpRetriever.closeConnect();
 		}
+		return null;
 	}
 
 }

@@ -24,7 +24,7 @@ public class HttpRetriever {
 			startConnection(url);
 		} catch (IOException e) {
 			getRequest.abort();
-			Log.w(getClass().getSimpleName(), "Error for URL " + url, e);
+			Log.e(getClass().getSimpleName(), "Error for URL " + url, e);
 		}
 	}
 	
@@ -36,8 +36,9 @@ public class HttpRetriever {
 		final int statusCode = getResponse.getStatusLine().getStatusCode();
 
 		if (statusCode != HttpStatus.SC_OK) {
-			Log.w(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
+			Log.e(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
 			getResponseEntity = null;
+			throw new IOException();
 		}
 		else {
 			getResponseEntity =  getResponse.getEntity();
