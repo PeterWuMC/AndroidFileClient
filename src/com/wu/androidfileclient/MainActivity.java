@@ -131,8 +131,9 @@ public class MainActivity extends ListActivity {
 			String fileLocation = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
 			
     		HttpRetriever httpRetreiever = new HttpRetriever(url);
-    		InputStream inputStream      = new BufferedInputStream(httpRetreiever.retrieveStream(), 8192);
-    		if (inputStream != null) {
+    		InputStream tempStrem        = httpRetreiever.retrieveStream();
+    		InputStream inputStream      = new BufferedInputStream(tempStrem, 8192);
+    		if (tempStrem != null) {
 	    		
 	    		try {
 	    			File folder = new File(fileLocation);
