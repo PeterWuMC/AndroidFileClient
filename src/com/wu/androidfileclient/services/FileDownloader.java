@@ -3,13 +3,14 @@ package com.wu.androidfileclient.services;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.wu.androidfileclient.HttpRetriever;
 import com.wu.androidfileclient.models.FileItem;
 
 public class FileDownloader extends Base {
 
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "download";
-	protected static final String FORMAT = ".json";
+	protected static final String FORMAT = "";
 
 
 	protected String getObjectUrl() {
@@ -26,11 +27,12 @@ public class FileDownloader extends Base {
 
 	public FileItem retrieveFile(String key) {
 		String url      = constructSearchUrl(key);
-		String response = httpRetriever.retrieve(url);
+		httpRetriever 	= new HttpRetriever(url);
 
 		try {
-			FileItem file  = new FileItem();
-			JSONObject obj = new JSONObject(response);
+			String response = httpRetriever.retrieveEntireResponse();
+			FileItem file   = new FileItem();
+			JSONObject obj  = new JSONObject(response);
 
             file.path = obj.getString("path");
             file.key  = obj.getString("key");
@@ -40,6 +42,8 @@ public class FileDownloader extends Base {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			httpRetriever.closeConnect();
 		}
 	}
 }

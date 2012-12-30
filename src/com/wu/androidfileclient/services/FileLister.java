@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.wu.androidfileclient.HttpRetriever;
 import com.wu.androidfileclient.models.FileItem;
 
 
@@ -33,11 +34,12 @@ public class FileLister extends Base {
 	public ArrayList<FileItem> retrieveFilesList(String key) {
 		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
 		String url                    = constructSearchUrl(key);
-		String response               = httpRetriever.retrieve(url);
-
-		Log.d(getClass().getSimpleName(), response);
+		httpRetriever 	              = new HttpRetriever(url);
 
 		try {
+			String response = httpRetriever.retrieveEntireResponse();
+
+			Log.d(getClass().getSimpleName(), response);
 			JSONArray files = new JSONArray(response);
 			for (int i = 0; i < files.length(); ++i) {
                 JSONObject rec = files.getJSONObject(i);
@@ -53,6 +55,8 @@ public class FileLister extends Base {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			httpRetriever.closeConnect();
 		}
 	}
 

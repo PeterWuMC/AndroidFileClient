@@ -11,9 +11,9 @@ public abstract class Base {
 	protected abstract String getAction();
 	protected abstract String getFormat();
 
-	protected HttpRetriever httpRetriever = new HttpRetriever();
+	protected HttpRetriever httpRetriever;
 
-	protected String constructSearchUrl(String key) {
+	public String constructSearchUrl(String key) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(BASE_URL);
 		sb.append(getObjectUrl());
