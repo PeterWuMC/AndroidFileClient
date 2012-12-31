@@ -2,11 +2,13 @@ package com.wu.androidfileclient.services;
 
 import java.util.ArrayList;
 
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
+import org.apache.http.HttpException;
 
 import com.wu.androidfileclient.HttpRetriever;
 import com.wu.androidfileclient.models.FileItem;
@@ -31,11 +33,14 @@ public class FileLister extends Base {
 		return FORMAT;
 	}
 
-	public ArrayList<FileItem> retrieveFilesList(String key) {
+	public ArrayList<FileItem> retrieveFilesList(String key) throws HttpException {
 		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
 		String url                    = constructSearchUrl(key);
 		httpRetriever 	              = new HttpRetriever(url);
-
+		int statusCode                = httpRetriever.startConnection();
+		
+		if (statusCode != HttpStatus.SC_OK) throw new HttpException(""+statusCode);
+		
 		try {
 			String response = httpRetriever.retrieveEntireResponse();
 			if (response != null) {

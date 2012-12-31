@@ -18,31 +18,38 @@ public class HttpRetriever {
 	private HttpEntity getResponseEntity;
 	String url;
 	
-	public HttpRetriever(String url) {
+	public HttpRetriever(String url){
 		this.url = url;
-		try {
-			startConnection(url);
-		} catch (IOException e) {
-			getRequest.abort();
-			Log.e(getClass().getSimpleName(), "Error for URL " + url, e);
-		}
+//		try {
+//			startConnection(url);
+//		} catch (IOException e) {
+//			getRequest.abort();
+//			Log.e(getClass().getSimpleName(), "Error for URL " + url, e);
+//		}
 	}
 	
-	public void startConnection(String url) throws IOException {
+	public int startConnection() {
+		int statusCode;
+		HttpResponse getResponse;
 		client = new DefaultHttpClient();
 		getRequest = new HttpGet(url);
 		
-		HttpResponse getResponse = client.execute(getRequest);
-		final int statusCode = getResponse.getStatusLine().getStatusCode();
+		try {
+			getResponse = client.execute(getRequest);
+			statusCode = getResponse.getStatusLine().getStatusCode();
+			
+			if (statusCode != HttpStatus.SC_OK) {
+				Log.e(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
+				getResponseEntity = null;
+			}
+			else {
+				getResponseEntity =  getResponse.getEntity();
+			}
+		} catch (IOException e) {
+			statusCode = HttpStatus.SC_BAD_REQUEST;
+		}
 
-		if (statusCode != HttpStatus.SC_OK) {
-			Log.e(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
-			getResponseEntity = null;
-			throw new IOException();
-		}
-		else {
-			getResponseEntity =  getResponse.getEntity();
-		}
+		return statusCode;
 	}
 
 	public String retrieveEntireResponse() {

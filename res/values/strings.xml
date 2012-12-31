@@ -3,5 +3,8 @@
 
     <string name="app_name">Wu File Client</string>
     <string name="nothing_found"></string>
+    <string name="user_name">User Name:</string>
+    <string name="password">Password:</string>
+    <string name="login">Login</string>
 
 </resources>
