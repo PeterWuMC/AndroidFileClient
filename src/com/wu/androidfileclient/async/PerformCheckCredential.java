@@ -1,29 +1,27 @@
 package com.wu.androidfileclient.async;
 
-import java.util.HashMap;
-
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.wu.androidfileclient.LoginActivity;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class PerformCheckCredential extends AsyncTask<Void, Void, Boolean>{
 	private LoginActivity context;
-	private HashMap<String, String> credential;
 	private Registration registration = new Registration();
+	private String userName;
+	private String deviceCode;
 	
-	public PerformCheckCredential(LoginActivity context, HashMap<String, String> credential) {
+	public PerformCheckCredential(LoginActivity context, String userName, String deviceCode) {
 		super();
-		this.context = context;
-		this.credential = credential;
+		this.context    = context;
+		this.userName   = userName;
+		this.deviceCode = deviceCode;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
-		if (registration.check(credential.get("user_name"), credential.get("device_code"))) return true;
+		if (registration.check(userName, deviceCode)) return true;
         return false;
 	}
 

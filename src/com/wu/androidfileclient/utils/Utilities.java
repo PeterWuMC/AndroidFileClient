@@ -2,8 +2,10 @@ package com.wu.androidfileclient.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 public final class Utilities {
@@ -43,5 +45,21 @@ public final class Utilities {
 		}
 
 		return credential;
+	}
+	
+	public final static void setCredential(Context context, HashMap<String, String> credential) {
+		XMLHelper xmlHelper                           = new XMLHelper(context);
+		ArrayList<HashMap<String, String>> xmlContent = new ArrayList<HashMap<String, String>>();
+
+		HashMap<String, String> hash;
+		for (Map.Entry<String, String> entry : credential.entrySet()) {
+			hash = new HashMap<String, String>();
+			hash.put("key", entry.getKey());
+			hash.put("value", entry.getValue());
+			xmlContent.add(hash);
+		}
+		Log.w("PETER", xmlContent.toString());
+		xmlHelper.writer("credential.xml", xmlContent);
+
 	}
 }

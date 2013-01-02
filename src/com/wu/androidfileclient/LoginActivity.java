@@ -7,44 +7,72 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
-import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.wu.androidfileclient.async.PerformCheckCredential;
+import com.wu.androidfileclient.async.PerformRegisterDevice;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class LoginActivity extends Activity {
 	private String android_id;
-	private HashMap<String, String> credential = new HashMap<String, String>();
 	private ProgressDialog progressDialog;
+	
+	private EditText userNameBox;
+	private EditText passwordBox;
+	private Button   loginBtn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        android_id = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+        HashMap<String, String> credential = Utilities.getCredential(this);
+        android_id  = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+        userNameBox = (EditText) findViewById(R.id.user_name);
+		passwordBox = (EditText) findViewById(R.id.password);
+		loginBtn    = (Button) findViewById(R.id.login);
 
-		credential = Utilities.getCredential(this);
+		if (!credential.isEmpty()) {
+			checkCredential(credential.get("user_name"), credential.get("device_code"));
+		}
+		
+		loginBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				registerDevice(userNameBox.getText().toString(), passwordBox.getText().toString());
+			}
+        });
+    }
 
+    public void checkCredential(String userName, String deviceCode) {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle("Please wait...");
     	progressDialog.setMessage("Checking Credential...");
     	progressDialog.setCancelable(true);
 
 		progressDialog.show();
-		
-		if (!credential.isEmpty()) {
-			PerformCheckCredential task = new PerformCheckCredential(this, credential);
-			task.execute();
-			progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
-		}
+
+		PerformCheckCredential task = new PerformCheckCredential(this, userName, deviceCode);
+		task.execute();
+		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
     }
 
-    public void longToast(CharSequence message) {
-		Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-	}
+    public void registerDevice(String userName, String password) {
+		progressDialog = new ProgressDialog(this);
+		progressDialog.setTitle("Please wait...");
+    	progressDialog.setMessage("Logging in...");
+    	progressDialog.setCancelable(true);
+
+		progressDialog.show();
+
+		PerformRegisterDevice task = new PerformRegisterDevice(this, userName, password, android_id);
+		task.execute();
+		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
+    }
     
     public void openMainActivity(boolean allowed) {
     	if (allowed) {
@@ -52,9 +80,21 @@ public class LoginActivity extends Activity {
     		startActivity(mainIntent);
     	}
     	else {
-    		longToast("Credential not recognised, please login again");
+    		Utilities.longToast(this, "Credential not recognised, please login again");
     	}
-		if (progressDialog != null) {
+		cancelProgressDialog();
+    }
+    
+    public void saveCredential(String userName, String deviceCode) {
+    	HashMap<String, String> credential = new HashMap<String, String>();
+    	credential.put("user_name", userName);
+    	credential.put("device_code", deviceCode);
+    	Utilities.setCredential(this, credential);
+    	cancelProgressDialog();
+    }
+    
+    public void cancelProgressDialog() {
+    	if (progressDialog != null) {
 			progressDialog.dismiss();
 			progressDialog = null;
 		}

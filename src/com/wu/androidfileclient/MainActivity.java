@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
@@ -36,20 +35,6 @@ public class MainActivity extends ListActivity {
 		goBack.type  = "action";
 		currentKey   = "initial";
 		previousKeys = new HashMap<String, String>();
-		
-////		TEMP START
-//		ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
-//		HashMap<String, String> hash = new HashMap<String, String>();
-//		hash.put("key", "user_name");
-//		hash.put("value", "peterwumc");
-//		data.add(hash);
-//		hash = new HashMap<String, String>();
-//		hash.put("key", "device_code");
-//		hash.put("value", "882b6577b0073bb7fd0491a1241e5ff1ec9e2bc2");
-//		data.add(hash);
-//		new XMLHelper(this).writer("credential.xml", data);
-////		TEMP END
-		
 		credential   = Utilities.getCredential(this);
 
         filesList = (ArrayList<FileItem>) getIntent().getSerializableExtra("files");
@@ -57,7 +42,6 @@ public class MainActivity extends ListActivity {
         if (filesList.isEmpty()) loadFilesList("initial");
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
-//    	filesAdapter.setNotifyOnChange(true);
     	setListAdapter(filesAdapter);
     }
 

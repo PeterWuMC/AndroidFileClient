@@ -1,6 +1,7 @@
 package com.wu.androidfileclient.utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -26,6 +27,12 @@ public class XMLHelper {
 
 	public XMLHelper(Context context) {
 		this.context = context;
+	}
+	
+	public void delete(String filename) {
+		File dir = context.getFilesDir();
+		File file = new File(dir, filename);
+		boolean deleted = file.delete();
 	}
 	
 	public void writer(String filename, ArrayList<HashMap<String, String>> data) {
@@ -58,7 +65,7 @@ public class XMLHelper {
 		    serializer.flush();
 		    fos.close();
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Error for URL trying to write into internal storage", e);
+			Log.e(getClass().getSimpleName(), "Error trying to write into internal storage", e);
 		}
 	}
 	
@@ -72,7 +79,7 @@ public class XMLHelper {
 		    String data = new String(inputBuffer);
 		    isr.close();
 		    fis.close();
-
+		    
 	        InputStream is = new ByteArrayInputStream(data.getBytes("UTF-8"));
 
 		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();;
@@ -97,7 +104,7 @@ public class XMLHelper {
 		    }
 		    return result;
 		} catch (Exception e) {
-			Log.e(getClass().getSimpleName(), "Error for URL trying to read from internal storage", e);
+			Log.e(getClass().getSimpleName(), "Error trying to read from internal storage", e);
 			return null;
 		}
 	}

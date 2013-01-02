@@ -52,7 +52,7 @@ public class HttpRetriever {
 			getResponse = client.execute(request);
 			statusCode = getResponse.getStatusLine().getStatusCode();
 			
-			if (statusCode != HttpStatus.SC_OK) {
+			if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_ACCEPTED) {
 				Log.e(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
 				getResponseEntity = null;
 			}

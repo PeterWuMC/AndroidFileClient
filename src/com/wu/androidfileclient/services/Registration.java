@@ -49,7 +49,7 @@ public class Registration extends Base {
 		int statusCode = httpRetriever.startPOSTConnection(parameters);
 
 		if (statusCode != HttpStatus.SC_ACCEPTED) throw new HttpException(""+statusCode);
-
+		
 		try {
 			String response = httpRetriever.retrieveEntireResponse();
 			if (response != null) {
