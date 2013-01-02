@@ -1,19 +1,15 @@
 package com.wu.androidfileclient.services;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpStatus;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.wu.androidfileclient.HttpRetriever;
-import com.wu.androidfileclient.models.FileItem;
-
 public class FileDownloader extends Base {
 
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "download";
 	protected static final String FORMAT = "";
 
+
+	public FileDownloader(String userName, String secretCode) {
+		super(userName, secretCode);
+	}
 
 	protected String getObjectUrl() {
 		return OBJECT;
@@ -25,6 +21,10 @@ public class FileDownloader extends Base {
 
 	protected String getFormat() {
 		return FORMAT;
+	}
+	
+	public String constructUrl() {
+		return null;
 	}
 
 //	public FileItem retrieveFile(String key) throws HttpException {

@@ -10,8 +10,8 @@ import org.json.JSONObject;
 import android.util.Log;
 import org.apache.http.HttpException;
 
-import com.wu.androidfileclient.HttpRetriever;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.utils.HttpRetriever;
 
 
 public class FileLister extends Base {
@@ -20,6 +20,9 @@ public class FileLister extends Base {
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
 
+	public FileLister(String userName, String secretCode) {
+		super(userName, secretCode);
+	}
 
 	protected String getObjectUrl() {
 		return OBJECT;
@@ -35,9 +38,9 @@ public class FileLister extends Base {
 
 	public ArrayList<FileItem> retrieveFilesList(String key) throws HttpException {
 		ArrayList<FileItem> fileArray = new ArrayList<FileItem>();
-		String url                    = constructSearchUrl(key);
+		String url                    = constructUrl(key);
 		httpRetriever 	              = new HttpRetriever(url);
-		int statusCode                = httpRetriever.startConnection();
+		int statusCode                = httpRetriever.startGETConnection();
 		
 		if (statusCode != HttpStatus.SC_OK) throw new HttpException(""+statusCode);
 		

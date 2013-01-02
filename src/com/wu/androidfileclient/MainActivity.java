@@ -4,28 +4,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ListView;
 
 import com.wu.androidfileclient.async.PerformFileDownloadTask;
 import com.wu.androidfileclient.async.PerformFileListSearchTask;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
+import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<FileItem> filesList = new ArrayList<FileItem>();
-	private FileItem goBack               = new FileItem();
+	private ArrayList<FileItem> filesList      = new ArrayList<FileItem>();
+	private FileItem goBack                    = new FileItem();
+	private HashMap<String, String> credential = new HashMap<String, String>();
 
 	private FileItemsListAdapter filesAdapter;
 	private HashMap<String, String> previousKeys;
 	private String currentKey;
-
-	private ProgressDialog progressDialog;
 
 	@SuppressWarnings("unchecked")
     @Override
@@ -33,16 +32,32 @@ public class MainActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		goBack.name = "Back";
-		goBack.type = "action";
-		currentKey  = "initial";
+		goBack.name  = "Back";
+		goBack.type  = "action";
+		currentKey   = "initial";
 		previousKeys = new HashMap<String, String>();
+		
+////		TEMP START
+//		ArrayList<HashMap<String, String>> data = new ArrayList<HashMap<String, String>>();
+//		HashMap<String, String> hash = new HashMap<String, String>();
+//		hash.put("key", "user_name");
+//		hash.put("value", "peterwumc");
+//		data.add(hash);
+//		hash = new HashMap<String, String>();
+//		hash.put("key", "device_code");
+//		hash.put("value", "882b6577b0073bb7fd0491a1241e5ff1ec9e2bc2");
+//		data.add(hash);
+//		new XMLHelper(this).writer("credential.xml", data);
+////		TEMP END
+		
+		credential   = Utilities.getCredential(this);
 
         filesList = (ArrayList<FileItem>) getIntent().getSerializableExtra("files");
         if (filesList == null) filesList = new ArrayList<FileItem>();
         if (filesList.isEmpty()) loadFilesList("initial");
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
+//    	filesAdapter.setNotifyOnChange(true);
     	setListAdapter(filesAdapter);
     }
 
@@ -70,17 +85,8 @@ public class MainActivity extends ListActivity {
     }
 
 	public void downloadFile(String key, String name) {
-    	progressDialog = new ProgressDialog(this);
-    	progressDialog.setMessage("Downloading file. Please wait...");
-    	progressDialog.setIndeterminate(false);
-    	progressDialog.setMax(100);
-    	progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    	progressDialog.setCancelable(true);
-
-		PerformFileDownloadTask task = new PerformFileDownloadTask(this);
+		PerformFileDownloadTask task = new PerformFileDownloadTask(this, credential);
 		task.execute(key, name);
-
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
 	}
 
     public void loadFilesList(String key) {
@@ -89,7 +95,18 @@ public class MainActivity extends ListActivity {
 
     	goBack.key = previousKeys.get(currentKey);
 
-    	PerformFileListSearchTask task = new PerformFileListSearchTask(this, filesList, filesAdapter, goBack, currentKey);
+    	PerformFileListSearchTask task = new PerformFileListSearchTask(this, credential);
 		task.execute(key);
+    }
+    
+    public void updateFilesList(ArrayList<FileItem> result) {
+    	if (result != null) {
+			filesList.clear();
+			for (int i = 0; i < result.size(); i++) {
+				filesList.add(result.get(i));
+			}
+			if (!currentKey.equals(goBack.key)) filesList.add(0, goBack);
+	        filesAdapter.notifyDataSetChanged();
+		}
     }
 }

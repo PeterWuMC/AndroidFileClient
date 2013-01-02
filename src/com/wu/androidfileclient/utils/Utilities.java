@@ -1,5 +1,8 @@
 package com.wu.androidfileclient.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -27,4 +30,18 @@ public final class Utilities {
             return ext.toLowerCase();
         }
     }
+	
+	public final static HashMap<String, String> getCredential(Context context) {
+		HashMap<String, String> credential            = new HashMap<String, String>();
+		XMLHelper xmlHelper                           = new XMLHelper(context);
+		ArrayList<HashMap<String, String>> xmlContent = xmlHelper.reader("credential.xml");
+		
+		if (xmlContent != null) {
+			for (int i = 0; i < xmlContent.size(); i++) {
+				credential.put(xmlContent.get(i).get("key"), xmlContent.get(i).get("value"));
+			}
+		}
+
+		return credential;
+	}
 }

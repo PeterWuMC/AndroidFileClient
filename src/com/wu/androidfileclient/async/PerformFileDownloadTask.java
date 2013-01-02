@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import org.apache.http.HttpStatus;
 
@@ -18,26 +19,36 @@ import android.os.Environment;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.wu.androidfileclient.HttpRetriever;
+import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.services.FileDownloader;
+import com.wu.androidfileclient.utils.HttpRetriever;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
     private Context context;
 	ProgressDialog progressDialog;
+	private HashMap<String, String> credential;
 	
-	public PerformFileDownloadTask(Context context) {
+	public PerformFileDownloadTask(Context context, HashMap<String, String> credential) {
 		super();
 		this.context = context;
+		this.credential = credential;
 		progressDialog = new ProgressDialog(context);
+    	progressDialog.setMessage("Downloading file. Please wait...");
+    	progressDialog.setIndeterminate(false);
+    	progressDialog.setMax(100);
+    	progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+    	progressDialog.setCancelable(true);
+    	
+		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
 	}
-	
+
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
     	progressDialog.show();
     }
-	
+
 	@Override
 	protected String doInBackground(String... params) {
 		int count;
@@ -46,11 +57,11 @@ public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
 		
 		String key          = params[0];
 		String fileName     = params[1]; 
-		String url          = new FileDownloader().constructSearchUrl(key);
+		String url          = new FileDownloader(credential.get("user_name"), credential.get("device_code")).constructUrl(key);
 		String fileLocation = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
 
 		HttpRetriever httpRetreiever = new HttpRetriever(url);
-		int statusCode = httpRetreiever.startConnection();
+		int statusCode = httpRetreiever.startGETConnection();
 		InputStream tempStrem        = httpRetreiever.retrieveStream();
 		InputStream inputStream      = new BufferedInputStream(tempStrem, 8192);
 
