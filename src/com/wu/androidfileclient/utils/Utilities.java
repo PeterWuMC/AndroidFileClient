@@ -58,8 +58,6 @@ public final class Utilities {
 			hash.put("value", entry.getValue());
 			xmlContent.add(hash);
 		}
-		Log.w("PETER", xmlContent.toString());
 		xmlHelper.writer("credential.xml", xmlContent);
-
 	}
 }
