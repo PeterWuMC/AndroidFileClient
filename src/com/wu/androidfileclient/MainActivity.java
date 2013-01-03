@@ -80,7 +80,7 @@ public class MainActivity extends ListActivity {
         if (file.type.equals("folder") || file.type.equals("action")) {
         	loadFilesList(file.key);
         } else {
-        	downloadFile(file.key, file.name);
+        	downloadFile(file);
         }
     }
 
@@ -95,9 +95,9 @@ public class MainActivity extends ListActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-	public void downloadFile(String key, String name) {
+	public void downloadFile(FileItem file) {
 		PerformFileDownloadTask task = new PerformFileDownloadTask(this, credential);
-		task.execute(key, name);
+		task.execute(file);
 	}
 
     public void loadFilesList(String key) {

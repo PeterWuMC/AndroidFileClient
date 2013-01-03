@@ -29,7 +29,7 @@ public final class Utilities {
             if (ext.indexOf("/")>-1) {
                 ext = ext.substring(0,ext.indexOf("/"));
             }
-            return ext.toLowerCase(Locale.ENGLISH);
+            return ext.toLowerCase(Locale.ENGLISH).substring(1);
         }
     }
 	

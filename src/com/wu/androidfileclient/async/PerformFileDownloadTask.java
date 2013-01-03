@@ -20,11 +20,12 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
+import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.utils.HttpRetriever;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
+public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileItem> {
     private Context context;
 	ProgressDialog progressDialog;
 	private HashMap<String, String> credential;
@@ -50,15 +51,14 @@ public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
     }
 
 	@Override
-	protected String doInBackground(String... params) {
+	protected FileItem doInBackground(FileItem... params) {
 		int count;
 		Long lenghtOfFile;
 		OutputStream outputStream;
 		
-		String key          = params[0];
-		String fileName     = params[1]; 
-		String url          = new FileDownloader(credential.get("user_name"), credential.get("device_code")).constructUrl(key);
-		String fileLocation = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
+		FileItem fileItem   = params[0];
+		String url          = new FileDownloader(credential.get("user_name"), credential.get("device_code")).constructUrl(fileItem.key);
+		fileItem.localLocation  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
 
 		HttpRetriever httpRetreiever = new HttpRetriever(url);
 		int statusCode = httpRetreiever.startGETConnection();
@@ -69,14 +69,14 @@ public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
 
 		if (tempStrem != null) {
     		try {
-    			File folder = new File(fileLocation);
+    			File folder = new File(fileItem.localLocation);
     			byte data[] = new byte[1024];
                 long total  = 0;
 
     			if (!folder.exists()) folder.mkdir();
 
     			lenghtOfFile = (Long) httpRetreiever.retrieveContentSize();
-    			outputStream = new BufferedOutputStream(new FileOutputStream(fileLocation + fileName));
+    			outputStream = new BufferedOutputStream(new FileOutputStream(fileItem.localLocation + fileItem.name));
 
                 while ((count = inputStream.read(data)) != -1) {
                     total += count;
@@ -98,7 +98,7 @@ public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
         	    }
     	    	catch (Exception e) { Log.e("Error: ", e.getMessage()); }
     	    }
-    		return fileLocation + fileName;
+    		return fileItem;
 		} else {
 			return null;
 		}
@@ -115,19 +115,19 @@ public class PerformFileDownloadTask extends AsyncTask<String, String, String> {
 	}
 
 	@Override
-	protected void onPostExecute(String file_location) {
+	protected void onPostExecute(FileItem fileItem) {
 		MimeTypeMap myMime = MimeTypeMap.getSingleton();
 
 		progressDialog.dismiss();
 
 		Intent fileViewIntent = new Intent();
 		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
-		if (file_location != null) {
-    		File file = new File(file_location);
+		if (fileItem != null && !fileItem.localLocation.isEmpty()) {
+    		File file       = new File(fileItem.localLocation + fileItem.name);
+    		String mimeType = myMime.getMimeTypeFromExtension(fileItem.ext);
 
-    		String mimeType = myMime.getMimeTypeFromExtension(Utilities.fileExt(file.toString()).substring(1));
-    		
-    	       
+    		Log.d("PETER", Uri.fromFile(file).toString());
+    		Log.d("PETER", mimeType);
     		fileViewIntent.setDataAndType(Uri.fromFile(file), mimeType);
     		try {
     			context.startActivity(fileViewIntent);

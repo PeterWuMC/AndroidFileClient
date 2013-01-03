@@ -9,7 +9,9 @@ public class FileItem implements Serializable {
 	private static final long serialVersionUID = -3056032740471401976L;
 
 	public String type;
+	public String ext;
 	public String path;
+	public String localLocation;
 	public String key;
 	public String name;
 	private String content;
