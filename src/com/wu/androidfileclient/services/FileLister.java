@@ -2,17 +2,16 @@ package com.wu.androidfileclient.services;
 
 import java.util.ArrayList;
 
+import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
-import org.apache.http.HttpException;
 
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.utils.HttpRetriever;
-import com.wu.androidfileclient.utils.Utilities;
 
 
 public class FileLister extends Base {
@@ -58,7 +57,6 @@ public class FileLister extends Base {
 	                file.name = rec.getString("name");
 	                file.path = rec.getString("path");
 	                file.key  = rec.getString("key");
-	                file.ext  = Utilities.fileExt(rec.getString("name"));
 	                fileArray.add(file);
 				}
 				return fileArray;

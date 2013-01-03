@@ -1,30 +1,34 @@
 package com.wu.androidfileclient.models;
 
 import java.io.Serializable;
+import java.util.Locale;
 
-import android.util.Base64;
+import android.webkit.MimeTypeMap;
 
 public class FileItem implements Serializable {
 
 	private static final long serialVersionUID = -3056032740471401976L;
 
 	public String type;
-	public String ext;
 	public String path;
-	public String localLocation;
+	public String localPath;
 	public String key;
 	public String name;
-	private String content;
-
-	public String getContent() {
-		return content;
+//	private String content;
+//
+//	public String getContent() {
+//		return content;
+//	}
+//
+//	public void setContent(String content) {
+//		byte[] decodedContent = Base64.decode(content, Base64.DEFAULT);
+//		this.content = new String(decodedContent);
+//	}
+	
+	public String ext() {
+		return MimeTypeMap.getFileExtensionFromUrl(name).toLowerCase(Locale.ENGLISH);
 	}
-
-	public void setContent(String content) {
-		byte[] decodedContent = Base64.decode(content, Base64.DEFAULT);
-		this.content = new String(decodedContent);
-	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

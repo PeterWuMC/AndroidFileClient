@@ -58,7 +58,7 @@ public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileIte
 		
 		FileItem fileItem   = params[0];
 		String url          = new FileDownloader(credential.get("user_name"), credential.get("device_code")).constructUrl(fileItem.key);
-		fileItem.localLocation  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
+		fileItem.localPath  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
 
 		HttpRetriever httpRetreiever = new HttpRetriever(url);
 		int statusCode = httpRetreiever.startGETConnection();
@@ -69,14 +69,14 @@ public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileIte
 
 		if (tempStrem != null) {
     		try {
-    			File folder = new File(fileItem.localLocation);
+    			File folder = new File(fileItem.localPath);
     			byte data[] = new byte[1024];
                 long total  = 0;
 
     			if (!folder.exists()) folder.mkdir();
 
     			lenghtOfFile = (Long) httpRetreiever.retrieveContentSize();
-    			outputStream = new BufferedOutputStream(new FileOutputStream(fileItem.localLocation + fileItem.name));
+    			outputStream = new BufferedOutputStream(new FileOutputStream(fileItem.localPath + fileItem.name));
 
                 while ((count = inputStream.read(data)) != -1) {
                     total += count;
@@ -122,12 +122,10 @@ public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileIte
 
 		Intent fileViewIntent = new Intent();
 		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
-		if (fileItem != null && !fileItem.localLocation.isEmpty()) {
-    		File file       = new File(fileItem.localLocation + fileItem.name);
-    		String mimeType = myMime.getMimeTypeFromExtension(fileItem.ext);
+		if (fileItem != null && !fileItem.localPath.isEmpty()) {
+    		File file       = new File(fileItem.localPath + fileItem.name);
+    		String mimeType = myMime.getMimeTypeFromExtension(fileItem.ext());
 
-    		Log.d("PETER", Uri.fromFile(file).toString());
-    		Log.d("PETER", mimeType);
     		fileViewIntent.setDataAndType(Uri.fromFile(file), mimeType);
     		try {
     			context.startActivity(fileViewIntent);

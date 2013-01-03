@@ -35,9 +35,15 @@ public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 
 		if (fileItem != null) {
 			int icon = 0;
-			if (fileItem.type.equals("action") && fileItem.name.equalsIgnoreCase("back")) icon = android.R.drawable.ic_menu_revert;
-			else if (fileItem.type.equals("folder")) icon = android.R.drawable.ic_menu_more;
-			else if (fileItem.type.equals("file")) icon = android.R.drawable.ic_menu_set_as;
+			if (fileItem.type.equals("action") && fileItem.name.equalsIgnoreCase("back")) {
+				icon = android.R.drawable.ic_menu_revert;
+			} else if (fileItem.type.equals("folder")) {
+				icon = android.R.drawable.ic_menu_more;
+			}
+			else if (fileItem.type.equals("file")) {
+				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
+				if (icon == 0) icon = context.getResources().getIdentifier("unknown", "drawable",  context.getPackageName()); 
+			}
 			ImageView typeImage = (ImageView) view.findViewById(R.id.icon);
 			typeImage.setImageResource(icon);
 

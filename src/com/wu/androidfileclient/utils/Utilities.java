@@ -2,7 +2,6 @@ package com.wu.androidfileclient.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import android.content.Context;
@@ -14,24 +13,6 @@ public final class Utilities {
 	public final static void longToast(Context context, CharSequence message) {
 		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
-	
-	public final static String fileExt(String url) {
-//		remove parameters
-        if (url.indexOf("?")>-1) url = url.substring(0,url.indexOf("?"));
-        
-        if (url.lastIndexOf(".") == -1) {
-            return null;
-        } else {
-            String ext = url.substring(url.lastIndexOf("."));
-            if (ext.indexOf("%")>-1) {
-                ext = ext.substring(0,ext.indexOf("%"));
-            }
-            if (ext.indexOf("/")>-1) {
-                ext = ext.substring(0,ext.indexOf("/"));
-            }
-            return ext.toLowerCase(Locale.ENGLISH).substring(1);
-        }
-    }
 	
 	public final static HashMap<String, String> getCredential(Context context) {
 		HashMap<String, String> credential            = new HashMap<String, String>();
