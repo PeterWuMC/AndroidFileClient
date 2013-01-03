@@ -10,6 +10,7 @@
     <string name="download">Download</string>
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
+    <string name="upload">Upload</string>
     <string name="about">About</string>
 
 </resources>

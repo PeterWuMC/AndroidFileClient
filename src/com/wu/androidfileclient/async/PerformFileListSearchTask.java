@@ -6,7 +6,6 @@ import java.util.HashMap;
 import org.apache.http.HttpException;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.wu.androidfileclient.MainActivity;

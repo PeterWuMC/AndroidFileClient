@@ -32,7 +32,7 @@ public class XMLHelper {
 	public void delete(String filename) {
 		File dir = context.getFilesDir();
 		File file = new File(dir, filename);
-		boolean deleted = file.delete();
+		file.delete();
 	}
 	
 	public void writer(String filename, ArrayList<HashMap<String, String>> data) {
