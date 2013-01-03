@@ -1,7 +1,6 @@
 package com.wu.androidfileclient.async;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.apache.http.HttpException;
 
@@ -10,6 +9,7 @@ import android.os.AsyncTask;
 
 import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.services.FileLister;
 import com.wu.androidfileclient.utils.Utilities;
@@ -18,9 +18,9 @@ public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList
     private MainActivity context;
 	private ProgressDialog progressDialog;
 	private FileLister fileLister;
-	private HashMap<String, String> credential;
+	private Credential credential;
 	
-	public PerformFileListSearchTask(MainActivity context, HashMap<String, String> credential) {
+	public PerformFileListSearchTask(MainActivity context, Credential credential) {
 		super();
 		this.context = context;
 		this.credential = credential;
@@ -36,7 +36,7 @@ public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList
 	@Override
 	protected ArrayList<ListItem> doInBackground(String... params) {
 		String key = params[0];
-        fileLister = new FileLister(credential.get("user_name"), credential.get("device_code"));
+        fileLister = new FileLister(credential);
         
         try {
         	return fileLister.retrieveFilesList(key);

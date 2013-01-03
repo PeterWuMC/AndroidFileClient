@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 
 import org.apache.http.HttpStatus;
 
@@ -20,6 +19,7 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.utils.HttpRetriever;
@@ -28,9 +28,9 @@ import com.wu.androidfileclient.utils.Utilities;
 public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileItem> {
     private Context context;
 	ProgressDialog progressDialog;
-	private HashMap<String, String> credential;
+	private Credential credential;
 	
-	public PerformFileDownloadTask(Context context, HashMap<String, String> credential) {
+	public PerformFileDownloadTask(Context context, Credential credential) {
 		super();
 		this.context = context;
 		this.credential = credential;
@@ -57,7 +57,7 @@ public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileIte
 		OutputStream outputStream;
 		
 		FileItem fileItem   = params[0];
-		String url          = new FileDownloader(credential.get("user_name"), credential.get("device_code")).constructUrl(fileItem.key);
+		String url          = new FileDownloader(credential).constructUrl(fileItem.key);
 		fileItem.localPath  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
 
 		HttpRetriever httpRetreiever = new HttpRetriever(url);

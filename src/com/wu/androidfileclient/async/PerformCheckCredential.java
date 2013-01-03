@@ -3,25 +3,24 @@ package com.wu.androidfileclient.async;
 import android.os.AsyncTask;
 
 import com.wu.androidfileclient.LoginActivity;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class PerformCheckCredential extends AsyncTask<Void, Void, Boolean>{
 	private LoginActivity context;
 	private Registration registration = new Registration();
-	private String userName;
-	private String deviceCode;
+	private Credential credential;
 	
-	public PerformCheckCredential(LoginActivity context, String userName, String deviceCode) {
+	public PerformCheckCredential(LoginActivity context, Credential credential) {
 		super();
 		this.context    = context;
-		this.userName   = userName;
-		this.deviceCode = deviceCode;
+		this.credential = credential;
 	}
 
 	@Override
 	protected Boolean doInBackground(Void... params) {
-		if (registration.check(userName, deviceCode)) return true;
+		if (registration.check(credential)) return true;
         return false;
 	}
 

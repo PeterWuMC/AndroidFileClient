@@ -16,17 +16,18 @@ import android.widget.ListView;
 import com.wu.androidfileclient.async.PerformFileDownloadTask;
 import com.wu.androidfileclient.async.PerformFileListSearchTask;
 import com.wu.androidfileclient.models.ActionItem;
-import com.wu.androidfileclient.models.ListItem;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
+import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<ListItem> objectsList   = new ArrayList<ListItem>();
+	private ArrayList<ListItem> objectsList    = new ArrayList<ListItem>();
 	private ActionItem goBack                  = new ActionItem();
-	private HashMap<String, String> credential = new HashMap<String, String>();
+	private Credential credential              = new Credential();
 
 	private FileItemsListAdapter filesAdapter;
 	private HashMap<String, String> previousKeys;

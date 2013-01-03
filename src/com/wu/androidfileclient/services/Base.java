@@ -1,31 +1,40 @@
 package com.wu.androidfileclient.services;
 
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpRetriever;
 
 public abstract class Base {
 
-	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087/";
-//	protected static final String BASE_URL = "http://10.0.4.220:1234/";
+	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087";
 	protected static final String SLASH = "/";
 	protected static final String START_OF_PARAMETERS = "?";
-	protected static final String PARAMETERS_SEPARATORS = "&";
+	protected static final String PARAMETERS_SEPARATOR = "&";
+	protected static final String EQUAL = "=";
 
 	protected abstract String getObjectUrl();
 	protected abstract String getAction();
 	protected abstract String getFormat();
-	protected String userName;
-	protected String deviceCode;
+	protected Credential credential;
 
 	protected HttpRetriever httpRetriever;
 	
-	public Base(String userName, String deviceCode) {
-		this.userName = userName;
-		this.deviceCode = deviceCode;
+	public Base(Credential credential) {
+		this.credential = credential;
 	}
 	
 	public String getCredentialParameters() {
-		if (!userName.isEmpty() && !deviceCode.isEmpty()) {
-			return START_OF_PARAMETERS + "user_name=" + userName + PARAMETERS_SEPARATORS + "code=" + deviceCode;
+		StringBuffer sb = new StringBuffer();
+		sb.append(START_OF_PARAMETERS);
+		sb.append(Credential.USER_NAME_KEY);
+		sb.append(EQUAL);
+		sb.append(credential.getUserName());
+		sb.append(PARAMETERS_SEPARATOR);
+		sb.append(Credential.DEVICE_CODE_KEY);
+		sb.append(EQUAL);
+		sb.append(credential.getDeviceCode());
+		
+		if (!credential.getUserName().isEmpty() && !credential.getDeviceCode().isEmpty()) {
+			return  sb.toString();
 		} else {
 			return "";
 		}
@@ -34,6 +43,7 @@ public abstract class Base {
 	public String constructUrl(String key) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(BASE_URL);
+		if (!getObjectUrl().isEmpty()) sb.append(SLASH);
 		sb.append(getObjectUrl());
 		if (!key.isEmpty()) sb.append(SLASH);
 		sb.append(key);

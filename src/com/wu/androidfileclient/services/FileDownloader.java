@@ -1,5 +1,7 @@
 package com.wu.androidfileclient.services;
 
+import com.wu.androidfileclient.models.Credential;
+
 public class FileDownloader extends Base {
 
 	protected static final String OBJECT = "server_files";
@@ -7,8 +9,8 @@ public class FileDownloader extends Base {
 	protected static final String FORMAT = "";
 
 
-	public FileDownloader(String userName, String secretCode) {
-		super(userName, secretCode);
+	public FileDownloader(Credential credential) {
+		super(credential);
 	}
 
 	protected String getObjectUrl() {

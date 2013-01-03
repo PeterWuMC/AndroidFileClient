@@ -1,7 +1,5 @@
 package com.wu.androidfileclient;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -15,12 +13,11 @@ import android.widget.EditText;
 import com.wu.androidfileclient.async.PerformCheckCredential;
 import com.wu.androidfileclient.async.PerformRegisterDevice;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class LoginActivity extends Activity {
-	private String android_id;
 	private ProgressDialog progressDialog;
-	
 	private EditText userNameBox;
 	private EditText passwordBox;
 	private Button   loginBtn;
@@ -30,25 +27,28 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        HashMap<String, String> credential = Utilities.getCredential(this);
-        android_id  = Secure.getString(this.getContentResolver(), Secure.ANDROID_ID);
+        final Credential credential = Utilities.getCredential(this);
+        credential.setDeviceId(Secure.getString(this.getContentResolver(), Secure.ANDROID_ID));
+
         userNameBox = (EditText) findViewById(R.id.user_name);
 		passwordBox = (EditText) findViewById(R.id.password);
 		loginBtn    = (Button) findViewById(R.id.login);
 
-		if (!credential.isEmpty()) {
-			checkCredential(credential.get("user_name"), credential.get("device_code"));
+		if (!credential.getUserName().isEmpty() && !credential.getDeviceCode().isEmpty()) {
+			checkCredential(credential);
 		}
-		
+
 		loginBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				registerDevice(userNameBox.getText().toString(), passwordBox.getText().toString());
+				credential.setUserName(userNameBox.getText().toString());
+				credential.setPassword(passwordBox.getText().toString());
+				registerDevice(credential);
 			}
         });
     }
 
-    public void checkCredential(String userName, String deviceCode) {
+    public void checkCredential(Credential credential) {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle("Please wait...");
     	progressDialog.setMessage("Checking Credential...");
@@ -56,12 +56,12 @@ public class LoginActivity extends Activity {
 
 		progressDialog.show();
 
-		PerformCheckCredential task = new PerformCheckCredential(this, userName, deviceCode);
+		PerformCheckCredential task = new PerformCheckCredential(this, credential);
 		task.execute();
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
     }
 
-    public void registerDevice(String userName, String password) {
+    public void registerDevice(Credential credential) {
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle("Please wait...");
     	progressDialog.setMessage("Logging in...");
@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
 
 		progressDialog.show();
 
-		PerformRegisterDevice task = new PerformRegisterDevice(this, userName, password, android_id);
+		PerformRegisterDevice task = new PerformRegisterDevice(this, credential);
 		task.execute();
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
     }
@@ -86,11 +86,8 @@ public class LoginActivity extends Activity {
 		cancelProgressDialog();
     }
     
-    public void saveCredential(String userName, String deviceCode) {
-    	HashMap<String, String> credential = new HashMap<String, String>();
-    	credential.put("user_name", userName);
-    	credential.put("device_code", deviceCode);
-    	Utilities.setCredential(this, credential);
+    public void saveCredential(Credential credential) {
+    	Utilities.saveCredential(this, credential);
     	cancelProgressDialog();
     }
     

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpRetriever;
 
 public class Registration extends Base {
@@ -21,7 +22,7 @@ public class Registration extends Base {
 	protected static final String FORMAT = "";
 
 	public Registration() {
-		super("","");
+		super(new Credential());
 	}
 
 	protected String getObjectUrl() {
@@ -36,15 +37,16 @@ public class Registration extends Base {
 		return FORMAT;
 	}
 	
-	public String register(String userName, String password, String deviceId) throws HttpException{
+	public Credential register(Credential credential) throws HttpException{
 		String url                     = constructUrl("");
 		httpRetriever 	               = new HttpRetriever(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(4);
+		Credential new_credential      = new Credential();
 
-		parameters.add(new BasicNameValuePair("user_name", userName));
-		parameters.add(new BasicNameValuePair("password", password));
-		parameters.add(new BasicNameValuePair("device_name", "Android"));
-		parameters.add(new BasicNameValuePair("device_code", deviceId));
+		parameters.add(new BasicNameValuePair(Credential.USER_NAME_KEY, credential.getUserName()));
+		parameters.add(new BasicNameValuePair(Credential.PASSWORD_KEY, credential.getPassword()));
+		parameters.add(new BasicNameValuePair(Credential.DEVICE_NAME_KEY, credential.getDeviceName()));
+		parameters.add(new BasicNameValuePair(Credential.DEVICE_ID_KEY, credential.getDeviceId()));
 
 		int statusCode = httpRetriever.startPOSTConnection(parameters);
 
@@ -55,24 +57,27 @@ public class Registration extends Base {
 			if (response != null) {
 				Log.d(getClass().getSimpleName(), response);
 				JSONObject json = new JSONObject(response);
-				return json.getString("key");
+				
+				new_credential.setUserName(credential.getUserName());
+				new_credential.setDeviceCode(json.getString("key"));
+				return new_credential;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
+			return new_credential;
 		} finally {
 			httpRetriever.closeConnect();
 		}
-		return null;
+		return new_credential;
 	}
 	
-	public boolean check(String userName, String deviceCode) {
+	public boolean check(Credential credential) {
 		String url                     = constructUrl("") + "/check";
 		httpRetriever 	               = new HttpRetriever(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(2);
 
-		parameters.add(new BasicNameValuePair("user_name", userName));
-		parameters.add(new BasicNameValuePair("code", deviceCode));
+		parameters.add(new BasicNameValuePair(Credential.USER_NAME_KEY, credential.getUserName()));
+		parameters.add(new BasicNameValuePair(Credential.DEVICE_CODE_KEY, credential.getDeviceCode()));
 
 		int statusCode = httpRetriever.startPOSTConnection(parameters);
 		

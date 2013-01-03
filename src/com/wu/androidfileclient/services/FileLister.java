@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
@@ -22,8 +23,8 @@ public class FileLister extends Base {
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
 
-	public FileLister(String userName, String secretCode) {
-		super(userName, secretCode);
+	public FileLister(Credential credential) {
+		super(credential);
 	}
 
 	protected String getObjectUrl() {

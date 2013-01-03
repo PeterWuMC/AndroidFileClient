@@ -5,28 +5,25 @@ import org.apache.http.HttpException;
 import android.os.AsyncTask;
 
 import com.wu.androidfileclient.LoginActivity;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformRegisterDevice extends AsyncTask<Void, Void, String>{
+public class PerformRegisterDevice extends AsyncTask<Void, Void, Credential>{
 	private LoginActivity context;
 	private Registration registration = new Registration();
-	private String userName;
-	private String password;
-	private String deviceId;
+	private Credential credential;
 	
-	public PerformRegisterDevice(LoginActivity context, String userName, String password, String deviceId) {
+	public PerformRegisterDevice(LoginActivity context, Credential credential) {
 		super();
 		this.context = context;
-		this.userName = userName;
-		this.password = password;
-		this.deviceId = deviceId;
+		this.credential = credential;
 	}
 
 	@Override
-	protected String doInBackground(Void... params) {
+	protected Credential doInBackground(Void... params) {
 		try {
-			return registration.register(userName, password, deviceId);
+			return registration.register(credential);
 		} catch (HttpException e) {
         	cancel(true);
 		}
@@ -40,8 +37,8 @@ public class PerformRegisterDevice extends AsyncTask<Void, Void, String>{
 	}
 
 	@Override
-	protected void onPostExecute(final String result) {
-		context.saveCredential(userName, result);
-		context.checkCredential(userName, result);
+	protected void onPostExecute(Credential result) {
+		context.saveCredential(result);
+		context.checkCredential(result);
 	}	
 }
