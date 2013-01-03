@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.wu.androidfileclient.async.PerformFileDownloadTask;
@@ -54,8 +55,10 @@ public class MainActivity extends ListActivity {
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.activity_main_context, menu);
+	    if (!(objectsList.get(info.position) instanceof ActionItem))
+	    	inflater.inflate(R.menu.activity_main_context, menu);
 	}
 
 	@Override
