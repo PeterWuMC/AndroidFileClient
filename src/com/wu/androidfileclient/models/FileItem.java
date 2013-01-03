@@ -1,19 +1,14 @@
 package com.wu.androidfileclient.models;
 
-import java.io.Serializable;
 import java.util.Locale;
 
 import android.webkit.MimeTypeMap;
 
-public class FileItem implements Serializable {
+public class FileItem extends ListItem {
 
 	private static final long serialVersionUID = -3056032740471401976L;
 
-	public String type;
-	public String path;
-	public String localPath;
-	public String key;
-	public String name;
+//	public String type;
 //	private String content;
 //
 //	public String getContent() {
@@ -29,15 +24,15 @@ public class FileItem implements Serializable {
 		return MimeTypeMap.getFileExtensionFromUrl(name).toLowerCase(Locale.ENGLISH);
 	}
 	
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		if (type != null && !type.isEmpty() && !type.equals("action")) {
-			builder.append("[");
-			builder.append(type);
-			builder.append("] ");
-		}
-		builder.append(name);
-		return builder.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder builder = new StringBuilder();
+//		if (type != null && !type.isEmpty() && !type.equals("action")) {
+//			builder.append("[");
+//			builder.append(type);
+//			builder.append("] ");
+//		}
+//		builder.append(name);
+//		return builder.toString();
+//	}
 }

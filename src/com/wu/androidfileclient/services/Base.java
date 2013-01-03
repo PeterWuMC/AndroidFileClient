@@ -35,9 +35,9 @@ public abstract class Base {
 		StringBuffer sb = new StringBuffer();
 		sb.append(BASE_URL);
 		sb.append(getObjectUrl());
-		if (!getObjectUrl().isEmpty()) sb.append(SLASH);
-		sb.append(key);
 		if (!key.isEmpty()) sb.append(SLASH);
+		sb.append(key);
+		if (!getAction().isEmpty()) sb.append(SLASH);
 		sb.append(getAction());
 		sb.append(getFormat());
 		sb.append(getCredentialParameters());

@@ -9,6 +9,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -28,11 +29,17 @@ public class HttpRetriever {
 	}
 	
 	public int startGETConnection() {
-		request = new HttpGet(url);	
-		
+		request = new HttpGet(url);
+
 		return startConnection();
 	}
-	
+
+	public int startDELETEConnection() {
+		request = new HttpDelete(url);
+
+		return startConnection();
+	}
+
 	public int startPOSTConnection(List<NameValuePair> parameters) {
 		HttpPost request = new HttpPost(url); 
 		try {

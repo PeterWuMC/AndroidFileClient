@@ -15,14 +15,17 @@ import android.widget.ListView;
 
 import com.wu.androidfileclient.async.PerformFileDownloadTask;
 import com.wu.androidfileclient.async.PerformFileListSearchTask;
+import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<FileItem> filesList      = new ArrayList<FileItem>();
-	private FileItem goBack                    = new FileItem();
+	private ArrayList<ListItem> objectsList   = new ArrayList<ListItem>();
+	private ActionItem goBack                  = new ActionItem();
 	private HashMap<String, String> credential = new HashMap<String, String>();
 
 	private FileItemsListAdapter filesAdapter;
@@ -35,15 +38,14 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
 		goBack.name  = "Back";
-		goBack.type  = "action";
 		currentKey   = "initial";
 		previousKeys = new HashMap<String, String>();
 		credential   = Utilities.getCredential(this);
 
-        if (filesList == null) filesList = new ArrayList<FileItem>();
-        if (filesList.isEmpty()) loadFilesList("initial");
+        if (objectsList == null) objectsList = new ArrayList<ListItem>();
+        if (objectsList.isEmpty()) loadFilesList("initial");
 
-    	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, filesList);
+    	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, objectsList);
     	setListAdapter(filesAdapter);
 
     	registerForContextMenu(getListView());
@@ -76,11 +78,12 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        FileItem file = filesAdapter.getItem(position);
-        if (file.type.equals("folder") || file.type.equals("action")) {
-        	loadFilesList(file.key);
+        ListItem object = filesAdapter.getItem(position);
+        if (object instanceof FolderItem || object instanceof ActionItem) {
+        	loadFilesList(object.key);
         } else {
-        	downloadFile(file);
+        	FileItem fileItem = (FileItem) object;
+        	downloadFile(fileItem);
         }
     }
 
@@ -110,13 +113,13 @@ public class MainActivity extends ListActivity {
 		task.execute(key);
     }
     
-    public void updateFilesList(ArrayList<FileItem> result) {
+    public void updateFilesList(ArrayList<ListItem> result) {
     	if (result != null) {
-			filesList.clear();
+			objectsList.clear();
 			for (int i = 0; i < result.size(); i++) {
-				filesList.add(result.get(i));
+				objectsList.add(result.get(i));
 			}
-			if (!currentKey.equals(goBack.key)) filesList.add(0, goBack);
+			if (!currentKey.equals(goBack.key)) objectsList.add(0, goBack);
 	        filesAdapter.notifyDataSetChanged();
 		}
     }

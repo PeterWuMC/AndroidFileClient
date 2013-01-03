@@ -10,11 +10,11 @@ import android.os.AsyncTask;
 
 import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
-import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.services.FileLister;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList<FileItem>> {
+public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList<ListItem>> {
     private MainActivity context;
 	private ProgressDialog progressDialog;
 	private FileLister fileLister;
@@ -34,7 +34,7 @@ public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList
     }
 
 	@Override
-	protected ArrayList<FileItem> doInBackground(String... params) {
+	protected ArrayList<ListItem> doInBackground(String... params) {
 		String key = params[0];
         fileLister = new FileLister(credential.get("user_name"), credential.get("device_code"));
         
@@ -56,7 +56,7 @@ public class PerformFileListSearchTask extends AsyncTask<String, Void, ArrayList
 	}
 
 	@Override
-	protected void onPostExecute(final ArrayList<FileItem> result) {
+	protected void onPostExecute(final ArrayList<ListItem> result) {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 			progressDialog = null;

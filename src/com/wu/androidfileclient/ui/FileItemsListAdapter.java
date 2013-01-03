@@ -12,16 +12,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wu.androidfileclient.R;
+import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.FolderItem;
 
-public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
-	private ArrayList<FileItem> fileItems;
+public class FileItemsListAdapter extends ArrayAdapter<ListItem> {
+	private ArrayList<ListItem> objectsList;
 	private Activity context;
 
-	public FileItemsListAdapter(Activity context, int textViewResourceId, ArrayList<FileItem> fileItems) {
-		super(context, textViewResourceId, fileItems);
-		this.context = context;
-		this.fileItems = fileItems;
+	public FileItemsListAdapter(Activity context, int textViewResourceId, ArrayList<ListItem> objectsList) {
+		super(context, textViewResourceId, objectsList);
+		this.context     = context;
+		this.objectsList = objectsList;
 	}
 
 	@Override
@@ -31,16 +34,17 @@ public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = vi.inflate(R.layout.file_list_row, null);
 		}
-		FileItem fileItem = fileItems.get(position);
+		ListItem object = objectsList.get(position);
 
-		if (fileItem != null) {
+		if (object != null) {
 			int icon = 0;
-			if (fileItem.type.equals("action") && fileItem.name.equalsIgnoreCase("back")) {
+			if (object instanceof ActionItem && object.name.equalsIgnoreCase("back")) {
 				icon = android.R.drawable.ic_menu_revert;
-			} else if (fileItem.type.equals("folder")) {
+			} else if (object instanceof FolderItem) {
 				icon = android.R.drawable.ic_menu_more;
 			}
-			else if (fileItem.type.equals("file")) {
+			else if (object instanceof FileItem) {
+				FileItem fileItem = (FileItem) object;
 				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
 				if (icon == 0) icon = context.getResources().getIdentifier("unknown", "drawable",  context.getPackageName()); 
 			}
@@ -48,7 +52,7 @@ public class FileItemsListAdapter extends ArrayAdapter<FileItem> {
 			typeImage.setImageResource(icon);
 
 			TextView nameTextView = (TextView) view.findViewById(R.id.name);
-			nameTextView.setText(fileItem.name);
+			nameTextView.setText(object.name);
 		}
 
 		return view;
