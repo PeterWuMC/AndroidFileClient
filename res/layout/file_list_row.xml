@@ -19,11 +19,41 @@
         <TextView
             android:id="@+id/name"
             android:layout_width="fill_parent"
-            android:layout_height="0dip"
+            android:layout_height="fill_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="" />
-            
+
+    	<LinearLayout
+    	    android:id="@+id/additional_info"
+    	    android:visibility="invisible"
+        	android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2" >
+
+	        <TextView
+	            android:id="@+id/size"
+	            android:layout_height="fill_parent"
+	            android:layout_width="fill_parent"
+	            android:layout_weight="1"
+	            android:gravity="right"
+	            android:text="Size: "
+	            android:textSize="8sp"
+	            android:textColor="#B0B0B0" />
+	            />
+
+	        <TextView
+	            android:id="@+id/last_modified"
+	            android:layout_height="fill_parent"
+	            android:layout_width="fill_parent"
+	            android:layout_weight="1"
+	            android:gravity="right"
+	            android:text="Last Modified: "
+	            android:textSize="8sp"
+	            android:textColor="#B0B0B0" />
+	            />
+		</LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

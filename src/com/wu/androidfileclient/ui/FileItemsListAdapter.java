@@ -13,9 +13,9 @@ import android.widget.TextView;
 
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.models.ActionItem;
-import com.wu.androidfileclient.models.ListItem;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
+import com.wu.androidfileclient.models.ListItem;
 
 public class FileItemsListAdapter extends ArrayAdapter<ListItem> {
 	private ArrayList<ListItem> objectsList;
@@ -34,7 +34,8 @@ public class FileItemsListAdapter extends ArrayAdapter<ListItem> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = vi.inflate(R.layout.file_list_row, null);
 		}
-		ListItem listItem = objectsList.get(position);
+		ListItem listItem           = objectsList.get(position);
+		View additionalInfo         = view.findViewById(R.id.additional_info);
 
 		if (listItem != null) {
 			int icon = 0;
@@ -44,6 +45,7 @@ public class FileItemsListAdapter extends ArrayAdapter<ListItem> {
 				icon = R.drawable.folder;
 			}
 			else if (listItem instanceof FileItem) {
+				additionalInfo.setVisibility(View.VISIBLE);
 				FileItem fileItem = (FileItem) listItem;
 				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
 				if (icon == 0) icon = R.drawable.unknown; 
