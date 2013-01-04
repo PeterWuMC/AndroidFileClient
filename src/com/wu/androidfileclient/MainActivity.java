@@ -14,7 +14,8 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import com.wu.androidfileclient.async.PerformFileDownloadAsyncTask;
+import com.wu.androidfileclient.async.PerformDeleteFileAsyncTask;
+import com.wu.androidfileclient.async.PerformDownloadFileAsyncTask;
 import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.Credential;
@@ -26,26 +27,27 @@ import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<ListItem> objectsList    = new ArrayList<ListItem>();
-	private ActionItem goBack                  = new ActionItem();
-	private Credential credential              = new Credential();
+	private ArrayList<ListItem> objectsList                 = new ArrayList<ListItem>();
+	private ActionItem goBack                               = new ActionItem();
+	private Credential credential                           = new Credential();
+	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
+	private FolderItem currentFolder                        = new FolderItem();
 
 	private FileItemsListAdapter filesAdapter;
-	private HashMap<String, String> previousKeys;
-	private String currentKey;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		goBack.name  = "Back";
-		currentKey   = "initial";
-		previousKeys = new HashMap<String, String>();
-		credential   = Utilities.getCredential(this);
+		credential        = Utilities.getCredential(this);
+		goBack.name       = "Back";
+		currentFolder.key = "initial";
+
+		previousFolders.put(currentFolder, currentFolder);
 
         if (objectsList == null) objectsList = new ArrayList<ListItem>();
-        if (objectsList.isEmpty()) loadList("initial");
+        if (objectsList.isEmpty()) loadList(currentFolder);
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, objectsList);
     	setListAdapter(filesAdapter);
@@ -60,6 +62,27 @@ public class MainActivity extends ListActivity {
 	    if (!(objectsList.get(info.position) instanceof ActionItem))
 	    	inflater.inflate(R.menu.activity_main_context, menu);
 	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		ListItem listItem = objectsList.get(info.position);
+		if (listItem instanceof FileItem) {
+			FileItem fileItem = (FileItem) listItem;
+	
+			switch (item.getItemId()) {
+			case R.id.open:
+				downloadFile(fileItem);
+				break;
+			case R.id.delete:
+	    		deleteFile(fileItem);
+		    	break;
+	        default:
+	            return super.onOptionsItemSelected(item);
+			}
+		}
+		return true;
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,30 +95,32 @@ public class MainActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
         case R.id.refresh:
-        	loadList(currentKey);
-        	return true;
+        	refreshList();
+        	break;
         default:
             return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ListItem object = filesAdapter.getItem(position);
-        if (object instanceof FolderItem || object instanceof ActionItem) {
-        	loadList(object.key);
+        ListItem listItem = filesAdapter.getItem(position);
+        if (listItem instanceof FolderItem) {
+        	loadList((FolderItem) listItem);
+        } else if (listItem instanceof ActionItem) {
+        	loadList(((ActionItem) listItem).folderItem);
         } else {
-        	FileItem fileItem = (FileItem) object;
-        	downloadFile(fileItem);
+        	downloadFile((FileItem) listItem);
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-        	if (!currentKey.equals(goBack.key)) {
-        		loadList(goBack.key);
+        	if (!currentFolder.key.equals(goBack.key)) {
+        		loadList(goBack.folderItem);
         		return true;
         	}
         }
@@ -103,18 +128,28 @@ public class MainActivity extends ListActivity {
     }
 
 	public void downloadFile(FileItem file) {
-		PerformFileDownloadAsyncTask task = new PerformFileDownloadAsyncTask(this, credential);
+		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(this, credential);
 		task.execute(file);
 	}
 
-    public void loadList(String key) {
-    	if (!previousKeys.containsKey(key)) previousKeys.put(key, currentKey);
-    	currentKey = key;
+//	TODO: currently only allow to delete file
+	public void deleteFile(FileItem file) {
+		PerformDeleteFileAsyncTask task = new PerformDeleteFileAsyncTask(this, credential);
+		task.execute(file);
+	}
 
-    	goBack.key = previousKeys.get(currentKey);
+	public void refreshList() {
+		loadList(currentFolder);
+	}
+
+    public void loadList(FolderItem folderItem) {
+    	if (!previousFolders.containsKey(folderItem)) previousFolders.put(folderItem, currentFolder);
+    	currentFolder = folderItem;
+
+    	goBack.folderItem = previousFolders.get(currentFolder);
 
     	PerformUpdateListAsyncTask task = new PerformUpdateListAsyncTask(this, credential);
-		task.execute(key);
+		task.execute(currentFolder.key);
     }
     
     public void updateList(ArrayList<ListItem> result) {
@@ -123,7 +158,7 @@ public class MainActivity extends ListActivity {
 			for (int i = 0; i < result.size(); i++) {
 				objectsList.add(result.get(i));
 			}
-			if (!currentKey.equals(goBack.key)) objectsList.add(0, goBack);
+			if (currentFolder != goBack.folderItem) objectsList.add(0, goBack);
 	        filesAdapter.notifyDataSetChanged();
 		}
     }

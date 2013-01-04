@@ -34,25 +34,25 @@ public class FileItemsListAdapter extends ArrayAdapter<ListItem> {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = vi.inflate(R.layout.file_list_row, null);
 		}
-		ListItem object = objectsList.get(position);
+		ListItem listItem = objectsList.get(position);
 
-		if (object != null) {
+		if (listItem != null) {
 			int icon = 0;
-			if (object instanceof ActionItem && object.name.equalsIgnoreCase("back")) {
+			if (listItem instanceof ActionItem && listItem.name.equalsIgnoreCase("back")) {
 				icon = android.R.drawable.ic_menu_revert;
-			} else if (object instanceof FolderItem) {
-				icon = android.R.drawable.ic_menu_more;
+			} else if (listItem instanceof FolderItem) {
+				icon = R.drawable.folder;
 			}
-			else if (object instanceof FileItem) {
-				FileItem fileItem = (FileItem) object;
+			else if (listItem instanceof FileItem) {
+				FileItem fileItem = (FileItem) listItem;
 				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
-				if (icon == 0) icon = context.getResources().getIdentifier("unknown", "drawable",  context.getPackageName()); 
+				if (icon == 0) icon = R.drawable.unknown; 
 			}
 			ImageView typeImage = (ImageView) view.findViewById(R.id.icon);
 			typeImage.setImageResource(icon);
 
 			TextView nameTextView = (TextView) view.findViewById(R.id.name);
-			nameTextView.setText(object.name);
+			nameTextView.setText(listItem.name);
 		}
 
 		return view;

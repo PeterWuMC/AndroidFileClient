@@ -23,9 +23,9 @@ public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayLis
 	
 	public PerformUpdateListAsyncTask(MainActivity context, Credential credential) {
 		super();
-		this.context = context;
+		this.context    = context;
 		this.credential = credential;
-		progressDialog = ProgressDialogHandler.createProgressDialog(context, ProgressDialogHandler.RETRIEVING_DATA);
+		progressDialog  = ProgressDialogHandler.createProgressDialog(context, ProgressDialogHandler.RETRIEVING_DATA);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
 
 		progressDialog.show();

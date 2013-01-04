@@ -26,12 +26,12 @@ import com.wu.androidfileclient.utils.HttpRetriever;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformFileDownloadAsyncTask extends AsyncTask<FileItem, String, FileItem> {
+public class PerformDownloadFileAsyncTask extends AsyncTask<FileItem, String, FileItem> {
     private Context context;
 	ProgressDialog progressDialog;
 	private Credential credential;
 	
-	public PerformFileDownloadAsyncTask(Context context, Credential credential) {
+	public PerformDownloadFileAsyncTask(Context context, Credential credential) {
 		super();
 		this.context = context;
 		this.credential = credential;

@@ -8,6 +8,7 @@
     <string name="login">Login</string>
     
     <string name="download">Download</string>
+    <string name="open">Open</string>
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>
     <string name="upload">Upload</string>
