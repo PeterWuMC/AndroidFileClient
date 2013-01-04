@@ -1,8 +1,10 @@
 package com.wu.androidfileclient.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -53,5 +55,18 @@ public final class Utilities {
 	    int exp = (int) (Math.log(bytes) / Math.log(unit));
 	    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
 	    return String.format(Locale.ENGLISH, "%.1f %sB", bytes / Math.pow(unit, exp), pre);
+	}
+	
+	public final static String humanReadableDatesDifferemce(Date originalDate, Date targetDate) {
+		long seconds = Math.abs(targetDate.getTime() - originalDate.getTime()) / 1000;
+
+		if (TimeUnit.SECONDS.toDays(seconds) > 365)       return "> 1 year old";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 182)  return "> 6 months old";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 30)   return "> 1 month old";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 0)    return (int) TimeUnit.SECONDS.toDays(seconds) + " days old";
+		else if (TimeUnit.SECONDS.toHours(seconds) > 0)   return (int) TimeUnit.SECONDS.toHours(seconds) + " hours old";
+		else if (TimeUnit.SECONDS.toMinutes(seconds) > 0) return (int) TimeUnit.SECONDS.toMinutes(seconds) + " minutes old";
+		
+		return "< 1 minute old";
 	}
 }

@@ -1,6 +1,7 @@
 package com.wu.androidfileclient.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,9 +14,9 @@ import android.widget.TextView;
 
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
@@ -37,9 +38,14 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 		}
 		BaseListItem listItem       = objectsList.get(position);
 		View additionalInfo         = view.findViewById(R.id.additional_info);
+		TextView sizeView           = (TextView) additionalInfo.findViewById(R.id.size);
+		TextView lastModifiedView   = (TextView) additionalInfo.findViewById(R.id.last_modified);
 
 		if (listItem != null) {
 			int icon = 0;
+			additionalInfo.setVisibility(View.INVISIBLE);
+			sizeView.setText("");
+			lastModifiedView.setText("");
 			if (listItem instanceof ActionItem && listItem.name.equalsIgnoreCase("back")) {
 				icon = android.R.drawable.ic_menu_revert;
 			} else if (listItem instanceof FolderItem) {
@@ -49,8 +55,10 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 				additionalInfo.setVisibility(View.VISIBLE);
 				FileItem fileItem = (FileItem) listItem;
 				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
-				TextView sizeView = (TextView) additionalInfo.findViewById(R.id.size);
+
 				sizeView.setText("Size: " + Utilities.humanReadableByteCount(fileItem.size, true));
+				lastModifiedView.setText("Last Modified: " + Utilities.humanReadableDatesDifferemce(fileItem.last_modified, new Date()));
+
 				if (icon == 0) icon = R.drawable.unknown; 
 			}
 			ImageView typeImage = (ImageView) view.findViewById(R.id.icon);
