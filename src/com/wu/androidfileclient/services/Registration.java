@@ -59,7 +59,7 @@ public class Registration extends Base {
 				JSONObject json = new JSONObject(response);
 				
 				new_credential.setUserName(credential.getUserName());
-				new_credential.setDeviceCode(json.getString("key"));
+				new_credential.setDeviceCode(json.getString(Credential.DEVICE_CODE_KEY));
 				return new_credential;
 			}
 		} catch (JSONException e) {
