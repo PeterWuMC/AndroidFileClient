@@ -119,7 +119,7 @@ public class MainActivity extends ListActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-        	if (!currentFolder.key.equals(goBack.key)) {
+        	if (currentFolder != goBack.folderItem) {
         		loadList(goBack.folderItem);
         		return true;
         	}

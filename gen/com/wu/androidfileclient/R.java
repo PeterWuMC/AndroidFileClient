@@ -60,11 +60,11 @@ public final class R {
         public static final int android_user_name=0x7f070000;
         public static final int android_user_password=0x7f070002;
         public static final int delete=0x7f07000c;
-        public static final int download=0x7f07000a;
+        public static final int download=0x7f07000b;
         public static final int icon=0x7f070005;
         public static final int login=0x7f070004;
         public static final int name=0x7f070006;
-        public static final int open=0x7f07000b;
+        public static final int open=0x7f07000a;
         public static final int password=0x7f070003;
         public static final int refresh=0x7f070007;
         public static final int upload=0x7f070008;
