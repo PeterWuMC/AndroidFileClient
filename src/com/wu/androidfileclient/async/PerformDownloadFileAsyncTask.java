@@ -54,7 +54,7 @@ public class PerformDownloadFileAsyncTask extends AsyncTask<FileItem, String, Fi
 		
 		FileItem fileItem   = params[0];
 		String url          = new FileDownloader(credential).constructUrl(fileItem.key);
-		fileItem.localPath  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/";
+		fileItem.localPath  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/" + fileItem.path + "/";
 
 		HttpRetriever httpRetreiever = new HttpRetriever(url);
 		int statusCode = httpRetreiever.startGETConnection();
@@ -69,7 +69,7 @@ public class PerformDownloadFileAsyncTask extends AsyncTask<FileItem, String, Fi
     			byte data[] = new byte[1024];
                 long total  = 0;
 
-    			if (!folder.exists()) folder.mkdir();
+    			if (!folder.exists()) folder.mkdirs();
 
     			lenghtOfFile = (Long) httpRetreiever.retrieveContentSize();
     			outputStream = new BufferedOutputStream(new FileOutputStream(fileItem.localPath + fileItem.name));

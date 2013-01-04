@@ -60,12 +60,12 @@ public final class Utilities {
 	public final static String humanReadableDatesDifferemce(Date originalDate, Date targetDate) {
 		long seconds = Math.abs(targetDate.getTime() - originalDate.getTime()) / 1000;
 
-		if (TimeUnit.SECONDS.toDays(seconds) > 365)       return "> 1 year old";
-		else if (TimeUnit.SECONDS.toDays(seconds) > 182)  return "> 6 months old";
-		else if (TimeUnit.SECONDS.toDays(seconds) > 30)   return "> 1 month old";
-		else if (TimeUnit.SECONDS.toDays(seconds) > 0)    return (int) TimeUnit.SECONDS.toDays(seconds) + " days old";
-		else if (TimeUnit.SECONDS.toHours(seconds) > 0)   return (int) TimeUnit.SECONDS.toHours(seconds) + " hours old";
-		else if (TimeUnit.SECONDS.toMinutes(seconds) > 0) return (int) TimeUnit.SECONDS.toMinutes(seconds) + " minutes old";
+		if (TimeUnit.SECONDS.toDays(seconds) > 365)       return "1 year ago";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 182)  return "6 months ago";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 30)   return "1 month ago";
+		else if (TimeUnit.SECONDS.toDays(seconds) > 0)    return (int) TimeUnit.SECONDS.toDays(seconds) + " days ago";
+		else if (TimeUnit.SECONDS.toHours(seconds) > 0)   return (int) TimeUnit.SECONDS.toHours(seconds) + " hours ago";
+		else if (TimeUnit.SECONDS.toMinutes(seconds) > 0) return (int) TimeUnit.SECONDS.toMinutes(seconds) + " minutes ago";
 		
 		return "< 1 minute old";
 	}

@@ -57,7 +57,7 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
 
 				sizeView.setText("Size: " + Utilities.humanReadableByteCount(fileItem.size, true));
-				lastModifiedView.setText("Last Modified: " + Utilities.humanReadableDatesDifferemce(fileItem.last_modified, new Date()));
+				lastModifiedView.setText("Modified: " + Utilities.humanReadableDatesDifferemce(fileItem.last_modified, new Date()));
 
 				if (icon == 0) icon = R.drawable.unknown; 
 			}
