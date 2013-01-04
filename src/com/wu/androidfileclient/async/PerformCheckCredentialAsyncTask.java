@@ -7,12 +7,12 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformCheckCredential extends AsyncTask<Void, Void, Boolean>{
+public class PerformCheckCredentialAsyncTask extends AsyncTask<Void, Void, Boolean>{
 	private LoginActivity context;
 	private Registration registration = new Registration();
 	private Credential credential;
 	
-	public PerformCheckCredential(LoginActivity context, Credential credential) {
+	public PerformCheckCredentialAsyncTask(LoginActivity context, Credential credential) {
 		super();
 		this.context    = context;
 		this.credential = credential;

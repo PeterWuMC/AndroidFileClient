@@ -9,12 +9,12 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformRegisterDevice extends AsyncTask<Void, Void, Credential>{
+public class PerformRegisterDeviceAsyncTask extends AsyncTask<Void, Void, Credential>{
 	private LoginActivity context;
 	private Registration registration = new Registration();
 	private Credential credential;
 	
-	public PerformRegisterDevice(LoginActivity context, Credential credential) {
+	public PerformRegisterDeviceAsyncTask(LoginActivity context, Credential credential) {
 		super();
 		this.context = context;
 		this.credential = credential;
@@ -33,7 +33,7 @@ public class PerformRegisterDevice extends AsyncTask<Void, Void, Credential>{
 	@Override
 	protected void onCancelled() {
 		Utilities.longToast(context, "Something wrong with your connection...");
-		context.cancelProgressDialog();
+		context.dismissProgressDialog();
 	}
 
 	@Override

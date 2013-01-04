@@ -10,10 +10,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.wu.androidfileclient.async.PerformCheckCredential;
-import com.wu.androidfileclient.async.PerformRegisterDevice;
+import com.wu.androidfileclient.async.PerformCheckCredentialAsyncTask;
+import com.wu.androidfileclient.async.PerformRegisterDeviceAsyncTask;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class LoginActivity extends Activity {
@@ -49,27 +50,15 @@ public class LoginActivity extends Activity {
     }
 
     public void checkCredential(Credential credential) {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("Please wait...");
-    	progressDialog.setMessage("Checking Credential...");
-    	progressDialog.setCancelable(true);
-
-		progressDialog.show();
-
-		PerformCheckCredential task = new PerformCheckCredential(this, credential);
+    	showProgressDialog(ProgressDialogHandler.CHECKING_CREDENTIAL);
+		PerformCheckCredentialAsyncTask task = new PerformCheckCredentialAsyncTask(this, credential);
 		task.execute();
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
     }
 
     public void registerDevice(Credential credential) {
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setTitle("Please wait...");
-    	progressDialog.setMessage("Logging in...");
-    	progressDialog.setCancelable(true);
-
-		progressDialog.show();
-
-		PerformRegisterDevice task = new PerformRegisterDevice(this, credential);
+    	showProgressDialog(ProgressDialogHandler.LOGGING_IN);
+		PerformRegisterDeviceAsyncTask task = new PerformRegisterDeviceAsyncTask(this, credential);
 		task.execute();
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
     }
@@ -83,18 +72,20 @@ public class LoginActivity extends Activity {
     	else {
     		Utilities.longToast(this, "Credential not recognised, please login again");
     	}
-		cancelProgressDialog();
+		dismissProgressDialog();
     }
     
     public void saveCredential(Credential credential) {
     	Utilities.saveCredential(this, credential);
-    	cancelProgressDialog();
+    	dismissProgressDialog();
     }
     
-    public void cancelProgressDialog() {
-    	if (progressDialog != null) {
-			progressDialog.dismiss();
-			progressDialog = null;
-		}
+    public void showProgressDialog(int type) {
+		progressDialog = ProgressDialogHandler.createProgressDialog(this, type);
+    	if (progressDialog != null) progressDialog.show();
+    }
+    
+    public void dismissProgressDialog() {
+		ProgressDialogHandler.dismissProgressDialog(progressDialog);
     }
 }

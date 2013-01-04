@@ -14,8 +14,8 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
-import com.wu.androidfileclient.async.PerformFileDownloadTask;
-import com.wu.androidfileclient.async.PerformFileListSearchTask;
+import com.wu.androidfileclient.async.PerformFileDownloadAsyncTask;
+import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
@@ -45,7 +45,7 @@ public class MainActivity extends ListActivity {
 		credential   = Utilities.getCredential(this);
 
         if (objectsList == null) objectsList = new ArrayList<ListItem>();
-        if (objectsList.isEmpty()) loadFilesList("initial");
+        if (objectsList.isEmpty()) loadList("initial");
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, objectsList);
     	setListAdapter(filesAdapter);
@@ -72,7 +72,7 @@ public class MainActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
         case R.id.refresh:
-        	loadFilesList(currentKey);
+        	loadList(currentKey);
         	return true;
         default:
             return super.onOptionsItemSelected(item);
@@ -84,7 +84,7 @@ public class MainActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
         ListItem object = filesAdapter.getItem(position);
         if (object instanceof FolderItem || object instanceof ActionItem) {
-        	loadFilesList(object.key);
+        	loadList(object.key);
         } else {
         	FileItem fileItem = (FileItem) object;
         	downloadFile(fileItem);
@@ -95,7 +95,7 @@ public class MainActivity extends ListActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
         	if (!currentKey.equals(goBack.key)) {
-        		loadFilesList(goBack.key);
+        		loadList(goBack.key);
         		return true;
         	}
         }
@@ -103,21 +103,21 @@ public class MainActivity extends ListActivity {
     }
 
 	public void downloadFile(FileItem file) {
-		PerformFileDownloadTask task = new PerformFileDownloadTask(this, credential);
+		PerformFileDownloadAsyncTask task = new PerformFileDownloadAsyncTask(this, credential);
 		task.execute(file);
 	}
 
-    public void loadFilesList(String key) {
+    public void loadList(String key) {
     	if (!previousKeys.containsKey(key)) previousKeys.put(key, currentKey);
     	currentKey = key;
 
     	goBack.key = previousKeys.get(currentKey);
 
-    	PerformFileListSearchTask task = new PerformFileListSearchTask(this, credential);
+    	PerformUpdateListAsyncTask task = new PerformUpdateListAsyncTask(this, credential);
 		task.execute(key);
     }
     
-    public void updateFilesList(ArrayList<ListItem> result) {
+    public void updateList(ArrayList<ListItem> result) {
     	if (result != null) {
 			objectsList.clear();
 			for (int i = 0; i < result.size(); i++) {

@@ -23,23 +23,19 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.utils.HttpRetriever;
+import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileItem> {
+public class PerformFileDownloadAsyncTask extends AsyncTask<FileItem, String, FileItem> {
     private Context context;
 	ProgressDialog progressDialog;
 	private Credential credential;
 	
-	public PerformFileDownloadTask(Context context, Credential credential) {
+	public PerformFileDownloadAsyncTask(Context context, Credential credential) {
 		super();
 		this.context = context;
 		this.credential = credential;
-		progressDialog = new ProgressDialog(context);
-    	progressDialog.setMessage("Downloading file. Please wait...");
-    	progressDialog.setIndeterminate(false);
-    	progressDialog.setMax(100);
-    	progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-    	progressDialog.setCancelable(true);
+		progressDialog = ProgressDialogHandler.createProgressDialog(context, ProgressDialogHandler.DOWNLOADING_FILE);
     	
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
 	}
@@ -110,23 +106,20 @@ public class PerformFileDownloadTask extends AsyncTask<FileItem, String, FileIte
 
 	@Override
 	protected void onCancelled() {
-		if (progressDialog.isShowing()) progressDialog.dismiss();
+		ProgressDialogHandler.dismissProgressDialog(progressDialog);
 		Utilities.longToast(context, "Something wrong with your connection...");
 	}
 
 	@Override
 	protected void onPostExecute(FileItem fileItem) {
-		MimeTypeMap myMime = MimeTypeMap.getSingleton();
-
-		progressDialog.dismiss();
+		ProgressDialogHandler.dismissProgressDialog(progressDialog);
 
 		Intent fileViewIntent = new Intent();
 		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
 		if (fileItem != null && !fileItem.localPath.isEmpty()) {
-    		File file       = new File(fileItem.localPath + fileItem.name);
-    		String mimeType = myMime.getMimeTypeFromExtension(fileItem.ext());
+    		File file = new File(fileItem.localPath + fileItem.name);
 
-    		fileViewIntent.setDataAndType(Uri.fromFile(file), mimeType);
+    		fileViewIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileItem.ext()));
     		try {
     			context.startActivity(fileViewIntent);
     		} catch (android.content.ActivityNotFoundException e) {
