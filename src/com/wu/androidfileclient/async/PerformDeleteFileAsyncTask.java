@@ -5,11 +5,11 @@ import android.os.AsyncTask;
 
 import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.models.ListItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.services.FileRemover;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 
-public class PerformDeleteFileAsyncTask extends AsyncTask<ListItem, Void, Boolean> {
+public class PerformDeleteFileAsyncTask extends AsyncTask<BaseListItem, Void, Boolean> {
     private MainActivity context;
 	private ProgressDialog progressDialog;
 	private Credential credential;
@@ -24,8 +24,8 @@ public class PerformDeleteFileAsyncTask extends AsyncTask<ListItem, Void, Boolea
     }
 
 	@Override
-	protected Boolean doInBackground(ListItem... params) {
-		ListItem listItem = params[0];
+	protected Boolean doInBackground(BaseListItem... params) {
+		BaseListItem listItem = params[0];
         FileRemover fileRemover = new FileRemover(credential);
 
     	return fileRemover.delete(listItem.key);

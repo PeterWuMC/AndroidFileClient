@@ -11,7 +11,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.models.ListItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpRetriever;
@@ -39,11 +39,11 @@ public class FileLister extends Base {
 		return FORMAT;
 	}
 
-	public ArrayList<ListItem> retrieveFilesList(String key) throws HttpException {
-		ArrayList<ListItem> fileArray = new ArrayList<ListItem>();
-		String url                     = constructUrl(key);
-		httpRetriever 	               = new HttpRetriever(url);
-		int statusCode                 = httpRetriever.startGETConnection();
+	public ArrayList<BaseListItem> retrieveFilesList(String key) throws HttpException {
+		ArrayList<BaseListItem> fileArray = new ArrayList<BaseListItem>();
+		String url                        = constructUrl(key);
+		httpRetriever 	                  = new HttpRetriever(url);
+		int statusCode                    = httpRetriever.startGETConnection();
 		
 		if (statusCode != HttpStatus.SC_OK) throw new HttpException(""+statusCode);
 		
@@ -54,12 +54,13 @@ public class FileLister extends Base {
 				JSONArray files = new JSONArray(response);
 				for (int i = 0; i < files.length(); ++i) {
 	                JSONObject rec = files.getJSONObject(i);
-	                ListItem object = rec.getString("type").equalsIgnoreCase("file") ? new FileItem() : new FolderItem();
+	                BaseListItem listItem = rec.getString("type").equalsIgnoreCase("file") ? new FileItem() : new FolderItem();
 	                
-	                object.name = rec.getString("name");
-	                object.path = rec.getString("path");
-	                object.key  = rec.getString("key");
-	                fileArray.add(object);
+	                listItem.name = rec.getString("name");
+	                listItem.path = rec.getString("path");
+	                listItem.key  = rec.getString("key");
+	                if (listItem instanceof FileItem) ((FileItem) listItem).size = rec.getLong("size");
+	                fileArray.add(listItem);
 				}
 				return fileArray;
 			}

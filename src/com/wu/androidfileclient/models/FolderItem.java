@@ -1,7 +1,7 @@
 package com.wu.androidfileclient.models;
 
 
-public class FolderItem extends ListItem {
+public class FolderItem extends BaseListItem {
 
 	private static final long serialVersionUID = -4161962540130906285L;
 

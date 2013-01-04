@@ -21,13 +21,13 @@ import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.models.ListItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<ListItem> objectsList                 = new ArrayList<ListItem>();
+	private ArrayList<BaseListItem> objectsList                 = new ArrayList<BaseListItem>();
 	private ActionItem goBack                               = new ActionItem();
 	private Credential credential                           = new Credential();
 	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
@@ -46,7 +46,7 @@ public class MainActivity extends ListActivity {
 
 		previousFolders.put(currentFolder, currentFolder);
 
-        if (objectsList == null) objectsList = new ArrayList<ListItem>();
+        if (objectsList == null) objectsList = new ArrayList<BaseListItem>();
         if (objectsList.isEmpty()) loadList(currentFolder);
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, objectsList);
@@ -66,7 +66,7 @@ public class MainActivity extends ListActivity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		ListItem listItem = objectsList.get(info.position);
+		BaseListItem listItem = objectsList.get(info.position);
 		if (listItem instanceof FileItem) {
 			FileItem fileItem = (FileItem) listItem;
 	
@@ -106,7 +106,7 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        ListItem listItem = filesAdapter.getItem(position);
+        BaseListItem listItem = filesAdapter.getItem(position);
         if (listItem instanceof FolderItem) {
         	loadList((FolderItem) listItem);
         } else if (listItem instanceof ActionItem) {
@@ -152,7 +152,7 @@ public class MainActivity extends ListActivity {
 		task.execute(currentFolder.key);
     }
     
-    public void updateList(ArrayList<ListItem> result) {
+    public void updateList(ArrayList<BaseListItem> result) {
     	if (result != null) {
 			objectsList.clear();
 			for (int i = 0; i < result.size(); i++) {

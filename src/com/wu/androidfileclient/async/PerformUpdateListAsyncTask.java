@@ -10,12 +10,12 @@ import android.os.AsyncTask;
 import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.models.ListItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.services.FileLister;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayList<ListItem>> {
+public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayList<BaseListItem>> {
     private MainActivity context;
 	private ProgressDialog progressDialog;
 	private FileLister fileLister;
@@ -32,7 +32,7 @@ public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayLis
     }
 
 	@Override
-	protected ArrayList<ListItem> doInBackground(String... params) {
+	protected ArrayList<BaseListItem> doInBackground(String... params) {
 		String key = params[0];
         fileLister = new FileLister(credential);
         
@@ -51,7 +51,7 @@ public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayLis
 	}
 
 	@Override
-	protected void onPostExecute(final ArrayList<ListItem> result) {
+	protected void onPostExecute(final ArrayList<BaseListItem> result) {
 		ProgressDialogHandler.dismissProgressDialog(progressDialog);
 		context.updateList(result);
 	}

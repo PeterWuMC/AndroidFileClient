@@ -4,11 +4,11 @@ import java.util.Locale;
 
 import android.webkit.MimeTypeMap;
 
-public class FileItem extends ListItem {
+public class FileItem extends BaseListItem {
 
 	private static final long serialVersionUID = -3056032740471401976L;
+	public long size;
 
-//	public String type;
 //	private String content;
 //
 //	public String getContent() {
