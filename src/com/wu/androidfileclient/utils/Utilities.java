@@ -67,6 +67,6 @@ public final class Utilities {
 		else if (TimeUnit.SECONDS.toHours(seconds) > 0)   return (int) TimeUnit.SECONDS.toHours(seconds) + " hours ago";
 		else if (TimeUnit.SECONDS.toMinutes(seconds) > 0) return (int) TimeUnit.SECONDS.toMinutes(seconds) + " minutes ago";
 		
-		return "< 1 minute old";
+		return "< a minute old";
 	}
 }
