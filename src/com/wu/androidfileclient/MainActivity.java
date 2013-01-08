@@ -15,13 +15,13 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.wu.androidfileclient.async.PerformDeleteFileAsyncTask;
-import com.wu.androidfileclient.async.PerformDownloadFileAsyncTask;
 import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.models.BaseListItem;
+import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
@@ -72,7 +72,8 @@ public class MainActivity extends ListActivity {
 	
 			switch (item.getItemId()) {
 			case R.id.open:
-				downloadFile(fileItem);
+				FileDownloader fileDownloader = new FileDownloader(credential);
+				fileDownloader.downloadWithProgressUpdate(this, fileItem);
 				break;
 			case R.id.delete:
 	    		deleteFile(fileItem);
@@ -112,7 +113,8 @@ public class MainActivity extends ListActivity {
         } else if (listItem instanceof ActionItem) {
         	loadList(((ActionItem) listItem).folderItem);
         } else {
-        	downloadFile((FileItem) listItem);
+			FileDownloader fileDownloader = new FileDownloader(credential);
+			fileDownloader.downloadWithProgressUpdate(this, (FileItem) listItem);
         }
     }
 
@@ -127,10 +129,10 @@ public class MainActivity extends ListActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-	public void downloadFile(FileItem file) {
-		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(this, credential);
-		task.execute(file);
-	}
+//	public void downloadFile(FileItem file) {
+//		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(this, credential);
+//		task.execute(file);
+//	}
 
 //	TODO: currently only allow to delete file
 	public void deleteFile(FileItem file) {

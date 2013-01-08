@@ -11,30 +11,8 @@ public class FileItem extends BaseListItem {
 	public long size;
 	public Date last_modified;
 
-//	private String content;
-//
-//	public String getContent() {
-//		return content;
-//	}
-//
-//	public void setContent(String content) {
-//		byte[] decodedContent = Base64.decode(content, Base64.DEFAULT);
-//		this.content = new String(decodedContent);
-//	}
-	
 	public String ext() {
 		return MimeTypeMap.getFileExtensionFromUrl(name).toLowerCase(Locale.ENGLISH);
 	}
-	
-//	@Override
-//	public String toString() {
-//		StringBuilder builder = new StringBuilder();
-//		if (type != null && !type.isEmpty() && !type.equals("action")) {
-//			builder.append("[");
-//			builder.append(type);
-//			builder.append("] ");
-//		}
-//		builder.append(name);
-//		return builder.toString();
-//	}
+
 }

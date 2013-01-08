@@ -1,7 +1,6 @@
 package com.wu.androidfileclient;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
@@ -18,7 +17,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class LoginActivity extends Activity {
-	private ProgressDialog progressDialog;
+	private ProgressDialogHandler progressDialog;
 	private EditText userNameBox;
 	private EditText passwordBox;
 	private Button   loginBtn;
@@ -81,11 +80,12 @@ public class LoginActivity extends Activity {
     }
     
     public void showProgressDialog(int type) {
-		progressDialog = ProgressDialogHandler.createProgressDialog(this, type);
+		progressDialog = new ProgressDialogHandler(this);
+		progressDialog.createProgressDialog(type);
     	if (progressDialog != null) progressDialog.show();
     }
     
     public void dismissProgressDialog() {
-		ProgressDialogHandler.dismissProgressDialog(progressDialog);
+    	if (progressDialog != null) progressDialog.dismiss();
     }
 }

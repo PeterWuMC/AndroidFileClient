@@ -1,7 +1,7 @@
 package com.wu.androidfileclient.services;
 
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.utils.HttpRetriever;
+import com.wu.androidfileclient.utils.HttpHandler;
 
 public abstract class Base {
 
@@ -16,7 +16,7 @@ public abstract class Base {
 	protected abstract String getFormat();
 	protected Credential credential;
 
-	protected HttpRetriever httpRetriever;
+	protected HttpHandler httpHandler;
 	
 	public Base(Credential credential) {
 		this.credential = credential;

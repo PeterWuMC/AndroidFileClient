@@ -1,6 +1,10 @@
 package com.wu.androidfileclient.services;
 
+import android.content.Context;
+
+import com.wu.androidfileclient.async.PerformDownloadFileAsyncTask;
 import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.models.FileItem;
 
 public class FileDownloader extends Base {
 
@@ -24,33 +28,9 @@ public class FileDownloader extends Base {
 	protected String getFormat() {
 		return FORMAT;
 	}
-	
-	public String constructUrl() {
-		return null;
-	}
 
-//	public FileItem retrieveFile(String key) throws HttpException {
-//		String url      = constructSearchUrl(key);
-//		httpRetriever 	= new HttpRetriever(url);
-//		int statusCode  = httpRetriever.startConnection();
-//
-//		if (statusCode != HttpStatus.SC_OK) throw new HttpException(""+statusCode);
-//		
-//		try {
-//			String response = httpRetriever.retrieveEntireResponse();
-//			FileItem file   = new FileItem();
-//			JSONObject obj  = new JSONObject(response);
-//
-//            file.path = obj.getString("path");
-//            file.key  = obj.getString("key");
-//            file.setContent(obj.getString("file_content"));
-//
-//			return file;
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//			return null;
-//		} finally {
-//			httpRetriever.closeConnect();
-//		}
-//	}
+	public void downloadWithProgressUpdate(Context context, FileItem file) {
+		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(context, constructUrl(file.key));
+		task.execute(file);
+	}
 }

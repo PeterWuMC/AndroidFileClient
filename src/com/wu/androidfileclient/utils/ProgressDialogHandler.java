@@ -3,52 +3,45 @@ package com.wu.androidfileclient.utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 
-public final class ProgressDialogHandler {
+public final class ProgressDialogHandler extends ProgressDialog {
 
     public static final int RETRIEVING_DATA     = 1;
     public static final int LOGGING_IN          = 2;
     public static final int CHECKING_CREDENTIAL = 3;
     public static final int DOWNLOADING_FILE    = 4;
     public static final int DELETING_FILE       = 5;
+    
+    public ProgressDialogHandler(Context context) {
+    	super(context);
+    }
 
-    public static final ProgressDialog createProgressDialog(Context context, int dialogType) {
-    	ProgressDialog progressDialog = new ProgressDialog(context);
-    	progressDialog.setTitle("Please wait...");
+    public void createProgressDialog(int dialogType) {
+    	setTitle("Please wait...");
 
     	switch (dialogType) {
     	case RETRIEVING_DATA:
-        	progressDialog.setMessage("Retrieving list...");
-        	progressDialog.setCancelable(true);
+        	setMessage("Retrieving list...");
+        	setCancelable(true);
     		break;
     	case LOGGING_IN:
-        	progressDialog.setMessage("Logging in...");
-        	progressDialog.setCancelable(true);
+        	setMessage("Logging in...");
+        	setCancelable(true);
     		break;
     	case CHECKING_CREDENTIAL:
-        	progressDialog.setMessage("Checking Credential...");
-        	progressDialog.setCancelable(true);
+        	setMessage("Checking Credential...");
+        	setCancelable(true);
     		break;
     	case DELETING_FILE:
-        	progressDialog.setMessage("Deleting...");
-        	progressDialog.setCancelable(false);
+        	setMessage("Deleting...");
+        	setCancelable(false);
         	break;
     	case DOWNLOADING_FILE:
-        	progressDialog.setMessage("Downloading file...");
-        	progressDialog.setIndeterminate(false);
-        	progressDialog.setMax(100);
-        	progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        	progressDialog.setCancelable(true);
+        	setMessage("Downloading file...");
+        	setIndeterminate(false);
+//        	setMax(100);
+        	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        	setCancelable(true);
     		break;
-    	default:
-    		return null;
     	}
-    	return progressDialog;
-    }
-    
-    public static final void dismissProgressDialog(ProgressDialog progressDialog) {
-    	if (progressDialog != null) {
-			progressDialog.dismiss();
-			progressDialog = null;
-		}
     }
 }

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.utils.HttpRetriever;
+import com.wu.androidfileclient.utils.HttpHandler;
 
 public class Registration extends Base {
 
@@ -39,7 +39,7 @@ public class Registration extends Base {
 	
 	public Credential register(Credential credential) throws HttpException{
 		String url                     = constructUrl("");
-		httpRetriever 	               = new HttpRetriever(url);
+		httpHandler 	               = new HttpHandler(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(4);
 		Credential new_credential      = new Credential();
 
@@ -48,12 +48,12 @@ public class Registration extends Base {
 		parameters.add(new BasicNameValuePair(Credential.DEVICE_NAME_KEY, credential.getDeviceName()));
 		parameters.add(new BasicNameValuePair(Credential.DEVICE_ID_KEY, credential.getDeviceId()));
 
-		int statusCode = httpRetriever.startPOSTConnection(parameters);
+		int statusCode = httpHandler.startPOSTConnection(parameters);
 
 		if (statusCode != HttpStatus.SC_ACCEPTED) throw new HttpException(""+statusCode);
 		
 		try {
-			String response = httpRetriever.retrieveEntireResponse();
+			String response = httpHandler.retrieveEntireResponse();
 			if (response != null) {
 				Log.d(getClass().getSimpleName(), response);
 				JSONObject json = new JSONObject(response);
@@ -66,20 +66,20 @@ public class Registration extends Base {
 			e.printStackTrace();
 			return new_credential;
 		} finally {
-			httpRetriever.closeConnect();
+			httpHandler.closeConnect();
 		}
 		return new_credential;
 	}
 	
 	public boolean check(Credential credential) {
 		String url                     = constructUrl("") + "/check";
-		httpRetriever 	               = new HttpRetriever(url);
+		httpHandler 	               = new HttpHandler(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(2);
 
 		parameters.add(new BasicNameValuePair(Credential.USER_NAME_KEY, credential.getUserName()));
 		parameters.add(new BasicNameValuePair(Credential.DEVICE_CODE_KEY, credential.getDeviceCode()));
 
-		int statusCode = httpRetriever.startPOSTConnection(parameters);
+		int statusCode = httpHandler.startPOSTConnection(parameters);
 		
 		return (statusCode == HttpStatus.SC_OK);
 	}

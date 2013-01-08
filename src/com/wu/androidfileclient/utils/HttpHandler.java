@@ -18,13 +18,13 @@ import org.apache.http.util.EntityUtils;
 
 import android.util.Log;
 
-public class HttpRetriever {
+public class HttpHandler {
 	private DefaultHttpClient client;
 	private HttpRequestBase request;
 	private HttpEntity getResponseEntity;
 	String url;
 	
-	public HttpRetriever(String url) {
+	public HttpHandler(String url) {
 		this.url = url;
 	}
 	
@@ -107,16 +107,4 @@ public class HttpRetriever {
 	public void closeConnect() {
 		client.getConnectionManager().shutdown();
 	}
-//
-//	public Bitmap retrieveBitmap(String url) throws Exception {
-//		InputStream inputStream = null;
-//		try {
-//			inputStream = this.retrieveStream(url);
-//			final Bitmap bitmap = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
-//			return bitmap;
-//		}
-//		finally {
-//			Utils.closeStreamQuietly(inputStream);
-//		}
-//	}
 }

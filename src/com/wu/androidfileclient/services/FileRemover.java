@@ -1,16 +1,14 @@
 package com.wu.androidfileclient.services;
 
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.utils.HttpRetriever;
+import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FileRemover extends Base{
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
-	protected HttpDelete a;
 
 	public FileRemover(Credential credential) {
 		super(credential);
@@ -34,8 +32,8 @@ public class FileRemover extends Base{
 
 	public boolean delete(String key) {
 		String url     = constructUrl(key);
-		httpRetriever  = new HttpRetriever(url);
-		int statusCode = httpRetriever.startDELETEConnection();
+		httpHandler    = new HttpHandler(url);
+		int statusCode = httpHandler.startDELETEConnection();
 
 		if (statusCode != HttpStatus.SC_OK) return false;
 

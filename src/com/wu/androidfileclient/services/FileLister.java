@@ -16,7 +16,7 @@ import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.utils.HttpRetriever;
+import com.wu.androidfileclient.utils.HttpHandler;
 
 
 public class FileLister extends Base {
@@ -44,13 +44,13 @@ public class FileLister extends Base {
 	public ArrayList<BaseListItem> retrieveFilesList(String key) throws HttpException {
 		ArrayList<BaseListItem> fileArray = new ArrayList<BaseListItem>();
 		String url                        = constructUrl(key);
-		httpRetriever 	                  = new HttpRetriever(url);
-		int statusCode                    = httpRetriever.startGETConnection();
+		httpHandler 	                  = new HttpHandler(url);
+		int statusCode                    = httpHandler.startGETConnection();
 		
 		if (statusCode != HttpStatus.SC_OK) throw new HttpException(""+statusCode);
 		
 		try {
-			String response = httpRetriever.retrieveEntireResponse();
+			String response = httpHandler.retrieveEntireResponse();
 			if (response != null) {
 				Log.d(getClass().getSimpleName(), response);
 				JSONArray files = new JSONArray(response);
@@ -78,7 +78,7 @@ public class FileLister extends Base {
 			e.printStackTrace();
 			return null;
 		} finally {
-			httpRetriever.closeConnect();
+			httpHandler.closeConnect();
 		}
 		return null;
 	}
