@@ -27,7 +27,7 @@ import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
 	
-	private ArrayList<BaseListItem> objectsList                 = new ArrayList<BaseListItem>();
+	private ArrayList<BaseListItem> objectsList             = new ArrayList<BaseListItem>();
 	private ActionItem goBack                               = new ActionItem();
 	private Credential credential                           = new Credential();
 	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
