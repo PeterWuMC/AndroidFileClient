@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
@@ -39,11 +40,21 @@ public class HttpHandler {
 
 		return startConnection();
 	}
+	
+	public int startPOSTConnection(MultipartEntity multipartContent) {
+		HttpPost request = new HttpPost(url);
+
+//		MultipartEntity multipartContent = new MultipartEntity(); 
+//		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
+		if (multipartContent != null) request.setEntity(multipartContent);
+		this.request = request;
+		return startConnection();
+	}
 
 	public int startPOSTConnection(List<NameValuePair> parameters) {
 		HttpPost request = new HttpPost(url); 
 		try {
-			request.setEntity(new UrlEncodedFormEntity(parameters));
+			if (parameters != null) request.setEntity(new UrlEncodedFormEntity(parameters));
 		} catch (Exception e) {}
 		this.request = request;
 		return startConnection();

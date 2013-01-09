@@ -1,8 +1,6 @@
 package com.wu.androidfileclient.services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpStatus;
@@ -55,21 +53,8 @@ public class FileLister extends Base {
 				Log.d(getClass().getSimpleName(), response);
 				JSONArray files = new JSONArray(response);
 				for (int i = 0; i < files.length(); ++i) {
-	                JSONObject rec = files.getJSONObject(i);
-	                BaseListItem listItem = rec.getString("type").equalsIgnoreCase("file") ? new FileItem() : new FolderItem();
-	                
-	                listItem.name = rec.getString("name");
-	                listItem.path = rec.getString("path");
-	                listItem.key  = rec.getString("key");
-	                if (listItem instanceof FileItem) {
-	                	((FileItem) listItem).size = rec.getLong("size");
-	                	try {
-//	                		this is very temporary until a better solution is found
-	                		((FileItem) listItem).last_modified = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.ENGLISH).parse(rec.getString("last_update"));
-	                	} catch (Exception e) {
-	                		
-	                	}
-	                }
+	                JSONObject jsonObject = files.getJSONObject(i);
+	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject) : new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
 				return fileArray;

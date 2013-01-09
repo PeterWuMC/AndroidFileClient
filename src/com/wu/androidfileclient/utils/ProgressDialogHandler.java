@@ -10,6 +10,7 @@ public final class ProgressDialogHandler extends ProgressDialog {
     public static final int CHECKING_CREDENTIAL = 3;
     public static final int DOWNLOADING_FILE    = 4;
     public static final int DELETING_FILE       = 5;
+    public static final int UPLOADING_FILE      = 6;
     
     public ProgressDialogHandler(Context context) {
     	super(context);
@@ -39,6 +40,13 @@ public final class ProgressDialogHandler extends ProgressDialog {
         	setMessage("Downloading file...");
         	setIndeterminate(false);
 //        	setMax(100);
+        	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        	setCancelable(true);
+    		break;
+    	case UPLOADING_FILE:
+        	setMessage("Uploading file...");
+        	setIndeterminate(false);
+        	setMax(100);
         	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         	setCancelable(true);
     		break;
