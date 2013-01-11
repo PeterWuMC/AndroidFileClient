@@ -101,12 +101,12 @@ public class MainActivity extends ListActivity {
         	refreshList();
         	break;
         case R.id.upload:
-        	FileItem file = new FileItem();
-        	file.localPath = Environment.getExternalStorageDirectory().getPath() + "/";
-        	file.name = "DSC_0259.JPG";
+//        	FileItem file = new FileItem();
+//        	file.localPath = Environment.getExternalStorageDirectory().getPath() + "/";
+//        	file.name = "DSC_0259.JPG";
 
-        	FileUploader fileUploader = new FileUploader(credential);
-        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
+//        	FileUploader fileUploader = new FileUploader(credential);
+//        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
         	break;
         default:
             return super.onOptionsItemSelected(item);
