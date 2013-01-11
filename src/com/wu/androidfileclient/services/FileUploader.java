@@ -1,6 +1,10 @@
 package com.wu.androidfileclient.services;
 
+import android.content.Context;
+
+import com.wu.androidfileclient.async.PerformUploadFileAsyncTask;
 import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.models.FileItem;
 
 public class FileUploader extends Base{
 	protected static final String OBJECT = "folder";
@@ -22,12 +26,11 @@ public class FileUploader extends Base{
 	protected String getFormat() {
 		return FORMAT;
 	}
-	
-	public boolean upload() {
-		
-		
-		
-		
+
+	public boolean uploadWithProgressUpdate(Context context, String key, FileItem file) {
+		PerformUploadFileAsyncTask task = new PerformUploadFileAsyncTask(context, constructUrl(key));	
+
+		task.execute(file);
 		return true;
 	}
 }

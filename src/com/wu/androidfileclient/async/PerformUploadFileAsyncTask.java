@@ -6,9 +6,9 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
-import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.listeners.ProgressListener;
 import com.wu.androidfileclient.models.FileItem;
@@ -18,13 +18,13 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem> {
-    private MainActivity context;
+    private Context context;
 	private ProgressDialogHandler progressDialog;
 	private String url;
 	private HttpHandler httpHandler;
 	private long totalSize;
 	
-	public PerformUploadFileAsyncTask(MainActivity context, String url) {
+	public PerformUploadFileAsyncTask(Context context, String url) {
 		super();
 		this.context    = context;
 		this.url        = url;
@@ -47,11 +47,13 @@ public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, Fil
 			@Override
 			public void transferred(long num)
 			{
-				publishProgress((int) ((num / (float) totalSize) * 100));
+					publishProgress((int) num);
 			}
 		});
 		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
 		totalSize = multipartContent.getContentLength();
+		progressDialog.setMax((int) totalSize);
+		
 		statusCode = httpHandler.startPOSTConnection(multipartContent);
 
 		if (statusCode != HttpStatus.SC_OK) cancel(true);
@@ -71,6 +73,10 @@ public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, Fil
 		progressDialog.dismiss();
 		Utilities.longToast(context, "Something wrong with your connection...");
 	}
+	
+	protected void onProgressUpdate(Integer... params) {
+        progressDialog.setProgress((int)params[0]);
+    }
 
 	@Override
 	protected void onPostExecute(final FileItem result) {

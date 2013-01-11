@@ -46,7 +46,7 @@ public final class ProgressDialogHandler extends ProgressDialog {
     	case UPLOADING_FILE:
         	setMessage("Uploading file...");
         	setIndeterminate(false);
-        	setMax(100);
+//        	setMax(100);
         	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         	setCancelable(true);
     		break;

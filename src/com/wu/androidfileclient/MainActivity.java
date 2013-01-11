@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.services.FileDownloader;
+import com.wu.androidfileclient.services.FileUploader;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
@@ -97,6 +99,14 @@ public class MainActivity extends ListActivity {
 		switch (item.getItemId()) {
         case R.id.refresh:
         	refreshList();
+        	break;
+        case R.id.upload:
+        	FileItem file = new FileItem();
+        	file.localPath = Environment.getExternalStorageDirectory().getPath() + "/";
+        	file.name = "DSC_0259.JPG";
+
+        	FileUploader fileUploader = new FileUploader(credential);
+        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
         	break;
         default:
             return super.onOptionsItemSelected(item);
