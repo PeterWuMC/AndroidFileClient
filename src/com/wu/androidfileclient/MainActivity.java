@@ -1,11 +1,13 @@
 package com.wu.androidfileclient;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.wu.androidfileclient.async.PerformDeleteFileAsyncTask;
 import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
@@ -101,17 +104,34 @@ public class MainActivity extends ListActivity {
         	refreshList();
         	break;
         case R.id.upload:
-//        	FileItem file = new FileItem();
-//        	file.localPath = Environment.getExternalStorageDirectory().getPath() + "/";
-//        	file.name = "DSC_0259.JPG";
-
-//        	FileUploader fileUploader = new FileUploader(credential);
-//        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
+        	Intent target = FileUtils.createGetContentIntent();
+            Intent intent = Intent.createChooser(target, "Select a file");
+            try {
+                startActivityForResult(intent, 1234);
+            } catch (ActivityNotFoundException e) {
+                // The reason for the existence of aFileChooser
+            }
         	break;
         default:
             return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    switch (requestCode) {
+	    case 1234:  
+	        if (resultCode == RESULT_OK) {
+	        	File f = Utilities.getFileFromUri(data.getData(), this.getContentResolver());
+	        	FileItem file = new FileItem();
+	        	file.localPath = f.getParentFile().getPath() + "/";
+	        	file.name = f.getName();
+
+	        	FileUploader fileUploader = new FileUploader(credential);
+	        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
+	        }
+	    }
 	}
 
     @Override
@@ -138,11 +158,6 @@ public class MainActivity extends ListActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
-//	public void downloadFile(FileItem file) {
-//		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(this, credential);
-//		task.execute(file);
-//	}
 
 //	TODO: currently only allow to delete file
 	public void deleteFile(FileItem file) {

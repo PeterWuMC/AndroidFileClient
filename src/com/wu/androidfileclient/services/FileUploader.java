@@ -1,7 +1,6 @@
 package com.wu.androidfileclient.services;
 
-import android.content.Context;
-
+import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.async.PerformUploadFileAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
@@ -34,7 +33,7 @@ public class FileUploader extends Base{
 		return PROJECT;
 	}
 
-	public boolean uploadWithProgressUpdate(Context context, String key, FileItem file) {
+	public boolean uploadWithProgressUpdate(MainActivity context, String key, FileItem file) {
 		PerformUploadFileAsyncTask task = new PerformUploadFileAsyncTask(context, constructUrl(key));	
 
 		task.execute(file);

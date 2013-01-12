@@ -44,8 +44,6 @@ public class HttpHandler {
 	public int startPOSTConnection(MultipartEntity multipartContent) {
 		HttpPost request = new HttpPost(url);
 
-//		MultipartEntity multipartContent = new MultipartEntity(); 
-//		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
 		if (multipartContent != null) request.setEntity(multipartContent);
 		this.request = request;
 		return startConnection();

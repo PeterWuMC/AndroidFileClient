@@ -1,14 +1,20 @@
 package com.wu.androidfileclient.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore.MediaColumns;
 import android.widget.Toast;
 
+import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.wu.androidfileclient.models.Credential;
 
 public final class Utilities {
@@ -68,5 +74,25 @@ public final class Utilities {
 		else if (TimeUnit.SECONDS.toMinutes(seconds) > 0) return (int) TimeUnit.SECONDS.toMinutes(seconds) + " minutes ago";
 		
 		return "< a minute old";
+	}
+
+	public final static File getFileFromUri(Uri uri,
+	        ContentResolver contentResolver) {
+		File file;
+		if (uri.getScheme().toString().compareTo("content")==0) {
+		    String filePath;
+		    String[] filePathColumn = {MediaColumns.DATA};
+	
+		    Cursor cursor = contentResolver.query(uri, filePathColumn, null, null, null);
+		    cursor.moveToFirst();
+	
+		    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		    filePath = cursor.getString(columnIndex);
+		    cursor.close();
+		    file = new File(filePath);
+		} else {
+			file = FileUtils.getFile(uri);
+		}
+		return file;
 	}
 }

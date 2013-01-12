@@ -6,9 +6,9 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
+import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.listeners.ProgressListener;
 import com.wu.androidfileclient.models.FileItem;
@@ -18,16 +18,16 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem> {
-    private Context context;
+    private MainActivity context;
 	private ProgressDialogHandler progressDialog;
 	private String url;
 	private HttpHandler httpHandler;
 	private long totalSize;
 	
-	public PerformUploadFileAsyncTask(Context context, String url) {
+	public PerformUploadFileAsyncTask(MainActivity context, String url) {
 		super();
-		this.context    = context;
-		this.url        = url;
+		this.context   = context;
+		this.url       = url;
 		progressDialog = new ProgressDialogHandler(context);
 		progressDialog.createProgressDialog(ProgressDialogHandler.UPLOADING_FILE);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
@@ -53,7 +53,7 @@ public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, Fil
 		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
 		totalSize = multipartContent.getContentLength();
 		progressDialog.setMax((int) totalSize);
-		
+
 		statusCode = httpHandler.startPOSTConnection(multipartContent);
 
 		if (statusCode != HttpStatus.SC_OK) cancel(true);
@@ -81,5 +81,6 @@ public class PerformUploadFileAsyncTask extends AsyncTask<FileItem, Integer, Fil
 	@Override
 	protected void onPostExecute(final FileItem result) {
 		progressDialog.dismiss();
+		context.refreshList();
 	}
 }
