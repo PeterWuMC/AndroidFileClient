@@ -19,7 +19,9 @@ import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FileLister extends Base {
 
-	protected static final String OBJECT = "folder";
+	protected static final String PROJECT = "/projects/cHVibGlj";
+	
+	protected static final String OBJECT = "server_folders";
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
 
@@ -37,6 +39,10 @@ public class FileLister extends Base {
 
 	protected String getFormat() {
 		return FORMAT;
+	}
+
+	protected String getProject() {
+		return PROJECT;
 	}
 
 	public ArrayList<BaseListItem> retrieveFilesList(String key) throws HttpException {

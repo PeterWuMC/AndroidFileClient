@@ -7,9 +7,12 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 
 public class FileUploader extends Base{
-	protected static final String OBJECT = "folder";
+
+	protected static final String PROJECT = "/projects/cHVibGlj";
+
+	protected static final String OBJECT = "server_folders";
 	protected static final String ACTION = "upload";
-	protected static final String FORMAT = ".json";
+	protected static final String FORMAT = "";
 
 	public FileUploader(Credential credential) {
 		super(credential);
@@ -25,6 +28,10 @@ public class FileUploader extends Base{
 
 	protected String getFormat() {
 		return FORMAT;
+	}
+
+	protected String getProject() {
+		return PROJECT;
 	}
 
 	public boolean uploadWithProgressUpdate(Context context, String key, FileItem file) {

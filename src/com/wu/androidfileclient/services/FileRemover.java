@@ -6,6 +6,9 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FileRemover extends Base{
+
+	protected static final String PROJECT = "/projects/cHVibGlj";
+
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
@@ -28,6 +31,10 @@ public class FileRemover extends Base{
 	
 	public String constructUrl() {
 		return null;
+	}
+
+	protected String getProject() {
+		return PROJECT;
 	}
 
 	public boolean delete(String key) {

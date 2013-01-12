@@ -36,6 +36,10 @@ public class Registration extends Base {
 	protected String getFormat() {
 		return FORMAT;
 	}
+
+	protected String getProject() {
+		return "";
+	}
 	
 	public Credential register(Credential credential) throws HttpException{
 		String url                     = constructUrl("");
