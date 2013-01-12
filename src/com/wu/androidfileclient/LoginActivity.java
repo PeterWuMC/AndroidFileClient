@@ -2,6 +2,7 @@ package com.wu.androidfileclient;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.view.View;
@@ -26,6 +27,7 @@ public class LoginActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         final Credential credential = Utilities.getCredential(this);
         credential.setDeviceId(Secure.getString(this.getContentResolver(), Secure.ANDROID_ID));
