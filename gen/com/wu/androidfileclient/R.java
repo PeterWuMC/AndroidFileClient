@@ -67,8 +67,7 @@ public final class R {
         public static final int additional_info=0x7f09000a;
         public static final int android_user_name=0x7f090000;
         public static final int android_user_password=0x7f090002;
-        public static final int delete=0x7f090012;
-        public static final int download=0x7f090011;
+        public static final int delete=0x7f090011;
         public static final int explorer_fragment=0x7f090005;
         public static final int file_icon=0x7f090006;
         public static final int file_name=0x7f090007;
