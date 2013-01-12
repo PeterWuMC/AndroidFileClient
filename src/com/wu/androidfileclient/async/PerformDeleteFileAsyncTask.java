@@ -36,5 +36,4 @@ public class PerformDeleteFileAsyncTask extends AsyncTask<BaseListItem, Void, Bo
 		progressDialog.dismiss();
 		context.refreshList();
 	}
-
 }

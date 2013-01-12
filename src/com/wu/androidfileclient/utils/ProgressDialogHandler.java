@@ -11,6 +11,7 @@ public final class ProgressDialogHandler extends ProgressDialog {
     public static final int DOWNLOADING_FILE    = 4;
     public static final int DELETING_FILE       = 5;
     public static final int UPLOADING_FILE      = 6;
+    public static final int CREATING_FOLDER     = 7;
     
     public ProgressDialogHandler(Context context) {
     	super(context);
@@ -48,6 +49,10 @@ public final class ProgressDialogHandler extends ProgressDialog {
         	setIndeterminate(false);
 //        	setMax(100);
         	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        	setCancelable(true);
+    		break;
+    	case CREATING_FOLDER:
+        	setMessage("Creating folder");
         	setCancelable(true);
     		break;
     	}

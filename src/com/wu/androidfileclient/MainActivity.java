@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
@@ -28,6 +31,7 @@ import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.services.FileUploader;
+import com.wu.androidfileclient.services.FolderCreator;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.Utilities;
 
@@ -104,6 +108,32 @@ public class MainActivity extends ListActivity {
 		switch (item.getItemId()) {
         case R.id.refresh:
         	refreshList();
+        	break;
+        case R.id.create_folder:
+//        	TODO: clean up this crap!
+        	final EditText input = new EditText(this);
+        	final FolderItem folderItem = new FolderItem();
+        	final FolderCreator folderCreater = new FolderCreator(credential);
+
+        	new AlertDialog.Builder(this)
+	            .setTitle("Create Folder")
+	            .setMessage("Folder name")
+	            .setView(input)
+	            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                	folderItem.name = input.getText().toString(); 
+	                	folderItem.key = currentFolder.key;
+	                	if (!folderItem.name.isEmpty()) {
+	                		folderCreater.create_folder(MainActivity.this, folderItem);
+	                	} else {
+	                		Utilities.longToast(MainActivity.this, "Cannot have a folder without name");
+	                	}
+	                }
+	            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int whichButton) {
+	                    // Do nothing.
+	                }
+	            }).show();
         	break;
         case R.id.upload:
         	Intent target = FileUtils.createGetContentIntent();

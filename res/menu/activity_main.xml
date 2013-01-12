@@ -2,7 +2,10 @@
 
     <item android:id="@+id/refresh"
 		android:title="@string/refresh" />
-    
+
+    <item android:id="@+id/create_folder"
+        android:title="@string/create_folder" />
+
 	<item android:id="@+id/upload"
 		android:title="@string/upload" />
     
