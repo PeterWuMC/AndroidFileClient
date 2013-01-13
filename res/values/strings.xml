@@ -9,6 +9,7 @@
     
     <string name="download">Download</string>
     <string name="create_folder">Create Folder</string>
+    <string name="change_project">Change Project</string>
     <string name="open">Open</string>
     <string name="delete">Delete</string>
     <string name="refresh">Refresh</string>

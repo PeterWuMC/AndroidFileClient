@@ -26,4 +26,8 @@ public abstract class BaseListItem implements Serializable {
 		} catch (Exception e) { }
 	}
 
+	public String toString() {
+		return name;
+	}
+
 }

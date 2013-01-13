@@ -4,10 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -17,11 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
 import com.wu.androidfileclient.async.PerformDeleteFileAsyncTask;
+import com.wu.androidfileclient.async.PerformGetProjectAsyncTask;
 import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.BaseListItem;
@@ -30,8 +28,8 @@ import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.services.FileUploader;
-import com.wu.androidfileclient.services.FolderCreator;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
+import com.wu.androidfileclient.utils.AlertDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity {
@@ -51,11 +49,8 @@ public class MainActivity extends ListActivity {
 
 		credential        = Utilities.getCredential(this);
 		goBack.name       = "Back";
-		currentFolder.key = "initial";
-//		TODO: temp
-		currentFolder.projectKey = "cHVibGlj";
 
-		previousFolders.put(currentFolder, currentFolder);
+		resetCurrentAndPrevious("cHVibGlj");
 
         if (objectsList == null) objectsList = new ArrayList<BaseListItem>();
         if (objectsList.isEmpty()) loadList(currentFolder);
@@ -105,36 +100,26 @@ public class MainActivity extends ListActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		AlertDialogHandler alertDialog;
 		switch (item.getItemId()) {
+		case R.id.change_project:
+			ArrayList<FolderItem> folderItemList = new ArrayList<FolderItem>();
+			PerformGetProjectAsyncTask task = new PerformGetProjectAsyncTask(this, credential);
+			try {
+				task.execute();
+				folderItemList = task.get();
+			} catch (Exception e) {}
+			alertDialog = new AlertDialogHandler(this, credential, folderItemList);
+        	alertDialog.createAlertDialog(AlertDialogHandler.SELECT_PROJECT);
+        	alertDialog.show();
+			break;
         case R.id.refresh:
         	refreshList();
         	break;
         case R.id.create_folder:
-//        	TODO: clean up this crap!
-        	final EditText input = new EditText(this);
-        	final FolderItem folderItem = new FolderItem();
-        	final FolderCreator folderCreater = new FolderCreator(credential);
-
-        	new AlertDialog.Builder(this)
-	            .setTitle("Create Folder")
-	            .setMessage("Folder name")
-	            .setView(input)
-	            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int whichButton) {
-	                	folderItem.name = input.getText().toString();
-	                	folderItem.projectKey = currentFolder.projectKey;
-	                	folderItem.key = currentFolder.key;
-	                	if (!folderItem.name.isEmpty()) {
-	                		folderCreater.create_folder(MainActivity.this, folderItem);
-	                	} else {
-	                		Utilities.longToast(MainActivity.this, "Cannot have a folder without name");
-	                	}
-	                }
-	            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-	                public void onClick(DialogInterface dialog, int whichButton) {
-	                    // Do nothing.
-	                }
-	            }).show();
+        	alertDialog = new AlertDialogHandler(this, credential, currentFolder);
+        	alertDialog.createAlertDialog(AlertDialogHandler.FOLDER_NAME);
+        	alertDialog.show();
         	break;
         case R.id.upload:
         	Intent target = FileUtils.createGetContentIntent();
@@ -211,7 +196,7 @@ public class MainActivity extends ListActivity {
     	PerformUpdateListAsyncTask task = new PerformUpdateListAsyncTask(this, credential);
 		task.execute(currentFolder);
     }
-    
+
     public void updateList(ArrayList<BaseListItem> result) {
     	if (result != null) {
 			objectsList.clear();
@@ -221,5 +206,14 @@ public class MainActivity extends ListActivity {
 			if (currentFolder != goBack.folderItem) objectsList.add(0, goBack);
 	        filesAdapter.notifyDataSetChanged();
 		}
+    }
+
+    public void resetCurrentAndPrevious(String projectKey) {
+    	currentFolder = new FolderItem();
+		currentFolder.key = "initial";
+		currentFolder.projectKey = projectKey;
+		previousFolders = new HashMap<FolderItem, FolderItem>();
+
+		previousFolders.put(currentFolder, currentFolder);
     }
 }

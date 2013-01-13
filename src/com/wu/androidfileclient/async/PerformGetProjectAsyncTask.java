@@ -4,25 +4,22 @@ import java.util.ArrayList;
 
 import org.apache.http.HttpException;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
-import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
-import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.services.FolderLister;
+import com.wu.androidfileclient.models.FolderItem;
+import com.wu.androidfileclient.services.ProjectLister;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
-import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformUpdateListAsyncTask extends AsyncTask<BaseListItem, Void, ArrayList<BaseListItem>> {
-    private MainActivity context;
+public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<FolderItem>> {
+	private ProjectLister projectLister;
 	private ProgressDialogHandler progressDialog;
-	private FolderLister fileLister;
 	private Credential credential;
 	
-	public PerformUpdateListAsyncTask(MainActivity context, Credential credential) {
+	public PerformGetProjectAsyncTask(Context context, Credential credential) {
 		super();
-		this.context    = context;
 		this.credential = credential;
 		progressDialog = new ProgressDialogHandler(context);
 		progressDialog.createProgressDialog(ProgressDialogHandler.RETRIEVING_DATA);
@@ -32,12 +29,10 @@ public class PerformUpdateListAsyncTask extends AsyncTask<BaseListItem, Void, Ar
     }
 
 	@Override
-	protected ArrayList<BaseListItem> doInBackground(BaseListItem... params) {
-		BaseListItem baseListItem = params[0];
-        fileLister = new FolderLister(credential);
-        
+	protected ArrayList<FolderItem> doInBackground(Void... params) {
+		projectLister = new ProjectLister(credential);
         try {
-        	return fileLister.retrieveList(baseListItem);
+        	return projectLister.retrieveList();
         } catch (HttpException e) {
         	cancel(true);
         }
@@ -47,12 +42,10 @@ public class PerformUpdateListAsyncTask extends AsyncTask<BaseListItem, Void, Ar
 	@Override
 	protected void onCancelled() {
 		progressDialog.dismiss();
-		Utilities.longToast(context, "Something wrong with your connection...");
 	}
 
 	@Override
-	protected void onPostExecute(final ArrayList<BaseListItem> result) {
+	protected void onPostExecute(final ArrayList<FolderItem> result) {
 		progressDialog.dismiss();
-		context.updateList(result);
 	}
 }
