@@ -15,7 +15,6 @@ public abstract class Base {
 	protected abstract String getObjectUrl();
 	protected abstract String getAction();
 	protected abstract String getFormat();
-	protected abstract String getProject();
 	protected Credential credential;
 
 	protected HttpHandler httpHandler;
@@ -42,11 +41,15 @@ public abstract class Base {
 		}
 	}
 
-	public String constructUrl(String key) {
+	public String constructUrl() {
+		return constructUrl("", "");
+	}
+
+	public String constructUrl(String key, String projectKey) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(BASE_URL);
-		if (!getProject().isEmpty()) sb.append(SLASH + "projects" + SLASH);
-		sb.append(getProject());
+		if (!projectKey.isEmpty()) sb.append(SLASH + "projects" + SLASH);
+		sb.append(projectKey);
 		if (!getObjectUrl().isEmpty()) sb.append(SLASH);
 		sb.append(getObjectUrl());
 		if (!key.isEmpty()) sb.append(SLASH);

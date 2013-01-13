@@ -4,10 +4,9 @@ import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.async.PerformUploadFileAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.FolderItem;
 
 public class FileUploader extends Base{
-
-	private String project;
 
 	protected static final String PROJECT = "cHVibGlj";
 
@@ -15,9 +14,8 @@ public class FileUploader extends Base{
 	protected static final String ACTION = "upload";
 	protected static final String FORMAT = "";
 
-	public FileUploader(Credential credential, String project) {
+	public FileUploader(Credential credential) {
 		super(credential);
-		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -32,12 +30,8 @@ public class FileUploader extends Base{
 		return FORMAT;
 	}
 
-	protected String getProject() {
-		return project;
-	}
-
-	public boolean uploadWithProgressUpdate(MainActivity context, String key, FileItem file) {
-		PerformUploadFileAsyncTask task = new PerformUploadFileAsyncTask(context, constructUrl(key));	
+	public boolean uploadWithProgressUpdate(MainActivity context, FolderItem folderItem, FileItem file) {
+		PerformUploadFileAsyncTask task = new PerformUploadFileAsyncTask(context, constructUrl(folderItem.key, folderItem.projectKey));	
 
 		task.execute(file);
 		return true;

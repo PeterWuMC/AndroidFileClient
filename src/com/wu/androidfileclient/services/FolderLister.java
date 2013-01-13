@@ -19,17 +19,12 @@ import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FolderLister extends Base {
 
-	private String project;
-
-	protected static final String PROJECT = "cHVibGlj";
-	
 	protected static final String OBJECT = "server_folders";
 	protected static final String ACTION = "list";
 	protected static final String FORMAT = ".json";
 
-	public FolderLister(Credential credential, String project) {
+	public FolderLister(Credential credential) {
 		super(credential);
-		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -44,13 +39,9 @@ public class FolderLister extends Base {
 		return FORMAT;
 	}
 
-	protected String getProject() {
-		return project;
-	}
-
 	public ArrayList<BaseListItem> retrieveList(BaseListItem baseListItem) throws HttpException {
 		ArrayList<BaseListItem> fileArray = new ArrayList<BaseListItem>();
-		String url                        = constructUrl(baseListItem.key);
+		String url                        = constructUrl(baseListItem.key, baseListItem.projectKey);
 		httpHandler 	                  = new HttpHandler(url);
 		int statusCode                    = httpHandler.startGETConnection();
 		

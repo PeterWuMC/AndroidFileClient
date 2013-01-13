@@ -8,16 +8,13 @@ import com.wu.androidfileclient.models.FileItem;
 
 public class FileDownloader extends Base {
 
-	private String project;
-
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "download";
 	protected static final String FORMAT = "";
 
 
-	public FileDownloader(Credential credential, String project) {
+	public FileDownloader(Credential credential) {
 		super(credential);
-		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -32,12 +29,8 @@ public class FileDownloader extends Base {
 		return FORMAT;
 	}
 
-	protected String getProject() {
-		return project;
-	}
-
 	public void downloadWithProgressUpdate(Context context, FileItem file) {
-		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(context, constructUrl(file.key));
+		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(context, constructUrl(file.key, file.projectKey));
 		task.execute(file);
 	}
 }

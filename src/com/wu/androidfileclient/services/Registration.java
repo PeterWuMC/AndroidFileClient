@@ -36,13 +36,9 @@ public class Registration extends Base {
 	protected String getFormat() {
 		return FORMAT;
 	}
-
-	protected String getProject() {
-		return "";
-	}
 	
 	public Credential register(Credential credential) throws HttpException{
-		String url                     = constructUrl("");
+		String url                     = constructUrl();
 		httpHandler 	               = new HttpHandler(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(4);
 		Credential new_credential      = new Credential();
@@ -76,7 +72,7 @@ public class Registration extends Base {
 	}
 	
 	public boolean check(Credential credential) {
-		String url                     = constructUrl("") + "/check";
+		String url                     = constructUrl() + "/check";
 		httpHandler 	               = new HttpHandler(url);
 		List<NameValuePair> parameters = new ArrayList<NameValuePair>(2);
 

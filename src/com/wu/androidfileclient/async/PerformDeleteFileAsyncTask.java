@@ -26,9 +26,9 @@ public class PerformDeleteFileAsyncTask extends AsyncTask<BaseListItem, Void, Bo
 	@Override
 	protected Boolean doInBackground(BaseListItem... params) {
 		BaseListItem listItem = params[0];
-        FileRemover fileRemover = new FileRemover(credential, "cHVibGlj");
+        FileRemover fileRemover = new FileRemover(credential);
 
-    	return fileRemover.delete(listItem.key);
+    	return fileRemover.delete(listItem);
 	}
 
 	@Override

@@ -2,12 +2,11 @@ package com.wu.androidfileclient.services;
 
 import org.apache.http.HttpStatus;
 
+import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FileRemover extends Base{
-
-	private String project;
 
 //	protected static final String PROJECT = "cHVibGlj";
 
@@ -15,9 +14,8 @@ public class FileRemover extends Base{
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
 
-	public FileRemover(Credential credential, String project) {
+	public FileRemover(Credential credential) {
 		super(credential);
-		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -36,12 +34,8 @@ public class FileRemover extends Base{
 		return null;
 	}
 
-	protected String getProject() {
-		return project;
-	}
-
-	public boolean delete(String key) {
-		String url     = constructUrl(key);
+	public boolean delete(BaseListItem baseListItem) {
+		String url     = constructUrl(baseListItem.key, baseListItem.projectKey);
 		httpHandler    = new HttpHandler(url);
 		int statusCode = httpHandler.startDELETEConnection();
 

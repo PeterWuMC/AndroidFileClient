@@ -34,7 +34,7 @@ public class PerformUpdateListAsyncTask extends AsyncTask<BaseListItem, Void, Ar
 	@Override
 	protected ArrayList<BaseListItem> doInBackground(BaseListItem... params) {
 		BaseListItem baseListItem = params[0];
-        fileLister = new FolderLister(credential, "cHVibGlj");
+        fileLister = new FolderLister(credential);
         
         try {
         	return fileLister.retrieveList(baseListItem);

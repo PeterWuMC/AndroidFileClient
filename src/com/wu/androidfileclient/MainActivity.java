@@ -52,6 +52,8 @@ public class MainActivity extends ListActivity {
 		credential        = Utilities.getCredential(this);
 		goBack.name       = "Back";
 		currentFolder.key = "initial";
+//		TODO: temp
+		currentFolder.projectKey = "cHVibGlj";
 
 		previousFolders.put(currentFolder, currentFolder);
 
@@ -81,7 +83,7 @@ public class MainActivity extends ListActivity {
 	
 			switch (item.getItemId()) {
 			case R.id.open:
-				FileDownloader fileDownloader = new FileDownloader(credential, "cHVibGlj");
+				FileDownloader fileDownloader = new FileDownloader(credential);
 				fileDownloader.downloadWithProgressUpdate(this, fileItem);
 				break;
 			case R.id.delete:
@@ -111,7 +113,7 @@ public class MainActivity extends ListActivity {
 //        	TODO: clean up this crap!
         	final EditText input = new EditText(this);
         	final FolderItem folderItem = new FolderItem();
-        	final FolderCreator folderCreater = new FolderCreator(credential, "cHVibGlj");
+        	final FolderCreator folderCreater = new FolderCreator(credential);
 
         	new AlertDialog.Builder(this)
 	            .setTitle("Create Folder")
@@ -119,7 +121,8 @@ public class MainActivity extends ListActivity {
 	            .setView(input)
 	            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int whichButton) {
-	                	folderItem.name = input.getText().toString(); 
+	                	folderItem.name = input.getText().toString();
+	                	folderItem.projectKey = currentFolder.projectKey;
 	                	folderItem.key = currentFolder.key;
 	                	if (!folderItem.name.isEmpty()) {
 	                		folderCreater.create_folder(MainActivity.this, folderItem);
@@ -158,8 +161,8 @@ public class MainActivity extends ListActivity {
 	        	file.localPath = f.getParentFile().getPath() + "/";
 	        	file.name = f.getName();
 
-	        	FileUploader fileUploader = new FileUploader(credential, "cHVibGlj");
-	        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
+	        	FileUploader fileUploader = new FileUploader(credential);
+	        	fileUploader.uploadWithProgressUpdate(this, currentFolder, file);
 	        }
 	    }
 	}
@@ -173,7 +176,7 @@ public class MainActivity extends ListActivity {
         } else if (listItem instanceof ActionItem) {
         	loadList(((ActionItem) listItem).folderItem);
         } else {
-			FileDownloader fileDownloader = new FileDownloader(credential, "cHVibGlj");
+			FileDownloader fileDownloader = new FileDownloader(credential);
 			fileDownloader.downloadWithProgressUpdate(this, (FileItem) listItem);
         }
     }
