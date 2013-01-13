@@ -45,6 +45,7 @@ public abstract class Base {
 	public String constructUrl(String key) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(BASE_URL);
+		if (!getProject().isEmpty()) sb.append(SLASH + "projects" + SLASH);
 		sb.append(getProject());
 		if (!getObjectUrl().isEmpty()) sb.append(SLASH);
 		sb.append(getObjectUrl());

@@ -12,16 +12,18 @@ public abstract class BaseListItem implements Serializable {
 	public String localPath;
 	public String key;
 	public String name;
+	public String projectKey;
 
 	
 	public BaseListItem() {}
 	
 	public BaseListItem(JSONObject jsonObject) {
 		try {
-			name = jsonObject.getString("name");
-			path = jsonObject.getString("path");
-			key  = jsonObject.getString("key");
-		} catch (Exception e) {}
+			name       = jsonObject.getString("name");
+			path       = jsonObject.getString("path");
+			key        = jsonObject.getString("key");
+			projectKey = jsonObject.getString("project_key");
+		} catch (Exception e) { }
 	}
 
 }

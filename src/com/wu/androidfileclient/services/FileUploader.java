@@ -7,14 +7,17 @@ import com.wu.androidfileclient.models.FileItem;
 
 public class FileUploader extends Base{
 
-	protected static final String PROJECT = "/projects/cHVibGlj";
+	private String project;
+
+	protected static final String PROJECT = "cHVibGlj";
 
 	protected static final String OBJECT = "server_folders";
 	protected static final String ACTION = "upload";
 	protected static final String FORMAT = "";
 
-	public FileUploader(Credential credential) {
+	public FileUploader(Credential credential, String project) {
 		super(credential);
+		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -30,7 +33,7 @@ public class FileUploader extends Base{
 	}
 
 	protected String getProject() {
-		return PROJECT;
+		return project;
 	}
 
 	public boolean uploadWithProgressUpdate(MainActivity context, String key, FileItem file) {

@@ -71,7 +71,7 @@ public class MainActivity extends ListActivity {
 	    if (!(objectsList.get(info.position) instanceof ActionItem))
 	    	inflater.inflate(R.menu.activity_main_context, menu);
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -81,7 +81,7 @@ public class MainActivity extends ListActivity {
 	
 			switch (item.getItemId()) {
 			case R.id.open:
-				FileDownloader fileDownloader = new FileDownloader(credential);
+				FileDownloader fileDownloader = new FileDownloader(credential, "cHVibGlj");
 				fileDownloader.downloadWithProgressUpdate(this, fileItem);
 				break;
 			case R.id.delete:
@@ -111,7 +111,7 @@ public class MainActivity extends ListActivity {
 //        	TODO: clean up this crap!
         	final EditText input = new EditText(this);
         	final FolderItem folderItem = new FolderItem();
-        	final FolderCreator folderCreater = new FolderCreator(credential);
+        	final FolderCreator folderCreater = new FolderCreator(credential, "cHVibGlj");
 
         	new AlertDialog.Builder(this)
 	            .setTitle("Create Folder")
@@ -158,7 +158,7 @@ public class MainActivity extends ListActivity {
 	        	file.localPath = f.getParentFile().getPath() + "/";
 	        	file.name = f.getName();
 
-	        	FileUploader fileUploader = new FileUploader(credential);
+	        	FileUploader fileUploader = new FileUploader(credential, "cHVibGlj");
 	        	fileUploader.uploadWithProgressUpdate(this, currentFolder.key, file);
 	        }
 	    }
@@ -173,7 +173,7 @@ public class MainActivity extends ListActivity {
         } else if (listItem instanceof ActionItem) {
         	loadList(((ActionItem) listItem).folderItem);
         } else {
-			FileDownloader fileDownloader = new FileDownloader(credential);
+			FileDownloader fileDownloader = new FileDownloader(credential, "cHVibGlj");
 			fileDownloader.downloadWithProgressUpdate(this, (FileItem) listItem);
         }
     }
@@ -206,7 +206,7 @@ public class MainActivity extends ListActivity {
     	goBack.folderItem = previousFolders.get(currentFolder);
 
     	PerformUpdateListAsyncTask task = new PerformUpdateListAsyncTask(this, credential);
-		task.execute(currentFolder.key);
+		task.execute(currentFolder);
     }
     
     public void updateList(ArrayList<BaseListItem> result) {

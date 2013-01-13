@@ -7,14 +7,17 @@ import com.wu.androidfileclient.models.FolderItem;
 
 public class FolderCreator extends Base {
 
-	protected static final String PROJECT = "/projects/cHVibGlj";
+	private String project;
+
+	protected static final String PROJECT = "cHVibGlj";
 
 	protected static final String OBJECT = "server_folders";
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
 
-	public FolderCreator(Credential credential) {
+	public FolderCreator(Credential credential, String project) {
 		super(credential);
+		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -30,7 +33,7 @@ public class FolderCreator extends Base {
 	}
 
 	protected String getProject() {
-		return PROJECT;
+		return project;
 	}
 
 	public boolean create_folder(MainActivity context, FolderItem folderItem) {

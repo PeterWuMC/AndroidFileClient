@@ -8,15 +8,16 @@ import com.wu.androidfileclient.models.FileItem;
 
 public class FileDownloader extends Base {
 
-	protected static final String PROJECT = "/projects/cHVibGlj";
+	private String project;
 
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "download";
 	protected static final String FORMAT = "";
 
 
-	public FileDownloader(Credential credential) {
+	public FileDownloader(Credential credential, String project) {
 		super(credential);
+		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -32,7 +33,7 @@ public class FileDownloader extends Base {
 	}
 
 	protected String getProject() {
-		return PROJECT;
+		return project;
 	}
 
 	public void downloadWithProgressUpdate(Context context, FileItem file) {

@@ -7,14 +7,17 @@ import com.wu.androidfileclient.utils.HttpHandler;
 
 public class FileRemover extends Base{
 
-	protected static final String PROJECT = "/projects/cHVibGlj";
+	private String project;
+
+//	protected static final String PROJECT = "cHVibGlj";
 
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
 
-	public FileRemover(Credential credential) {
+	public FileRemover(Credential credential, String project) {
 		super(credential);
+		this.project = project;
 	}
 
 	protected String getObjectUrl() {
@@ -34,7 +37,7 @@ public class FileRemover extends Base{
 	}
 
 	protected String getProject() {
-		return PROJECT;
+		return project;
 	}
 
 	public boolean delete(String key) {

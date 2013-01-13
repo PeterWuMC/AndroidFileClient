@@ -10,14 +10,14 @@ import com.wu.androidfileclient.MainActivity;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.services.FileLister;
+import com.wu.androidfileclient.services.FolderLister;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayList<BaseListItem>> {
+public class PerformUpdateListAsyncTask extends AsyncTask<BaseListItem, Void, ArrayList<BaseListItem>> {
     private MainActivity context;
 	private ProgressDialogHandler progressDialog;
-	private FileLister fileLister;
+	private FolderLister fileLister;
 	private Credential credential;
 	
 	public PerformUpdateListAsyncTask(MainActivity context, Credential credential) {
@@ -32,12 +32,12 @@ public class PerformUpdateListAsyncTask extends AsyncTask<String, Void, ArrayLis
     }
 
 	@Override
-	protected ArrayList<BaseListItem> doInBackground(String... params) {
-		String key = params[0];
-        fileLister = new FileLister(credential);
+	protected ArrayList<BaseListItem> doInBackground(BaseListItem... params) {
+		BaseListItem baseListItem = params[0];
+        fileLister = new FolderLister(credential, "cHVibGlj");
         
         try {
-        	return fileLister.retrieveFilesList(key);
+        	return fileLister.retrieveList(baseListItem);
         } catch (HttpException e) {
         	cancel(true);
         }
