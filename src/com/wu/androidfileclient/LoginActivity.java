@@ -1,6 +1,5 @@
 package com.wu.androidfileclient;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
@@ -9,18 +8,17 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.wu.androidfileclient.async.PerformCheckCredentialAsyncTask;
-import com.wu.androidfileclient.async.PerformRegisterDeviceAsyncTask;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.utils.ProgressDialogHandler;
+import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class LoginActivity extends Activity {
-	private ProgressDialogHandler progressDialog;
+public class LoginActivity extends AllActivities {
+
 	private EditText userNameBox;
 	private EditText passwordBox;
 	private Button   loginBtn;
+
+	private final Registration registration = new Registration();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +33,7 @@ public class LoginActivity extends Activity {
 		loginBtn    = (Button) findViewById(R.id.login);
 
 		if (!credential.getUserName().isEmpty() && !credential.getDeviceCode().isEmpty()) {
-			checkCredential(credential);
+			registration.check(this, credential);
 		}
 
 		loginBtn.setOnClickListener(new OnClickListener() {
@@ -43,49 +41,24 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				credential.setUserName(userNameBox.getText().toString());
 				credential.setPassword(passwordBox.getText().toString());
-				registerDevice(credential);
+				registration.register(LoginActivity.this, credential);
 			}
         });
     }
-
-    public void checkCredential(Credential credential) {
-    	showProgressDialog(ProgressDialogHandler.CHECKING_CREDENTIAL);
-		PerformCheckCredentialAsyncTask task = new PerformCheckCredentialAsyncTask(this, credential);
-		task.execute();
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
-    }
-
-    public void registerDevice(Credential credential) {
-    	showProgressDialog(ProgressDialogHandler.LOGGING_IN);
-		PerformRegisterDeviceAsyncTask task = new PerformRegisterDeviceAsyncTask(this, credential);
-		task.execute();
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(task));
-    }
     
-    public void openMainActivity(boolean allowed) {
-    	if (allowed) {
+    public void afterAsyncTaskFinish(int task, Object object) {
+    	switch (task) {
+    	case FINISHED_REGISTER_DEVICE:
+    		if (object instanceof Credential) {
+    			Utilities.saveCredential(this, (Credential) object);
+    			registration.check(this, (Credential) object);
+    		}
+    		break;
+    	case FINISHED_CHECK_CREDENTIAL:
     		Intent mainIntent = new Intent(this, MainActivity.class);
     		startActivity(mainIntent);
     		this.finish();
+    		break;
     	}
-    	else {
-    		Utilities.longToast(this, "Credential not recognised, please login again");
-    	}
-		dismissProgressDialog();
-    }
-    
-    public void saveCredential(Credential credential) {
-    	Utilities.saveCredential(this, credential);
-    	dismissProgressDialog();
-    }
-    
-    public void showProgressDialog(int type) {
-		progressDialog = new ProgressDialogHandler(this);
-		progressDialog.createProgressDialog(type);
-    	if (progressDialog != null) progressDialog.show();
-    }
-    
-    public void dismissProgressDialog() {
-    	if (progressDialog != null) progressDialog.dismiss();
     }
 }
