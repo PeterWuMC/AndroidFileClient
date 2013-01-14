@@ -3,6 +3,8 @@ package com.wu.androidfileclient.models;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import android.os.Build;
+
 public class Credential implements Serializable {
 
 	private static final long serialVersionUID  = -7985043206630478168L;
@@ -32,7 +34,13 @@ public class Credential implements Serializable {
 	}
 
 	public String getDeviceName() {
-		return "Android";
+		String manufacturer = Build.MANUFACTURER;
+		String model = Build.MODEL;
+		if (model.startsWith(manufacturer)) {
+			return model;
+		} else {
+			return manufacturer + " " + model;
+		}
 	}
 
 	public String getDeviceId() {
