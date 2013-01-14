@@ -50,7 +50,10 @@ public class MainActivity extends ListActivity {
 		credential        = Utilities.getCredential(this);
 		goBack.name       = "Back";
 
-		resetCurrentAndPrevious("cHVibGlj");
+    	FolderItem tempFolderItem = new FolderItem();
+		tempFolderItem.key        = "initial";
+		tempFolderItem.projectKey = "cHVibGlj";
+		resetCurrentAndPrevious(tempFolderItem);
 
         if (objectsList == null) objectsList = new ArrayList<BaseListItem>();
         if (objectsList.isEmpty()) loadList(currentFolder);
@@ -208,10 +211,8 @@ public class MainActivity extends ListActivity {
 		}
     }
 
-    public void resetCurrentAndPrevious(String projectKey) {
-    	currentFolder = new FolderItem();
-		currentFolder.key = "initial";
-		currentFolder.projectKey = projectKey;
+    public void resetCurrentAndPrevious(FolderItem startingFolderItem) {
+    	currentFolder = startingFolderItem;
 		previousFolders = new HashMap<FolderItem, FolderItem>();
 
 		previousFolders.put(currentFolder, currentFolder);

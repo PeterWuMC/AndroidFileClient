@@ -77,10 +77,10 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 				adapter.add(folderItemList.get(i));
 			}
 			
-			setTitle("Please choose project");
+			setTitle("Please choose a project");
 			setAdapter(adapter, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			    	context.resetCurrentAndPrevious(folderItemList.get(item).projectKey);
+			    	context.resetCurrentAndPrevious(folderItemList.get(item));
 			    	context.refreshList();
 			    }
 			});
