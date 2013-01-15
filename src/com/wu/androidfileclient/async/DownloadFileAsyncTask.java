@@ -20,7 +20,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, FileItem> {
 
 	public DownloadFileAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.DOWNLOADING_FILE);
+		super(activity, reference, url, ProgressDialogHandler.DOWNLOADING_FILE, AllActivities.DOWNLOAD_FILE);
 	}
 
 	@Override

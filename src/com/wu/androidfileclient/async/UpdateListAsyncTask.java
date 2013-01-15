@@ -19,7 +19,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 public class UpdateListAsyncTask extends CustomAsyncTask<BaseListItem, Void, ArrayList<BaseListItem>> {
 
 	public UpdateListAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA);
+		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA, AllActivities.UPDATE_LIST);
     }
 
 	@Override

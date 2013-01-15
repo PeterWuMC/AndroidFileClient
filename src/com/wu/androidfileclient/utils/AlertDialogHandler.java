@@ -81,7 +81,7 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 			setAdapter(adapter, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 //			    	TODO: need better way to handle this line, infact this class!
-					activity.onTaskCompleted(AllActivities.PROJECT_SWITCH_COMPLETED, 0, folderItemList.get(item));
+					activity.onTaskCompleted(AllActivities.PROJECT_SWITCH, 0, folderItemList.get(item));
 			    }
 			});
 			break;

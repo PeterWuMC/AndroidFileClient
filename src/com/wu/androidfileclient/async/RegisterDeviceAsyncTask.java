@@ -20,7 +20,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 public class RegisterDeviceAsyncTask extends CustomAsyncTask<Credential, Void, Credential>{
 
 	public RegisterDeviceAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.LOGGING_IN);
+		super(activity, reference, url, ProgressDialogHandler.LOGGING_IN, AllActivities.REGISTER_DEVICE);
     }
 
 	@Override

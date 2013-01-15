@@ -17,7 +17,7 @@ import com.wu.androidfileclient.utils.Utilities;
 public class CreateFolderAsyncTask extends CustomAsyncTask<FolderItem, Void, Boolean> {
 
 	public CreateFolderAsyncTask (AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.CREATING_FOLDER);
+		super(activity, reference, url, ProgressDialogHandler.CREATING_FOLDER, AllActivities.CREATE_FOLDER);
     }
 
 	@Override

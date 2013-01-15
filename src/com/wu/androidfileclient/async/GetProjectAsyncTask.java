@@ -17,7 +17,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, ArrayList<FolderItem>> {
 
 	public GetProjectAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA);
+		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA, AllActivities.GET_PROJECT);
     }
 
 	@Override

@@ -222,19 +222,23 @@ public class MainActivity extends ListActivity implements AllActivities {
     }
 
     public void onTaskCancelled(int task, long reference, Object result) {
-    	
+    	switch (task) {
+    	case DOWNLOAD_FILE:
+    		
+    		break;
+    	}
     }
 
     public void onTaskCompleted(int task, long reference, Object result) {
     	if (result != null) {
 	    	switch (task) {
-	    	case CREATE_FOLDER_COMPLETED:
+	    	case CREATE_FOLDER:
 	    		if (result instanceof Boolean && (Boolean) result) refreshList();
 	    		break;
-	    	case DELETE_ITEM_COMPLETED:
+	    	case DELETE_ITEM:
 	    		if (result instanceof Boolean && (Boolean) result) refreshList();
 	    		break;
-	    	case DOWNLOAD_FILE_COMPLETED:
+	    	case DOWNLOAD_FILE:
 	    		if (result instanceof FileItem) {
 		    		Intent fileViewIntent = new Intent();
 		    		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
@@ -252,14 +256,15 @@ public class MainActivity extends ListActivity implements AllActivities {
 		    		}
 	    		}
 	    		break;
-	    	case UPDATE_LIST_COMPLETED:
-	    		if (result instanceof ArrayList)
+	    	case UPDATE_LIST:
+	    		if (result instanceof ArrayList) {
 	    			updateList((ArrayList<BaseListItem>) result);
+	    		}
 	    		break;
-	    	case UPLOAD_FILE_COMPLETED:
+	    	case UPLOAD_FILE:
 	    		refreshList();
 	    		break;
-	    	case GET_PROJECT_COMPLETED:
+	    	case GET_PROJECT:
 	    		if (result instanceof ArrayList) {
 	    			AlertDialogHandler alertDialog;
 					alertDialog = new AlertDialogHandler(this, credential, (ArrayList<FolderItem>) result);
@@ -267,7 +272,7 @@ public class MainActivity extends ListActivity implements AllActivities {
 		        	alertDialog.show();
 	    		}
 	    		break;
-	    	case PROJECT_SWITCH_COMPLETED:
+	    	case PROJECT_SWITCH:
 	    		if (result instanceof FolderItem) {
 	    			resetCurrentAndPrevious((FolderItem) result);
 	    			refreshList();

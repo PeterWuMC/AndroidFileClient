@@ -11,7 +11,7 @@ import com.wu.androidfileclient.utils.Utilities;
 public class DeleteItemAsyncTask extends CustomAsyncTask<Void, Void, Boolean> {
 
 	public DeleteItemAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.DELETING_FILE);
+		super(activity, reference, url, ProgressDialogHandler.DELETING_FILE, AllActivities.DELETE_ITEM);
     }
 
 	@Override

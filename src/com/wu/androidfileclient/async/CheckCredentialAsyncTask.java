@@ -17,7 +17,7 @@ import com.wu.androidfileclient.utils.Utilities;
 public class CheckCredentialAsyncTask extends CustomAsyncTask<Credential, Void, Boolean>{
 
 	public CheckCredentialAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.CHECKING_CREDENTIAL);
+		super(activity, reference, url, ProgressDialogHandler.CHECKING_CREDENTIAL, AllActivities.CHECK_CREDENTIAL);
 	}
 
 	@Override

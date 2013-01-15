@@ -59,13 +59,13 @@ public class LoginActivity extends Activity implements AllActivities {
     public void onTaskCompleted(int task, long reference, Object result) {
     	if (result != null) {
 	    	switch (task) {
-	    	case REGISTER_DEVICE_COMPLETED:
+	    	case REGISTER_DEVICE:
 	    		if (result instanceof Credential) {
 	    			Utilities.saveCredential(this, (Credential) result);
 	    			registration.check(this, 1, (Credential) result);
 	    		}
 	    		break;
-	    	case CHECK_CREDENTIAL_COMPLETED:
+	    	case CHECK_CREDENTIAL:
 	    		if (result instanceof Boolean && (Boolean) result) {
 	    			Intent mainIntent = new Intent(this, MainActivity.class);
 	    			startActivity(mainIntent);

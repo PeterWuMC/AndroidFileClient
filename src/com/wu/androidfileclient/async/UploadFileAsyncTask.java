@@ -16,7 +16,7 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, FileItem> {
 
 	public UploadFileAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.UPLOADING_FILE);
+		super(activity, reference, url, ProgressDialogHandler.UPLOADING_FILE, AllActivities.UPLOAD_FILE);
     }
 
 	@Override
