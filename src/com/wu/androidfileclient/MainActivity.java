@@ -47,6 +47,8 @@ public class MainActivity extends ListActivity implements AllActivities {
 	private ItemRemover itemRemover;
 	private FolderLister folderLister;
 	private ProjectLister projectLister;
+	private FileUploader fileUploader;
+	private FileDownloader fileDownloader;
 
 	private FileItemsListAdapter filesAdapter;
 
@@ -59,10 +61,12 @@ public class MainActivity extends ListActivity implements AllActivities {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		credential        = Utilities.getCredential(this);
-		itemRemover       = new ItemRemover(credential); 
-		folderLister      = new FolderLister(credential); 
-		projectLister     = new ProjectLister(credential);
+		credential     = Utilities.getCredential(this);
+		itemRemover    = new ItemRemover(credential); 
+		folderLister   = new FolderLister(credential); 
+		projectLister  = new ProjectLister(credential);
+    	fileUploader   = new FileUploader(credential);
+    	fileDownloader = new FileDownloader(credential);
 
 		goBack.name = "Back";
     	FolderItem tempFolderItem = new FolderItem();
@@ -96,7 +100,6 @@ public class MainActivity extends ListActivity implements AllActivities {
 	
 			switch (item.getItemId()) {
 			case R.id.open:
-				FileDownloader fileDownloader = new FileDownloader(credential);
 				fileDownloader.download(this, 1, fileItem);
 				break;
 			case R.id.delete:
@@ -157,7 +160,6 @@ public class MainActivity extends ListActivity implements AllActivities {
 	        	file.localPath = f.getParentFile().getPath() + "/";
 	        	file.name = f.getName();
 
-	        	FileUploader fileUploader = new FileUploader(credential);
 	        	fileUploader.uploadWithProgressUpdate(this, 1, currentFolder, file);
 	        }
 	    }
@@ -218,8 +220,12 @@ public class MainActivity extends ListActivity implements AllActivities {
 
 		previousFolders.put(currentFolder, currentFolder);
     }
-    
-    public void afterAsyncTaskFinish(int task, long reference, Object result) {
+
+    public void onTaskCancelled(int task, long reference, Object result) {
+    	
+    }
+
+    public void onTaskCompleted(int task, long reference, Object result) {
     	if (result != null) {
 	    	switch (task) {
 	    	case CREATE_FOLDER_COMPLETED:

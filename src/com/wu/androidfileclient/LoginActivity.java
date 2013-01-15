@@ -51,8 +51,12 @@ public class LoginActivity extends Activity implements AllActivities {
 			}
         });
     }
-    
-    public void afterAsyncTaskFinish(int task, long reference, Object result) {
+
+    public void onTaskCancelled(int task, long reference, Object result) {
+    	
+    }
+
+    public void onTaskCompleted(int task, long reference, Object result) {
     	if (result != null) {
 	    	switch (task) {
 	    	case REGISTER_DEVICE_COMPLETED:

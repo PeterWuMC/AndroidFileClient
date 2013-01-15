@@ -9,43 +9,19 @@ import java.io.OutputStream;
 
 import org.apache.http.HttpStatus;
 
-import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
-import com.wu.androidfileclient.utils.Utilities;
 
-public class DownloadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem> {
+public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, FileItem> {
 
-    private AllActivities activity;
-    private long reference;
-	private String url;
-
-    private ProgressDialogHandler progressDialog;
-	
 	public DownloadFileAsyncTask(AllActivities activity, long reference, String url) {
-		super();
-
-		this.activity  = activity;
-		this.reference = reference;
-		this.url       = url;
-
-		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(ProgressDialogHandler.DOWNLOADING_FILE);
-//		progressDialog.setProgressNumberFormat("%1d / %2d bytes");
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
+		super(activity, reference, url, ProgressDialogHandler.DOWNLOADING_FILE);
 	}
-
-	@Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    	progressDialog.show();
-    }
 
 	@Override
 	protected FileItem doInBackground(FileItem... params) {
@@ -108,15 +84,4 @@ public class DownloadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem
         progressDialog.setProgress((int)params[0]);
     }
 
-	@Override
-	protected void onCancelled() {
-		progressDialog.dismiss();
-		Utilities.longToast(activity, "Something wrong with your connection...");
-	}
-
-	@Override
-	protected void onPostExecute(FileItem result) {
-		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.DOWNLOAD_FILE_COMPLETED, reference, result);
-	}
 }

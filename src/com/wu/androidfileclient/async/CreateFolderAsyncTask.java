@@ -7,39 +7,17 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.os.AsyncTask;
-
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.R;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class CreateFolderAsyncTask extends AsyncTask<FolderItem, Void, Boolean> {
-    private AllActivities activity;
-    private long reference;
-	private String url;
+public class CreateFolderAsyncTask extends CustomAsyncTask<FolderItem, Void, Boolean> {
 
-	private ProgressDialogHandler progressDialog;
-	
 	public CreateFolderAsyncTask (AllActivities activity, long reference, String url) {
-		super();
-
-		this.activity  = activity;
-		this.url       = url;
-		this.reference = reference;
-
-		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(ProgressDialogHandler.CREATING_FOLDER);
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-    }
-
-	@Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    	progressDialog.show();
+		super(activity, reference, url, ProgressDialogHandler.CREATING_FOLDER);
     }
 
 	@Override
@@ -60,15 +38,4 @@ public class CreateFolderAsyncTask extends AsyncTask<FolderItem, Void, Boolean> 
 		return true;
 	}
 
-	@Override
-	protected void onCancelled() {
-		progressDialog.dismiss();
-		Utilities.longToast(activity, R.string.connection_error_toast);
-	}
-
-	@Override
-	protected void onPostExecute(Boolean result) {
-		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.CREATE_FOLDER_COMPLETED, reference, result);
-	}
 }

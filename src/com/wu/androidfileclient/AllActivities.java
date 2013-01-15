@@ -15,7 +15,8 @@ public interface AllActivities {
 	public static final int GET_PROJECT_COMPLETED      = 8;
 	public static final int PROJECT_SWITCH_COMPLETED   = 9;
 
-	public abstract void afterAsyncTaskFinish(int task, long reference, Object result);
+	public abstract void onTaskCompleted(int task, long reference, Object result);
+	public abstract void onTaskCancelled(int task, long reference, Object result);
 	public abstract Resources getResources();
 //	public abstract Context getApplicationContext();
 	public abstract Context getContext();

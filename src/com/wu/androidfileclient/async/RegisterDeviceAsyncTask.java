@@ -10,41 +10,17 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.R;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
-import com.wu.androidfileclient.utils.Utilities;
 
-public class RegisterDeviceAsyncTask extends AsyncTask<Credential, Void, Credential>{
+public class RegisterDeviceAsyncTask extends CustomAsyncTask<Credential, Void, Credential>{
 
-	private AllActivities activity;
-	private long reference;
-	private String url;
-
-	private ProgressDialogHandler progressDialog;
-	
 	public RegisterDeviceAsyncTask(AllActivities activity, long reference, String url) {
-		super();
-
-		this.activity   = activity;
-		this.url        = url;
-		this.reference  = reference; 
-
-		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(ProgressDialogHandler.LOGGING_IN);
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-	}
-
-	@Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    	progressDialog.show();
+		super(activity, reference, url, ProgressDialogHandler.LOGGING_IN);
     }
 
 	@Override
@@ -86,16 +62,5 @@ public class RegisterDeviceAsyncTask extends AsyncTask<Credential, Void, Credent
 		}
         return null;
 	}
-
-	@Override
-	protected void onCancelled() {
-		progressDialog.dismiss();
-		Utilities.longToast(activity, R.string.connection_error_toast);
-	}
-
-	@Override
-	protected void onPostExecute(Credential result) {
-		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.REGISTER_DEVICE_COMPLETED, reference, result);
-	}	
+	
 }

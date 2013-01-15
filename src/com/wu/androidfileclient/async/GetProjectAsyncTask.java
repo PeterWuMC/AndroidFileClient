@@ -7,41 +7,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.R;
-import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
-import com.wu.androidfileclient.utils.Utilities;
 
-public class GetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<FolderItem>> {
-	
-	private AllActivities activity;
-	private long reference;
-	private String url;
+public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, ArrayList<FolderItem>> {
 
-	private ProgressDialogHandler progressDialog;
-	
 	public GetProjectAsyncTask(AllActivities activity, long reference, String url) {
-		super();
-
-		this.activity  = activity;
-		this.reference = reference;
-		this.url       = url;
-		
-		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(ProgressDialogHandler.RETRIEVING_DATA);
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-    }
-
-	@Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    	progressDialog.show();
+		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA);
     }
 
 	@Override
@@ -73,15 +49,4 @@ public class GetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<Folder
 		return null;
 	}
 
-	@Override
-	protected void onCancelled() {
-		progressDialog.dismiss();
-		Utilities.longToast(activity, R.string.connection_error_toast);
-	}
-
-	@Override
-	protected void onPostExecute(final ArrayList<FolderItem> result) {
-		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.GET_PROJECT_COMPLETED, reference, result);
-	}
 }
