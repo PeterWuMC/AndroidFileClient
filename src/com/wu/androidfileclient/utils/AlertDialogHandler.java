@@ -80,8 +80,8 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 			setTitle("Please choose a project");
 			setAdapter(adapter, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-//			    	activity.resetCurrentAndPrevious(folderItemList.get(item));
-//			    	activity.refreshList();
+//			    	TODO: need better way to handle this line, infact this class!
+					activity.afterAsyncTaskFinish(AllActivities.PROJECT_SWITCH_COMPLETED, 0, folderItemList.get(item));
 			    }
 			});
 			break;

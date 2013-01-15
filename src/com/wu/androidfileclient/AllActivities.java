@@ -12,7 +12,8 @@ public interface AllActivities {
 	public static final int DOWNLOAD_FILE_COMPLETED    = 5;
 	public static final int UPDATE_LIST_COMPLETED  	   = 6;
 	public static final int UPLOAD_FILE_COMPLETED  	   = 7;
-	public static final int GET_PROJECT_COMPLETED = 8;
+	public static final int GET_PROJECT_COMPLETED      = 8;
+	public static final int PROJECT_SWITCH_COMPLETED   = 9;
 
 	public abstract void afterAsyncTaskFinish(int task, long reference, Object result);
 	public abstract Resources getResources();

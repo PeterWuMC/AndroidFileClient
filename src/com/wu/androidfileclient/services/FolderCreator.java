@@ -29,10 +29,8 @@ public class FolderCreator extends Base {
 		return FORMAT;
 	}
 
-	public boolean create_folder(AllActivities activity, long reference, FolderItem folderItem) {
+	public void create_folder(AllActivities activity, long reference, FolderItem folderItem) {
 		CreateFolderAsyncTask task = new CreateFolderAsyncTask(activity, reference, constructUrl(folderItem.key, folderItem.projectKey));	
-
 		task.execute(folderItem);
-		return true;
 	}
 }

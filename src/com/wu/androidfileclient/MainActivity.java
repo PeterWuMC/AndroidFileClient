@@ -261,6 +261,11 @@ public class MainActivity extends ListActivity implements AllActivities {
 		        	alertDialog.show();
 	    		}
 	    		break;
+	    	case PROJECT_SWITCH_COMPLETED:
+	    		if (result instanceof FolderItem) {
+	    			resetCurrentAndPrevious((FolderItem) result);
+	    			refreshList();
+	    		}
 	    	}
     	}
     }

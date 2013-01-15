@@ -53,20 +53,22 @@ public class LoginActivity extends Activity implements AllActivities {
     }
     
     public void afterAsyncTaskFinish(int task, long reference, Object result) {
-    	switch (task) {
-    	case REGISTER_DEVICE_COMPLETED:
-    		if (result instanceof Credential) {
-    			Utilities.saveCredential(this, (Credential) result);
-    			registration.check(this, 1, (Credential) result);
-    		}
-    		break;
-    	case CHECK_CREDENTIAL_COMPLETED:
-    		if (result instanceof Boolean && (Boolean) result) {
-    			Intent mainIntent = new Intent(this, MainActivity.class);
-    			startActivity(mainIntent);
-    			this.finish();
-    		}
-    		break;
+    	if (result != null) {
+	    	switch (task) {
+	    	case REGISTER_DEVICE_COMPLETED:
+	    		if (result instanceof Credential) {
+	    			Utilities.saveCredential(this, (Credential) result);
+	    			registration.check(this, 1, (Credential) result);
+	    		}
+	    		break;
+	    	case CHECK_CREDENTIAL_COMPLETED:
+	    		if (result instanceof Boolean && (Boolean) result) {
+	    			Intent mainIntent = new Intent(this, MainActivity.class);
+	    			startActivity(mainIntent);
+	    			this.finish();
+	    		}
+	    		break;
+	    	}
     	}
     }
 }

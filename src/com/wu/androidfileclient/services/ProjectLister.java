@@ -1,7 +1,7 @@
 package com.wu.androidfileclient.services;
 
 import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.async.PerformGetProjectAsyncTask;
+import com.wu.androidfileclient.async.GetProjectAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 
 public class ProjectLister extends Base {
@@ -27,7 +27,7 @@ public class ProjectLister extends Base {
 	}
 
 	public void retrieveList(AllActivities activity, long reference) {
-		PerformGetProjectAsyncTask task = new PerformGetProjectAsyncTask(activity, reference, constructUrl());
+		GetProjectAsyncTask task = new GetProjectAsyncTask(activity, reference, constructUrl());
 		task.execute();
 	}
 

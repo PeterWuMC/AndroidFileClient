@@ -18,7 +18,7 @@ import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<FolderItem>> {
+public class GetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<FolderItem>> {
 	
 	private AllActivities activity;
 	private long reference;
@@ -26,7 +26,7 @@ public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList
 
 	private ProgressDialogHandler progressDialog;
 	
-	public PerformGetProjectAsyncTask(AllActivities activity, long reference, String url) {
+	public GetProjectAsyncTask(AllActivities activity, long reference, String url) {
 		super();
 
 		this.activity  = activity;
