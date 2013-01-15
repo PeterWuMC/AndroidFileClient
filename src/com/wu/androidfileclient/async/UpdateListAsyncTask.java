@@ -13,26 +13,28 @@ import android.util.Log;
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
+import com.wu.androidfileclient.models.BaseListItem;
+import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList<FolderItem>> {
-	
-	private AllActivities activity;
-	private long reference;
-	private String url;
+public class UpdateListAsyncTask extends AsyncTask<BaseListItem, Void, ArrayList<BaseListItem>> {
+
+    private AllActivities activity;
+    private long reference;
+    private String url;
 
 	private ProgressDialogHandler progressDialog;
 	
-	public PerformGetProjectAsyncTask(AllActivities activity, long reference, String url) {
+	public UpdateListAsyncTask(AllActivities activity, long reference, String url) {
 		super();
 
 		this.activity  = activity;
 		this.reference = reference;
 		this.url       = url;
-		
+
 		progressDialog = new ProgressDialogHandler(activity);
 		progressDialog.createProgressDialog(ProgressDialogHandler.RETRIEVING_DATA);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
@@ -45,21 +47,21 @@ public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList
     }
 
 	@Override
-	protected ArrayList<FolderItem> doInBackground(Void... params) {
-		ArrayList<FolderItem> fileArray = new ArrayList<FolderItem>();
-		HttpHandler httpHandler 	    = new HttpHandler(url);
-		int statusCode                  = httpHandler.startGETConnection();
-
-		if (statusCode != HttpStatus.SC_OK) cancel(true);
-
+	protected ArrayList<BaseListItem> doInBackground(BaseListItem... params) {
+		ArrayList<BaseListItem> fileArray = new ArrayList<BaseListItem>();
+		HttpHandler httpHandler 	      = new HttpHandler(url);
+		int statusCode                    = httpHandler.startGETConnection();
+		
+		if (statusCode != HttpStatus.SC_OK) cancel(true); 
+		
 		try {
 			String response = httpHandler.retrieveEntireResponse();
 			if (response != null) {
 				Log.d(getClass().getSimpleName(), response);
-				JSONArray folders = new JSONArray(response);
-				for (int i = 0; i < folders.length(); ++i) {
-	                JSONObject jsonObject = folders.getJSONObject(i);
-	                FolderItem listItem = new FolderItem(jsonObject);
+				JSONArray files = new JSONArray(response);
+				for (int i = 0; i < files.length(); ++i) {
+	                JSONObject jsonObject = files.getJSONObject(i);
+	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject) : new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
 				return fileArray;
@@ -80,8 +82,8 @@ public class PerformGetProjectAsyncTask  extends AsyncTask<Void, Void, ArrayList
 	}
 
 	@Override
-	protected void onPostExecute(final ArrayList<FolderItem> result) {
+	protected void onPostExecute(final ArrayList<BaseListItem> result) {
 		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.GET_PROJECT_COMPLETED, reference, result);
+		activity.afterAsyncTaskFinish(AllActivities.UPDATE_LIST_COMPLETED, reference, result);
 	}
 }

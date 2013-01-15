@@ -1,8 +1,7 @@
 package com.wu.androidfileclient.services;
 
-import android.content.Context;
-
-import com.wu.androidfileclient.async.PerformDownloadFileAsyncTask;
+import com.wu.androidfileclient.AllActivities;
+import com.wu.androidfileclient.async.DownloadFileAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 
@@ -29,8 +28,8 @@ public class FileDownloader extends Base {
 		return FORMAT;
 	}
 
-	public void downloadWithProgressUpdate(Context context, FileItem file) {
-		PerformDownloadFileAsyncTask task = new PerformDownloadFileAsyncTask(context, constructUrl(file.key, file.projectKey));
+	public void download(AllActivities activity, long reference, FileItem file) {
+		DownloadFileAsyncTask task = new DownloadFileAsyncTask(activity, reference, constructUrl(file.key, file.projectKey));
 		task.execute(file);
 	}
 }

@@ -1,5 +1,7 @@
 package com.wu.androidfileclient;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
@@ -12,13 +14,17 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class LoginActivity extends AllActivities {
+public class LoginActivity extends Activity implements AllActivities {
 
 	private EditText userNameBox;
 	private EditText passwordBox;
 	private Button   loginBtn;
 
 	private final Registration registration = new Registration();
+
+	public Context getContext() {
+		return this;
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,7 @@ public class LoginActivity extends AllActivities {
 		loginBtn    = (Button) findViewById(R.id.login);
 
 		if (!credential.getUserName().isEmpty() && !credential.getDeviceCode().isEmpty()) {
-			registration.check(this, credential);
+			registration.check(this, 1, credential);
 		}
 
 		loginBtn.setOnClickListener(new OnClickListener() {
@@ -41,23 +47,25 @@ public class LoginActivity extends AllActivities {
 			public void onClick(View v) {
 				credential.setUserName(userNameBox.getText().toString());
 				credential.setPassword(passwordBox.getText().toString());
-				registration.register(LoginActivity.this, credential);
+				registration.register(LoginActivity.this, 1, credential);
 			}
         });
     }
     
-    public void afterAsyncTaskFinish(int task, Object object) {
+    public void afterAsyncTaskFinish(int task, long reference, Object result) {
     	switch (task) {
-    	case FINISHED_REGISTER_DEVICE:
-    		if (object instanceof Credential) {
-    			Utilities.saveCredential(this, (Credential) object);
-    			registration.check(this, (Credential) object);
+    	case REGISTER_DEVICE_COMPLETED:
+    		if (result instanceof Credential) {
+    			Utilities.saveCredential(this, (Credential) result);
+    			registration.check(this, 1, (Credential) result);
     		}
     		break;
-    	case FINISHED_CHECK_CREDENTIAL:
-    		Intent mainIntent = new Intent(this, MainActivity.class);
-    		startActivity(mainIntent);
-    		this.finish();
+    	case CHECK_CREDENTIAL_COMPLETED:
+    		if (result instanceof Boolean && (Boolean) result) {
+    			Intent mainIntent = new Intent(this, MainActivity.class);
+    			startActivity(mainIntent);
+    			this.finish();
+    		}
     		break;
     	}
     }

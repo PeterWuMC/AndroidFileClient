@@ -14,35 +14,43 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
+import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class RegisterDeviceAsyncTask extends AsyncTask<Void, Void, Credential>{
+public class RegisterDeviceAsyncTask extends AsyncTask<Credential, Void, Credential>{
 
 	private AllActivities activity;
-	private Credential credential;
+	private long reference;
 	private String url;
 
 	private ProgressDialogHandler progressDialog;
 	
-	public RegisterDeviceAsyncTask(AllActivities activity, Credential credential, String url) {
+	public RegisterDeviceAsyncTask(AllActivities activity, long reference, String url) {
 		super();
+
 		this.activity   = activity;
-		this.credential = credential;
 		this.url        = url;
+		this.reference  = reference; 
 
 		progressDialog = new ProgressDialogHandler(activity);
 		progressDialog.createProgressDialog(ProgressDialogHandler.LOGGING_IN);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-		progressDialog.show();
 	}
 
 	@Override
-	protected Credential doInBackground(Void... params) {
+    protected void onPreExecute() {
+        super.onPreExecute();
+    	progressDialog.show();
+    }
+
+	@Override
+	protected Credential doInBackground(Credential... params) {
 		try {
+			Credential credential          = params[0];
 			HttpHandler httpHandler 	   = new HttpHandler(url);
 			List<NameValuePair> parameters = new ArrayList<NameValuePair>(4);
 			Credential new_credential      = new Credential();
@@ -81,13 +89,13 @@ public class RegisterDeviceAsyncTask extends AsyncTask<Void, Void, Credential>{
 
 	@Override
 	protected void onCancelled() {
-		Utilities.longToast(activity, "Something wrong with your connection...");
 		progressDialog.dismiss();
+		Utilities.longToast(activity, R.string.connection_error_toast);
 	}
 
 	@Override
 	protected void onPostExecute(Credential result) {
 		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.FINISHED_REGISTER_DEVICE, result);
+		activity.afterAsyncTaskFinish(AllActivities.REGISTER_DEVICE_COMPLETED, reference, result);
 	}	
 }

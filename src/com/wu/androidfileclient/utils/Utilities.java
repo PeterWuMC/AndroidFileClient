@@ -9,19 +9,29 @@ import java.util.concurrent.TimeUnit;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore.MediaColumns;
 import android.widget.Toast;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
+import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.models.Credential;
 
 public final class Utilities {
-    
 
-	public final static void longToast(Context context, CharSequence message) {
-		Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+	public final static void longToast(AllActivities activity, int id) {
+		Resources res = activity.getResources();
+		longToast(activity, res.getString(id));
+	}
+
+	public final static void longToast(final AllActivities activity, final CharSequence message) {
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(activity.getContext(), message, Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 	
 	public final static Credential getCredential(Context context) {

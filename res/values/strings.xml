@@ -16,6 +16,9 @@
     <string name="upload">Upload</string>
     <string name="about">About</string>
 
+    <string name="connection_error_toast">Something wrong with your connection...</string>
+	<string name="credential_not_recognised">Credential not recognised, please login again</string>
+	<string name="no_compatible_application">"No Application found to open this file"</string>
     
     
     

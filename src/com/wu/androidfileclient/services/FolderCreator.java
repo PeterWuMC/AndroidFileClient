@@ -1,7 +1,7 @@
 package com.wu.androidfileclient.services;
 
-import com.wu.androidfileclient.MainActivity;
-import com.wu.androidfileclient.async.PerformCreateFolderAsyncTask;
+import com.wu.androidfileclient.AllActivities;
+import com.wu.androidfileclient.async.CreateFolderAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FolderItem;
 
@@ -29,8 +29,8 @@ public class FolderCreator extends Base {
 		return FORMAT;
 	}
 
-	public boolean create_folder(MainActivity context, FolderItem folderItem) {
-		PerformCreateFolderAsyncTask task = new PerformCreateFolderAsyncTask(context, constructUrl(folderItem.key, folderItem.projectKey));	
+	public boolean create_folder(AllActivities activity, long reference, FolderItem folderItem) {
+		CreateFolderAsyncTask task = new CreateFolderAsyncTask(activity, reference, constructUrl(folderItem.key, folderItem.projectKey));	
 
 		task.execute(folderItem);
 		return true;

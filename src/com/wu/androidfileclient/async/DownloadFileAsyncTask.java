@@ -9,33 +9,35 @@ import java.io.OutputStream;
 
 import org.apache.http.HttpStatus;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
+import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class PerformDownloadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem> {
-    private Context context;
-    private ProgressDialogHandler progressDialog;
+public class DownloadFileAsyncTask extends AsyncTask<FileItem, Integer, FileItem> {
+
+    private AllActivities activity;
+    private long reference;
 	private String url;
+
+    private ProgressDialogHandler progressDialog;
 	
-	public PerformDownloadFileAsyncTask(Context context, String url) {
+	public DownloadFileAsyncTask(AllActivities activity, long reference, String url) {
 		super();
-		this.context = context;
-		this.url = url;
-		progressDialog = new ProgressDialogHandler(context);
+
+		this.activity  = activity;
+		this.reference = reference;
+		this.url       = url;
+
+		progressDialog = new ProgressDialogHandler(activity);
 		progressDialog.createProgressDialog(ProgressDialogHandler.DOWNLOADING_FILE);
 //		progressDialog.setProgressNumberFormat("%1d / %2d bytes");
-    	
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
 	}
 
@@ -109,28 +111,12 @@ public class PerformDownloadFileAsyncTask extends AsyncTask<FileItem, Integer, F
 	@Override
 	protected void onCancelled() {
 		progressDialog.dismiss();
-		Utilities.longToast(context, "Something wrong with your connection...");
+		Utilities.longToast(activity, "Something wrong with your connection...");
 	}
 
 	@Override
-	protected void onPostExecute(FileItem fileItem) {
+	protected void onPostExecute(FileItem result) {
 		progressDialog.dismiss();
-
-		Intent fileViewIntent = new Intent();
-		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
-		if (fileItem != null && !fileItem.localPath.isEmpty()) {
-    		File file = new File(fileItem.localPath + fileItem.name);
-
-    		fileViewIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileItem.ext()));
-    		try {
-    			context.startActivity(fileViewIntent);
-    		} catch (android.content.ActivityNotFoundException e) {
-    			Utilities.longToast(context, "No Application found to open this file");
-    			Log.e(getClass().getSimpleName(), "Activity Not Found");
-    		}
-		} else {
-			cancel(true);
-		}
+		activity.afterAsyncTaskFinish(AllActivities.DOWNLOAD_FILE_COMPLETED, reference, result);
 	}
 }
-

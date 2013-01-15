@@ -28,14 +28,14 @@ public class Registration extends Base {
 		return FORMAT;
 	}
 	
-	public void register(AllActivities activity, Credential credential) {
-		RegisterDeviceAsyncTask task = new RegisterDeviceAsyncTask(activity, credential, constructUrl());
-		task.execute();
+	public void register(AllActivities activity, long reference, Credential credential) {
+		RegisterDeviceAsyncTask task = new RegisterDeviceAsyncTask(activity, reference, constructUrl());
+		task.execute(credential);
 	}
 	
-	public void check(AllActivities activity, Credential credential) {
-		CheckCredentialAsyncTask task = new CheckCredentialAsyncTask(activity, credential, constructUrl()+"/check");
-		task.execute();
+	public void check(AllActivities activity, long reference, Credential credential) {
+		CheckCredentialAsyncTask task = new CheckCredentialAsyncTask(activity, reference, constructUrl() + "/check");
+		task.execute(credential);
 	}
 
 }

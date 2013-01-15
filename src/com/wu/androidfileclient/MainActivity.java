@@ -6,21 +6,22 @@ import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 
 import com.ipaulpro.afilechooser.utils.FileUtils;
-import com.wu.androidfileclient.async.PerformDeleteFileAsyncTask;
-import com.wu.androidfileclient.async.PerformGetProjectAsyncTask;
-import com.wu.androidfileclient.async.PerformUpdateListAsyncTask;
 import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
@@ -28,11 +29,14 @@ import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.services.FileDownloader;
 import com.wu.androidfileclient.services.FileUploader;
+import com.wu.androidfileclient.services.FolderLister;
+import com.wu.androidfileclient.services.ItemRemover;
+import com.wu.androidfileclient.services.ProjectLister;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.AlertDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity implements AllActivities {
 	
 	private ArrayList<BaseListItem> objectsList             = new ArrayList<BaseListItem>();
 	private ActionItem goBack                               = new ActionItem();
@@ -40,7 +44,15 @@ public class MainActivity extends ListActivity {
 	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
 	private FolderItem currentFolder                        = new FolderItem();
 
+	private ItemRemover itemRemover;
+	private FolderLister folderLister;
+	private ProjectLister projectLister;
+
 	private FileItemsListAdapter filesAdapter;
+
+	public Context getContext() {
+		return this;
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,8 +60,11 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.activity_main);
 
 		credential        = Utilities.getCredential(this);
-		goBack.name       = "Back";
+		itemRemover       = new ItemRemover(credential); 
+		folderLister      = new FolderLister(credential); 
+		projectLister     = new ProjectLister(credential);
 
+		goBack.name = "Back";
     	FolderItem tempFolderItem = new FolderItem();
 		tempFolderItem.key        = "initial";
 		tempFolderItem.projectKey = "cHVibGlj";
@@ -82,10 +97,11 @@ public class MainActivity extends ListActivity {
 			switch (item.getItemId()) {
 			case R.id.open:
 				FileDownloader fileDownloader = new FileDownloader(credential);
-				fileDownloader.downloadWithProgressUpdate(this, fileItem);
+				fileDownloader.download(this, 1, fileItem);
 				break;
 			case R.id.delete:
-	    		deleteFile(fileItem);
+//				TODO: currently only allow to delete file
+				itemRemover.delete(this, 1, fileItem);
 		    	break;
 	        default:
 	            return super.onOptionsItemSelected(item);
@@ -106,15 +122,7 @@ public class MainActivity extends ListActivity {
 		AlertDialogHandler alertDialog;
 		switch (item.getItemId()) {
 		case R.id.change_project:
-			ArrayList<FolderItem> folderItemList = new ArrayList<FolderItem>();
-			PerformGetProjectAsyncTask task = new PerformGetProjectAsyncTask(this, credential);
-			try {
-				task.execute();
-				folderItemList = task.get();
-			} catch (Exception e) {}
-			alertDialog = new AlertDialogHandler(this, credential, folderItemList);
-        	alertDialog.createAlertDialog(AlertDialogHandler.SELECT_PROJECT);
-        	alertDialog.show();
+			projectLister.retrieveList(this, 1);
 			break;
         case R.id.refresh:
         	refreshList();
@@ -150,7 +158,7 @@ public class MainActivity extends ListActivity {
 	        	file.name = f.getName();
 
 	        	FileUploader fileUploader = new FileUploader(credential);
-	        	fileUploader.uploadWithProgressUpdate(this, currentFolder, file);
+	        	fileUploader.uploadWithProgressUpdate(this, 1, currentFolder, file);
 	        }
 	    }
 	}
@@ -165,7 +173,7 @@ public class MainActivity extends ListActivity {
         	loadList(((ActionItem) listItem).folderItem);
         } else {
 			FileDownloader fileDownloader = new FileDownloader(credential);
-			fileDownloader.downloadWithProgressUpdate(this, (FileItem) listItem);
+			fileDownloader.download(this, 1, (FileItem) listItem);
         }
     }
 
@@ -180,12 +188,6 @@ public class MainActivity extends ListActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-//	TODO: currently only allow to delete file
-	public void deleteFile(FileItem file) {
-		PerformDeleteFileAsyncTask task = new PerformDeleteFileAsyncTask(this, credential);
-		task.execute(file);
-	}
-
 	public void refreshList() {
 		loadList(currentFolder);
 	}
@@ -196,8 +198,7 @@ public class MainActivity extends ListActivity {
 
     	goBack.folderItem = previousFolders.get(currentFolder);
 
-    	PerformUpdateListAsyncTask task = new PerformUpdateListAsyncTask(this, credential);
-		task.execute(currentFolder);
+    	folderLister.retrieveList(this, 1, currentFolder); 
     }
 
     public void updateList(ArrayList<BaseListItem> result) {
@@ -216,5 +217,51 @@ public class MainActivity extends ListActivity {
 		previousFolders = new HashMap<FolderItem, FolderItem>();
 
 		previousFolders.put(currentFolder, currentFolder);
+    }
+    
+    public void afterAsyncTaskFinish(int task, long reference, Object result) {
+    	if (result != null) {
+	    	switch (task) {
+	    	case CREATE_FOLDER_COMPLETED:
+	    		if (result instanceof Boolean && (Boolean) result) refreshList();
+	    		break;
+	    	case DELETE_ITEM_COMPLETED:
+	    		if (result instanceof Boolean && (Boolean) result) refreshList();
+	    		break;
+	    	case DOWNLOAD_FILE_COMPLETED:
+	    		if (result instanceof FileItem) {
+		    		Intent fileViewIntent = new Intent();
+		    		fileViewIntent.setAction(android.content.Intent.ACTION_VIEW);
+		    		FileItem fileItem = (FileItem) result;
+		    		if (!fileItem.localPath.isEmpty()) {
+		        		File file = new File(fileItem.localPath + fileItem.name);
+	
+		        		fileViewIntent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileItem.ext()));
+		        		try {
+		        			startActivity(fileViewIntent);
+		        		} catch (android.content.ActivityNotFoundException e) {
+		        			Utilities.longToast(this, R.string.no_compatible_application);
+		        			Log.e(getClass().getSimpleName(), "Activity Not Found");
+		        		}
+		    		}
+	    		}
+	    		break;
+	    	case UPDATE_LIST_COMPLETED:
+	    		if (result instanceof ArrayList)
+	    			updateList((ArrayList<BaseListItem>) result);
+	    		break;
+	    	case UPLOAD_FILE_COMPLETED:
+	    		refreshList();
+	    		break;
+	    	case GET_PROJECT_COMPLETED:
+	    		if (result instanceof ArrayList) {
+	    			AlertDialogHandler alertDialog;
+					alertDialog = new AlertDialogHandler(this, credential, (ArrayList<FolderItem>) result);
+		        	alertDialog.createAlertDialog(AlertDialogHandler.SELECT_PROJECT);
+		        	alertDialog.show();
+	    		}
+	    		break;
+	    	}
+    	}
     }
 }

@@ -12,34 +12,29 @@ import android.os.AsyncTask;
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;
-import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
-public class CheckCredentialAsyncTask extends AsyncTask<Credential, Void, Boolean>{
-
-	private AllActivities activity;
-	private long reference;
+public class CreateFolderAsyncTask extends AsyncTask<FolderItem, Void, Boolean> {
+    private AllActivities activity;
+    private long reference;
 	private String url;
 
 	private ProgressDialogHandler progressDialog;
-
-	public CheckCredentialAsyncTask(AllActivities activity, String url) {
-		this(activity, 0, url);
-	}
-
-	public CheckCredentialAsyncTask(AllActivities activity, long reference, String url) {
+	
+	public CreateFolderAsyncTask (AllActivities activity, long reference, String url) {
 		super();
 
-		this.activity   = activity;
-		this.url        = url;
-		this.reference  = reference;
+		this.activity  = activity;
+		this.url       = url;
+		this.reference = reference;
 
 		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(ProgressDialogHandler.CHECKING_CREDENTIAL);
+		progressDialog.createProgressDialog(ProgressDialogHandler.CREATING_FOLDER);
 		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-	}
+    }
 
 	@Override
     protected void onPreExecute() {
@@ -48,21 +43,20 @@ public class CheckCredentialAsyncTask extends AsyncTask<Credential, Void, Boolea
     }
 
 	@Override
-	protected Boolean doInBackground(Credential... params) {
-		Credential credential          = params[0];
-		HttpHandler httpHandler 	   = new HttpHandler(url);
-		List<NameValuePair> parameters = new ArrayList<NameValuePair>(2);
+	protected Boolean doInBackground(FolderItem... params) {
+		FolderItem folderItem = params[0];
+		List<NameValuePair> parameters = new ArrayList<NameValuePair>(4);
 
-		parameters.add(new BasicNameValuePair(Credential.USER_NAME_KEY, credential.getUserName()));
-		parameters.add(new BasicNameValuePair(Credential.DEVICE_CODE_KEY, credential.getDeviceCode()));
+		parameters.add(new BasicNameValuePair("name", folderItem.name));
 
+		HttpHandler httpHandler = new HttpHandler(url);
 		int statusCode = httpHandler.startPOSTConnection(parameters);
 
 		if (statusCode != HttpStatus.SC_OK) {
-			Utilities.longToast(activity, R.string.credential_not_recognised);
+			Utilities.longToast(activity, R.string.connection_error_toast);
 			return false;
 		}
-
+		
 		return true;
 	}
 
@@ -73,8 +67,8 @@ public class CheckCredentialAsyncTask extends AsyncTask<Credential, Void, Boolea
 	}
 
 	@Override
-	protected void onPostExecute(final Boolean result) {
+	protected void onPostExecute(Boolean result) {
 		progressDialog.dismiss();
-		activity.afterAsyncTaskFinish(AllActivities.CHECK_CREDENTIAL_COMPLETED, reference, result);
+		activity.afterAsyncTaskFinish(AllActivities.CREATE_FOLDER_COMPLETED, reference, result);
 	}
 }

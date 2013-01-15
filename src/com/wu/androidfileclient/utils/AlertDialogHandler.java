@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import com.wu.androidfileclient.MainActivity;
+import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.services.FolderCreator;
@@ -15,7 +15,7 @@ import com.wu.androidfileclient.services.FolderCreator;
 public class AlertDialogHandler extends AlertDialog.Builder {
 
 	private EditText input;
-	private MainActivity context;
+	private AllActivities activity;
 	private Credential credential;
 
 	private FolderItem currentFolder;
@@ -24,22 +24,22 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 	public static final int FOLDER_NAME = 1;
 	public static final int SELECT_PROJECT = 2;
 	
-	public AlertDialogHandler(MainActivity context, Credential credential) {
-		super(context);
-		this.context = context;
+	public AlertDialogHandler(AllActivities activity, Credential credential) {
+		super(activity.getContext());
+		this.activity = activity;
 		this.credential = credential;
 	}
 
-	public AlertDialogHandler(MainActivity context, Credential credential, FolderItem currentFolder) {
-		super(context);
-		this.context = context;
+	public AlertDialogHandler(AllActivities activity, Credential credential, FolderItem currentFolder) {
+		super(activity.getContext());
+		this.activity = activity;
 		this.credential = credential;
 		this.currentFolder = currentFolder;
 	}
 
-	public AlertDialogHandler(MainActivity context, Credential credential, ArrayList<FolderItem> folderItemList) {
-		super(context);
-		this.context = context;
+	public AlertDialogHandler(AllActivities activity, Credential credential, ArrayList<FolderItem> folderItemList) {
+		super(activity.getContext());
+		this.activity = activity;
 		this.credential = credential;
 		this.folderItemList = folderItemList;
 	}
@@ -48,7 +48,7 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 		switch (dialogType) {
 		case FOLDER_NAME:
 			final FolderCreator folderCreater = new FolderCreator(credential);
-			input = new EditText(context);
+			input = new EditText(activity.getContext());
 			setTitle("Create Folder");
 			setMessage("Folder name");
 			setView(input);
@@ -59,9 +59,9 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 			    	folderItem.projectKey = currentFolder.projectKey;
 			    	folderItem.key = currentFolder.key;
                 	if (!folderItem.name.isEmpty()) {
-	            		folderCreater.create_folder(context, folderItem);
+	            		folderCreater.create_folder(activity, 1, folderItem);
 	            	} else {
-	            		Utilities.longToast(context, "Cannot have a folder without name");
+	            		Utilities.longToast(activity, "Cannot have a folder without name");
 	            	}
 			    }
 			}).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -71,7 +71,7 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 			});
 			break;
 		case SELECT_PROJECT:
-			ArrayAdapter<FolderItem> adapter = new ArrayAdapter<FolderItem>(context, android.R.layout.select_dialog_multichoice);
+			ArrayAdapter<FolderItem> adapter = new ArrayAdapter<FolderItem>(activity.getContext(), android.R.layout.select_dialog_multichoice);
 
 			for (int i = 0; i < folderItemList.size(); i++) {
 				adapter.add(folderItemList.get(i));
@@ -80,8 +80,8 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 			setTitle("Please choose a project");
 			setAdapter(adapter, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			    	context.resetCurrentAndPrevious(folderItemList.get(item));
-			    	context.refreshList();
+//			    	activity.resetCurrentAndPrevious(folderItemList.get(item));
+//			    	activity.refreshList();
 			    }
 			});
 			break;

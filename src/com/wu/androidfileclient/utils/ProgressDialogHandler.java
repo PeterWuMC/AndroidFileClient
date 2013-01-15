@@ -1,7 +1,8 @@
 package com.wu.androidfileclient.utils;
 
 import android.app.ProgressDialog;
-import android.content.Context;
+
+import com.wu.androidfileclient.AllActivities;
 
 public final class ProgressDialogHandler extends ProgressDialog {
 
@@ -13,8 +14,8 @@ public final class ProgressDialogHandler extends ProgressDialog {
     public static final int UPLOADING_FILE      = 6;
     public static final int CREATING_FOLDER     = 7;
     
-    public ProgressDialogHandler(Context context) {
-    	super(context);
+    public ProgressDialogHandler(AllActivities activity) {
+    	super(activity.getContext());
     }
 
     public void createProgressDialog(int dialogType) {
