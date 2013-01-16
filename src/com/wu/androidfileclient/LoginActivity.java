@@ -10,8 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.wu.androidfileclient.fetchers.Registration;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.services.Registration;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class LoginActivity extends Activity implements AllActivities {

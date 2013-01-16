@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.wu.androidfileclient.AllActivities;
+import com.wu.androidfileclient.fetchers.FolderCreator;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.services.FolderCreator;
 
 public class AlertDialogHandler extends AlertDialog.Builder {
 

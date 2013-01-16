@@ -1,4 +1,4 @@
-package com.wu.androidfileclient.services;
+package com.wu.androidfileclient.fetchers;
 
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.async.CreateFolderAsyncTask;
