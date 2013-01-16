@@ -6,8 +6,6 @@ import java.util.Locale;
 
 import org.json.JSONObject;
 
-import android.webkit.MimeTypeMap;
-
 public class FileItem extends BaseListItem {
 
 	private static final long serialVersionUID = -3056032740471401976L;
@@ -26,7 +24,13 @@ public class FileItem extends BaseListItem {
 	}
 
 	public String ext() {
-		return MimeTypeMap.getFileExtensionFromUrl(name).toLowerCase(Locale.ENGLISH);
+		String ext = null;
+		int i = name.lastIndexOf('.');
+
+		if (i > 0 && i < name.length() - 1) ext = name.substring(i+1).toLowerCase(Locale.ENGLISH);
+
+		if(ext == null) return "";
+		return ext;
 	}
 
 }
