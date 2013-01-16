@@ -1,7 +1,6 @@
 package com.wu.androidfileclient;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
@@ -28,9 +27,11 @@ import com.wu.androidfileclient.fetchers.FolderLister;
 import com.wu.androidfileclient.fetchers.ItemRemover;
 import com.wu.androidfileclient.fetchers.ProjectLister;
 import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
+import com.wu.androidfileclient.models.FolderArrayList;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.AlertDialogHandler;
@@ -38,7 +39,7 @@ import com.wu.androidfileclient.utils.Utilities;
 
 public class MainActivity extends ListActivity implements AllActivities {
 	
-	private ArrayList<BaseListItem> objectsList             = new ArrayList<BaseListItem>();
+	private BaseArrayList objectsList                       = new BaseArrayList();
 	private ActionItem goBack                               = new ActionItem();
 	private Credential credential                           = new Credential();
 	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
@@ -74,7 +75,7 @@ public class MainActivity extends ListActivity implements AllActivities {
 		tempFolderItem.projectKey = "cHVibGlj";
 		resetCurrentAndPrevious(tempFolderItem);
 
-        if (objectsList == null) objectsList = new ArrayList<BaseListItem>();
+        if (objectsList == null) objectsList = new BaseArrayList();
         if (objectsList.isEmpty()) loadList(currentFolder);
 
     	filesAdapter = new FileItemsListAdapter(this, R.layout.file_list_row, objectsList);
@@ -203,7 +204,7 @@ public class MainActivity extends ListActivity implements AllActivities {
     	folderLister.retrieveList(this, 1, currentFolder); 
     }
 
-    public void updateList(ArrayList<BaseListItem> result) {
+    public void updateList(BaseArrayList result) {
     	if (result != null) {
 			objectsList.clear();
 			for (int i = 0; i < result.size(); i++) {
@@ -257,17 +258,17 @@ public class MainActivity extends ListActivity implements AllActivities {
 	    		}
 	    		break;
 	    	case UPDATE_LIST:
-	    		if (result instanceof ArrayList) {
-	    			updateList((ArrayList<BaseListItem>) result);
+	    		if (result instanceof BaseArrayList) {
+	    			updateList((BaseArrayList) result);
 	    		}
 	    		break;
 	    	case UPLOAD_FILE:
 	    		refreshList();
 	    		break;
 	    	case GET_PROJECT:
-	    		if (result instanceof ArrayList) {
+	    		if (result instanceof FolderArrayList) {
 	    			AlertDialogHandler alertDialog;
-					alertDialog = new AlertDialogHandler(this, credential, (ArrayList<FolderItem>) result);
+					alertDialog = new AlertDialogHandler(this, credential, (FolderArrayList) result);
 		        	alertDialog.createAlertDialog(AlertDialogHandler.SELECT_PROJECT);
 		        	alertDialog.show();
 	    		}

@@ -1,6 +1,5 @@
 package com.wu.androidfileclient.ui;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import android.app.Activity;
@@ -14,16 +13,17 @@ import android.widget.TextView;
 
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.models.ActionItem;
+import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
-	private ArrayList<BaseListItem> objectsList;
+	private BaseArrayList objectsList;
 	private Activity context;
 
-	public FileItemsListAdapter(Activity context, int textViewResourceId, ArrayList<BaseListItem> objectsList) {
+	public FileItemsListAdapter(Activity context, int textViewResourceId, BaseArrayList objectsList) {
 		super(context, textViewResourceId, objectsList);
 		this.context     = context;
 		this.objectsList = objectsList;

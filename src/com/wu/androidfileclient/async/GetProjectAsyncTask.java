@@ -1,7 +1,5 @@
 package com.wu.androidfileclient.async;
 
-import java.util.ArrayList;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,21 +8,22 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
+import com.wu.androidfileclient.models.FolderArrayList;
 import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 
-public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, ArrayList<FolderItem>> {
+public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, FolderArrayList> {
 
 	public GetProjectAsyncTask(AllActivities activity, long reference, String url) {
 		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA, AllActivities.GET_PROJECT);
     }
 
 	@Override
-	protected ArrayList<FolderItem> doInBackground(Void... params) {
-		ArrayList<FolderItem> fileArray = new ArrayList<FolderItem>();
-		HttpHandler httpHandler 	    = new HttpHandler(url);
-		int statusCode                  = httpHandler.startGETConnection();
+	protected FolderArrayList doInBackground(Void... params) {
+		FolderArrayList fileArray = new FolderArrayList();
+		HttpHandler httpHandler   = new HttpHandler(url);
+		int statusCode            = httpHandler.startGETConnection();
 
 		if (statusCode != HttpStatus.SC_OK) cancel(true);
 

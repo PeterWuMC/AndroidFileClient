@@ -1,7 +1,5 @@
 package com.wu.androidfileclient.utils;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.ArrayAdapter;
@@ -10,6 +8,7 @@ import android.widget.EditText;
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.fetchers.FolderCreator;
 import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.models.FolderArrayList;
 import com.wu.androidfileclient.models.FolderItem;
 
 public class AlertDialogHandler extends AlertDialog.Builder {
@@ -19,7 +18,7 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 	private Credential credential;
 
 	private FolderItem currentFolder;
-	private ArrayList<FolderItem> folderItemList;
+	private FolderArrayList folderItemList;
 
 	public static final int FOLDER_NAME = 1;
 	public static final int SELECT_PROJECT = 2;
@@ -37,7 +36,7 @@ public class AlertDialogHandler extends AlertDialog.Builder {
 		this.currentFolder = currentFolder;
 	}
 
-	public AlertDialogHandler(AllActivities activity, Credential credential, ArrayList<FolderItem> folderItemList) {
+	public AlertDialogHandler(AllActivities activity, Credential credential, FolderArrayList folderItemList) {
 		super(activity.getContext());
 		this.activity = activity;
 		this.credential = credential;
