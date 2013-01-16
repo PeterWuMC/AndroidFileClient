@@ -52,14 +52,14 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
 
     	    	progressDialog.setMax((int) (long)lenghtOfFile);
 
-                while ((count = inputStream.read(data)) != -1) {
+                while ((count = inputStream.read(data)) != -1 ) {
+                	if (isCancelled()) break;
+
                     total += count;
                     publishProgress((int)total);
 
                     outputStream.write(data, 0, count);
                 }
-
-                publishProgress((int) (long)lenghtOfFile);
 
                 outputStream.flush();
                 outputStream.close();
@@ -74,7 +74,7 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
         	    }
     	    	catch (Exception e) { Log.e("Error: ", e.getMessage()); }
     	    }
-    		return fileItem;
+    		return isCancelled() ? null : fileItem;
 		} else {
 			return null;
 		}

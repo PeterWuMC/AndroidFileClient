@@ -36,7 +36,7 @@ public class CheckCredentialAsyncTask extends CustomAsyncTask<Credential, Void, 
 			return false;
 		}
 
-		return true;
+		return isCancelled() ? false : true;
 	}
 
 }

@@ -34,11 +34,13 @@ public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, ArrayList<
 				Log.d(getClass().getSimpleName(), response);
 				JSONArray folders = new JSONArray(response);
 				for (int i = 0; i < folders.length(); ++i) {
+                	if (isCancelled()) break;
+
 	                JSONObject jsonObject = folders.getJSONObject(i);
 	                FolderItem listItem = new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
-				return fileArray;
+				return isCancelled() ? null : fileArray;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

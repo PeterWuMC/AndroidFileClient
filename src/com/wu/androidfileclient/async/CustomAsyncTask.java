@@ -34,10 +34,11 @@ public abstract class CustomAsyncTask<A,B,C> extends AsyncTask<A, B, C> {
 	}
 
 	@Override
-	protected void onCancelled(C result) {
+//	protected void onCancelled(C result) {
+	protected void onCancelled() {
 		progressDialog.dismiss();
 		Utilities.longToast(activity, R.string.connection_error_toast);
-		activity.onTaskCancelled(taskId, reference, result);
+//		activity.onTaskCancelled(taskId, reference, result);
 	}
 
 	@Override

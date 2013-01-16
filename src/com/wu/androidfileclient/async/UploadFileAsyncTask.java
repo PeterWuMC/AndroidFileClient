@@ -29,10 +29,15 @@ public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, File
 		HttpHandler httpHandler = new HttpHandler(url);
 		multipartContent = new CustomMultiPartEntity(new ProgressListener() {
 			@Override
-			public void transferred(long num)
-			{
-					publishProgress((int) num);
+			public void transferred(long num) {
+				publishProgress((int) num);
 			}
+			
+			@Override
+			public boolean isCancelled() {
+				return UploadFileAsyncTask.this.isCancelled();
+			}
+			
 		});
 		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
 		long totalSize = multipartContent.getContentLength();

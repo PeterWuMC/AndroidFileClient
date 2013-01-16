@@ -36,15 +36,16 @@ public class UpdateListAsyncTask extends CustomAsyncTask<BaseListItem, Void, Arr
 				Log.d(getClass().getSimpleName(), response);
 				JSONArray files = new JSONArray(response);
 				for (int i = 0; i < files.length(); ++i) {
+                	if (isCancelled()) break;
+
 	                JSONObject jsonObject = files.getJSONObject(i);
 	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject) : new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
-				return fileArray;
+				return isCancelled() ? null : fileArray;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
 		} finally {
 			httpHandler.closeConnect();
 		}

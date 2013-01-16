@@ -24,15 +24,15 @@ public final class ProgressDialogHandler extends ProgressDialog {
     	switch (dialogType) {
     	case RETRIEVING_DATA:
         	setMessage("Retrieving list...");
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	case LOGGING_IN:
         	setMessage("Logging in...");
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	case CHECKING_CREDENTIAL:
         	setMessage("Checking Credential...");
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	case DELETING_FILE:
         	setMessage("Deleting...");
@@ -43,18 +43,18 @@ public final class ProgressDialogHandler extends ProgressDialog {
         	setIndeterminate(false);
 //        	setMax(100);
         	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	case UPLOADING_FILE:
         	setMessage("Uploading file...");
         	setIndeterminate(false);
 //        	setMax(100);
         	setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	case CREATING_FOLDER:
         	setMessage("Creating folder");
-        	setCancelable(true);
+        	setCancelable(false);
     		break;
     	}
     }
