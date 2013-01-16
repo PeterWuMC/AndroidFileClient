@@ -39,15 +39,14 @@ public class GetProjectAsyncTask  extends CustomAsyncTask<Void, Void, FolderArra
 	                FolderItem listItem = new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
-				return isCancelled() ? null : fileArray;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return null;
+			fileArray = null;
 		} finally {
 			httpHandler.closeConnect();
 		}
-		return null;
+		return isCancelled() ? null : fileArray;
 	}
 
 }

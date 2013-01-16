@@ -19,11 +19,13 @@ public class DeleteItemAsyncTask extends CustomAsyncTask<Void, Void, Boolean> {
 		HttpHandler httpHandler = new HttpHandler(url);
 		int statusCode = httpHandler.startDELETEConnection();
 
+		httpHandler.closeConnect();
+
+
 		if (statusCode != HttpStatus.SC_OK) {
 			Utilities.longToast(activity, R.string.connection_error_toast);
 			return false;
 		}
-
 		return true;
 	}
 

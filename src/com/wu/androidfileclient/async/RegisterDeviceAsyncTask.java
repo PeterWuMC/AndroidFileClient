@@ -48,14 +48,14 @@ public class RegisterDeviceAsyncTask extends CustomAsyncTask<Credential, Void, C
 				
 				new_credential.setUserName(credential.getUserName());
 				new_credential.setDeviceCode(json.getString(Credential.DEVICE_CODE_KEY));
-				return isCancelled() ? null : new_credential;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			new_credential = null;
 		} finally {
 			httpHandler.closeConnect();
 		}
-        return null;
+		return isCancelled() ? null : new_credential;
 	}
 	
 }

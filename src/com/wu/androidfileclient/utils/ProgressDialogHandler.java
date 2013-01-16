@@ -6,6 +6,7 @@ import com.wu.androidfileclient.AllActivities;
 
 public final class ProgressDialogHandler extends ProgressDialog {
 
+	public static final int NONE                = 0;
     public static final int RETRIEVING_DATA     = 1;
     public static final int LOGGING_IN          = 2;
     public static final int CHECKING_CREDENTIAL = 3;

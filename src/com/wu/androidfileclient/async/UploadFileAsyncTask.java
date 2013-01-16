@@ -6,6 +6,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.listeners.ProgressListener;
 import com.wu.androidfileclient.models.FileItem;
@@ -15,8 +17,8 @@ import com.wu.androidfileclient.utils.ProgressDialogHandler;
 
 public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, FileItem> {
 
-	public UploadFileAsyncTask(AllActivities activity, long reference, String url) {
-		super(activity, reference, url, ProgressDialogHandler.UPLOADING_FILE, AllActivities.UPLOAD_FILE);
+	public UploadFileAsyncTask(AllActivities activity, long reference, boolean showDialog, String url) {
+		super(activity, reference, url, showDialog ? ProgressDialogHandler.UPLOADING_FILE : ProgressDialogHandler.NONE, AllActivities.UPLOAD_FILE);
     }
 
 	@Override
@@ -24,7 +26,7 @@ public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, File
 		CustomMultiPartEntity multipartContent;
 		int statusCode;
 
-		FileItem file = params[0];
+		FileItem fileItem = params[0];
 		
 		HttpHandler httpHandler = new HttpHandler(url);
 		multipartContent = new CustomMultiPartEntity(new ProgressListener() {
@@ -39,15 +41,18 @@ public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, File
 			}
 			
 		});
-		multipartContent.addPart("file", new FileBody(new File(file.localPath + file.name)));
+		multipartContent.addPart("file", new FileBody(new File(fileItem.localPath + fileItem.name)));
 		long totalSize = multipartContent.getContentLength();
-		progressDialog.setMax((int) totalSize);
+		if (progressDialog != null) progressDialog.setMax((int) totalSize);
 
 		statusCode = httpHandler.startPOSTConnection(multipartContent);
 
 		if (statusCode != HttpStatus.SC_OK) cancel(true);
-		
+
 		String response = httpHandler.retrieveEntireResponse();
+
+		httpHandler.closeConnect();
+
 		try {
 			return new FileItem(new JSONObject(response));
 		} catch (Exception e) {
@@ -58,7 +63,7 @@ public class UploadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, File
 	}
 	
 	protected void onProgressUpdate(Integer... params) {
-        progressDialog.setProgress((int)params[0]);
+        if (progressDialog != null) progressDialog.setProgress((int)params[0]);
     }
 
 }

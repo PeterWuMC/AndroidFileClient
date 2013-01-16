@@ -69,6 +69,7 @@ public class HttpHandler {
 			statusCode = getResponse.getStatusLine().getStatusCode();
 			
 			if (statusCode != HttpStatus.SC_OK && statusCode != HttpStatus.SC_ACCEPTED) {
+				Log.e("PETER", "WHATTTT");
 				Log.e(getClass().getSimpleName(), "Error " + statusCode + " for URL " + url);
 				getResponseEntity = null;
 			}
@@ -76,6 +77,7 @@ public class HttpHandler {
 				getResponseEntity =  getResponse.getEntity();
 			}
 		} catch (IOException e) {
+			request.abort();
 			statusCode = HttpStatus.SC_BAD_REQUEST;
 		}
 
@@ -114,6 +116,7 @@ public class HttpHandler {
 	}
 	
 	public void closeConnect() {
+		Log.d("PETER", "CONNCLOSED");
 		client.getConnectionManager().shutdown();
 	}
 }

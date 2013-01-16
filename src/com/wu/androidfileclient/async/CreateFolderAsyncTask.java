@@ -30,11 +30,13 @@ public class CreateFolderAsyncTask extends CustomAsyncTask<FolderItem, Void, Boo
 		HttpHandler httpHandler = new HttpHandler(url);
 		int statusCode = httpHandler.startPOSTConnection(parameters);
 
+		httpHandler.closeConnect();
+
+
 		if (statusCode != HttpStatus.SC_OK) {
 			Utilities.longToast(activity, R.string.connection_error_toast);
 			return false;
 		}
-		
 		return true;
 	}
 

@@ -41,14 +41,14 @@ public class UpdateListAsyncTask extends CustomAsyncTask<BaseListItem, Void, Bas
 	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject) : new FolderItem(jsonObject);
 	                fileArray.add(listItem);
 				}
-				return isCancelled() ? null : fileArray;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
+			fileArray = null;
 		} finally {
 			httpHandler.closeConnect();
 		}
-		return null;
+		return isCancelled() ? null : fileArray;
 	}
 
 }

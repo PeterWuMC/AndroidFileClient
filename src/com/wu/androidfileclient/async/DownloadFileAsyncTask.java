@@ -32,9 +32,9 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
 		FileItem fileItem   = params[0];
 		fileItem.localPath  = Environment.getExternalStorageDirectory().getPath() + "/wu_files/" + fileItem.path + "/";
 
-		HttpHandler httphandler = new HttpHandler(url);
-		int statusCode = httphandler.startGETConnection();
-		InputStream tempStrem        = httphandler.retrieveStream();
+		HttpHandler httpHandler = new HttpHandler(url);
+		int statusCode = httpHandler.startGETConnection();
+		InputStream tempStrem        = httpHandler.retrieveStream();
 		InputStream inputStream      = new BufferedInputStream(tempStrem, 8192);
 
 		if (statusCode != HttpStatus.SC_OK) cancel(true);
@@ -47,10 +47,10 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
 
     			if (!folder.exists()) folder.mkdirs();
 
-    			lenghtOfFile = (Long) httphandler.retrieveContentSize();
+    			lenghtOfFile = (Long) httpHandler.retrieveContentSize();
     			outputStream = new BufferedOutputStream(new FileOutputStream(fileItem.localPath + fileItem.name));
 
-    	    	progressDialog.setMax((int) (long)lenghtOfFile);
+    			if (progressDialog != null) progressDialog.setMax((int) (long)lenghtOfFile);
 
                 while ((count = inputStream.read(data)) != -1 ) {
                 	if (isCancelled()) break;
@@ -69,8 +69,7 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
     	    } finally {
     	    	try{
                     inputStream.close();
-    	    		inputStream.close();
-        	    	httphandler.closeConnect();
+        	    	httpHandler.closeConnect();
         	    }
     	    	catch (Exception e) { Log.e("Error: ", e.getMessage()); }
     	    }
@@ -81,7 +80,7 @@ public class DownloadFileAsyncTask extends CustomAsyncTask<FileItem, Integer, Fi
 	}
 	
 	protected void onProgressUpdate(Integer... params) {
-        progressDialog.setProgress((int)params[0]);
+		if (progressDialog != null) progressDialog.setProgress((int)params[0]);
     }
 
 }

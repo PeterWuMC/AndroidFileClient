@@ -31,6 +31,8 @@ public class CheckCredentialAsyncTask extends CustomAsyncTask<Credential, Void, 
 
 		int statusCode = httpHandler.startPOSTConnection(parameters);
 
+		httpHandler.closeConnect();
+
 		if (statusCode != HttpStatus.SC_OK) {
 			Utilities.longToast(activity, R.string.credential_not_recognised);
 			return false;

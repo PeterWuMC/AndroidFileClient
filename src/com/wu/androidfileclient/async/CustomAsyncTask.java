@@ -27,16 +27,18 @@ public abstract class CustomAsyncTask<A,B,C> extends AsyncTask<A, B, C> {
 		this.reference  = reference;
 		this.taskId     = taskId;
 
-		progressDialog = new ProgressDialogHandler(activity);
-		progressDialog.createProgressDialog(progressDialogId);
-		progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
-//		progressDialog.setProgressNumberFormat("%1d / %2d bytes");
+		if (progressDialogId != ProgressDialogHandler.NONE) {
+			progressDialog = new ProgressDialogHandler(activity);
+			progressDialog.createProgressDialog(progressDialogId);
+			progressDialog.setOnCancelListener(new CancelTaskOnCancelListener(this));
+//			progressDialog.setProgressNumberFormat("%1d / %2d bytes");
+		}
 	}
 
 	@Override
 //	protected void onCancelled(C result) {
 	protected void onCancelled() {
-		progressDialog.dismiss();
+		if (progressDialog != null) progressDialog.dismiss();
 		Utilities.longToast(activity, R.string.connection_error_toast);
 //		activity.onTaskCancelled(taskId, reference, result);
 	}
@@ -44,12 +46,12 @@ public abstract class CustomAsyncTask<A,B,C> extends AsyncTask<A, B, C> {
 	@Override
     protected void onPreExecute() {
         super.onPreExecute();
-    	progressDialog.show();
+        if (progressDialog != null) progressDialog.show();
     }
 
 	@Override
 	protected void onPostExecute(C result) {
-		progressDialog.dismiss();
+		if (progressDialog != null) progressDialog.dismiss();
 		activity.onTaskCompleted(taskId, reference, result);
 	}
 }
