@@ -76,7 +76,7 @@ public class MainActivity extends ListActivity implements AllActivities {
         if (objectsList == null) objectsList = new BaseArrayList();
         if (objectsList.isEmpty()) loadList(currentFolder);
 
-    	filesAdapter = new FileItemsListAdapter(this, credential, R.layout.file_list_row, objectsList);
+    	filesAdapter = new FileItemsListAdapter(this, getListView(), credential, R.layout.file_list_row, objectsList);
     	setListAdapter(filesAdapter);
 
     	registerForContextMenu(getListView());
