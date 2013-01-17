@@ -1,9 +1,14 @@
 package com.wu.androidfileclient.ui;
 
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +16,32 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.R;
+import com.wu.androidfileclient.fetchers.ThumbnailStreamer;
 import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
+import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
+import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.Utilities;
 
 public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
-	private BaseArrayList objectsList;
-	private Activity context;
 
-	public FileItemsListAdapter(Activity context, int textViewResourceId, BaseArrayList objectsList) {
-		super(context, textViewResourceId, objectsList);
-		this.context     = context;
+	private Context context;
+	private BaseArrayList objectsList;
+	private AllActivities activity;
+	private Credential credential;
+	private LinkedHashMap<String, Bitmap> bitmapCache = new LinkedHashMap<String, Bitmap>();
+	
+
+	public FileItemsListAdapter(AllActivities activity, Credential credential, int textViewResourceId, BaseArrayList objectsList) {
+		super(activity.getContext(), textViewResourceId, objectsList);
+		this.activity    = activity;
+		this.context     = activity.getContext();
 		this.objectsList = objectsList;
+		this.credential  = credential; 
 	}
 
 	@Override
@@ -39,34 +55,96 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 		View additionalInfo         = view.findViewById(R.id.additional_info);
 		TextView sizeView           = (TextView) additionalInfo.findViewById(R.id.size);
 		TextView lastModifiedView   = (TextView) additionalInfo.findViewById(R.id.last_modified);
+		ImageView typeImage         = (ImageView) view.findViewById(R.id.icon);
+		TextView nameTextView       = (TextView) view.findViewById(R.id.name);
+
 
 		if (listItem != null) {
-			int icon = 0;
-			additionalInfo.setVisibility(View.INVISIBLE);
+			typeImage.setImageResource(R.drawable.unknown);
+			nameTextView.setText(listItem.name);
 			sizeView.setText("");
+			additionalInfo.setVisibility(View.INVISIBLE);
 			lastModifiedView.setText("");
 			if (listItem.name.equalsIgnoreCase("back")) {
-				icon = android.R.drawable.ic_menu_revert;
+				typeImage.setImageResource(android.R.drawable.ic_menu_revert);
 			} else if (listItem instanceof FolderItem) {
-				icon = R.drawable.folder;
+				typeImage.setImageResource(R.drawable.folder);
 			}
 			else if (listItem instanceof FileItem) {
 				additionalInfo.setVisibility(View.VISIBLE);
 				FileItem fileItem = (FileItem) listItem;
-				icon = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
+				typeImage.setImageResource(context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName()));
 
 				sizeView.setText("Size: " + Utilities.humanReadableByteCount(fileItem.size, true));
 				lastModifiedView.setText("Modified: " + Utilities.humanReadableDatesDifferemce(fileItem.last_modified, new Date()));
 
-				if (icon == 0) icon = R.drawable.unknown; 
+				String url = (new ThumbnailStreamer(credential)).constructUrl(fileItem.key, fileItem.projectKey);
+				if (url != null) {
+					Bitmap bitmap = fetchBitmapFromCache(url);
+					if (bitmap == null) {
+						new BitmapDownloaderTask(typeImage).execute(url); 
+					} else {
+						typeImage.setImageBitmap(bitmap);
+					}
+				} else {
+					typeImage.setImageBitmap(null);
+				}
 			}
-			ImageView typeImage = (ImageView) view.findViewById(R.id.icon);
-			typeImage.setImageResource(icon);
-
-			TextView nameTextView = (TextView) view.findViewById(R.id.name);
-			nameTextView.setText(listItem.name);
 		}
 
 		return view;
 	}
+
+	private void addBitmapToCache(String url, Bitmap bitmap) {
+		if (bitmap != null) {
+			synchronized (bitmapCache) {
+				bitmapCache.put(url, bitmap);
+			}
+		}
+	}
+
+	private Bitmap fetchBitmapFromCache(String url) {
+		synchronized (bitmapCache) {
+			final Bitmap bitmap = bitmapCache.get(url);
+			if (bitmap != null) {
+				bitmapCache.remove(url);
+				bitmapCache.put(url, bitmap);
+				return bitmap;
+			}
+		}
+		return null;
+	}
+
+	private class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
+		private String url;
+		private final WeakReference<ImageView> imageViewReference;
+		
+		public BitmapDownloaderTask(ImageView imageView) {
+			imageViewReference = new WeakReference<ImageView>(imageView);
+		}
+		
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			url = params[0];
+			HttpHandler httpRetriever = new HttpHandler(url);
+			httpRetriever.startGETConnection();
+			InputStream is = httpRetriever.retrieveStream();
+			if (is == null) return null;
+			return BitmapFactory.decodeStream(is);
+		}
+		
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			if (isCancelled()) bitmap = null;
+			
+			addBitmapToCache(url, bitmap);
+			
+			if (imageViewReference != null) {
+				ImageView imageView = imageViewReference.get();
+				if (imageView != null) imageView.setImageBitmap(bitmap);
+			}
+		}
+	}
+
+
 }
