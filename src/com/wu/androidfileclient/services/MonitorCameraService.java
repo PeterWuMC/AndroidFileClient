@@ -5,6 +5,8 @@ import java.io.File;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.FileObserver;
 import android.os.IBinder;
@@ -32,21 +34,18 @@ public class MonitorCameraService extends Service implements AllActivities {
 
 	@Override
 	public void onCreate() {
-		Log.d("PETER", "CREATED");
 		credential   = Utilities.getCredential(this);
 		fileUploader = new FileUploader(credential);
 	}
 
 	@Override
 	public void onDestroy() {
-		Log.d("PETER", "DEAD");
 		observer.stopWatching();
 	}
 
 	@Override
 	public void onStart(Intent intent, int startid) {
-		Log.d("PETER", "ALIVE");
-
+		Log.d("PETER", "STARTED");
 		final String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
 
 		observer = new RecursiveFileObserver(path) {
@@ -62,20 +61,24 @@ public class MonitorCameraService extends Service implements AllActivities {
 					folderItem.key        = Base64.encodeToString(("/mobile/" + credential.getDeviceName()).getBytes(), Base64.DEFAULT).replaceAll("[\n\r]", "");
 					folderItem.projectKey = Base64.encodeToString(credential.getUserName().getBytes(), Base64.DEFAULT).replaceAll("[\n\r]", "");
 
-					Log.d("PETER", fileItem.localPath + fileItem.name);
-					fileUploader.upload(MonitorCameraService.this, 1, false, folderItem, fileItem);
+					if (fileItem.ext().equalsIgnoreCase("jpg")) {
+//						fileUploader.upload(MonitorCameraService.this, 1, false, folderItem, fileItem);
+					}
 				}	
 			}
 		};
 		observer.startWatching();
 	}
 
-	public void onTaskCompleted(int task, long reference, Object result) {
-		Log.d("PETER", "UPLOADED " + result.toString());
+	public boolean isWifiConnected() {
+		ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		return mWifi.isConnected();
 	}
-	public void onTaskCancelled(int task, long reference, Object result) {
-		Log.d("PETER", "CANCELLED " + result.toString());
-	}
+
+	public void onTaskCompleted(int task, long reference, Object result) {Log.d("PETER", "UPLOADED");}
+	public void onTaskCancelled(int task, long reference, Object result) {}
 	public Context getContext() { return this; }
 	public void runOnUiThread(Runnable runnable) {}
 

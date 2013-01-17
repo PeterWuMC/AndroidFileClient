@@ -5,8 +5,9 @@ import com.wu.androidfileclient.utils.HttpHandler;
 
 public abstract class Base {
 
-//	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087";
-	protected static final String BASE_URL = "http://192.168.1.11:8087";
+	protected static final String BASE_URL = "http://peterwumc.asuscomm.com:8087";
+//	protected static final String BASE_URL = "http://192.168.1.11:8087";
+//	protected static final String BASE_URL = "http://172.16.10.3:8087";
 	protected static final String SLASH = "/";
 	protected static final String START_OF_PARAMETERS = "?";
 	protected static final String PARAMETERS_SEPARATOR = "&";

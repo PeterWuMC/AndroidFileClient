@@ -6,8 +6,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.entity.mime.content.FileBody;
 import org.json.JSONObject;
 
-import android.util.Log;
-
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.listeners.ProgressListener;
 import com.wu.androidfileclient.models.FileItem;
