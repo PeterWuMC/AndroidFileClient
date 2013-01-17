@@ -2,8 +2,8 @@ package com.wu.androidfileclient.fetchers;
 
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.async.UpdateListAsyncTask;
-import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
+import com.wu.androidfileclient.models.FolderItem;
 
 
 public class FolderLister extends Base {
@@ -28,9 +28,9 @@ public class FolderLister extends Base {
 		return FORMAT;
 	}
 
-	public void retrieveList(AllActivities activity, long reference, BaseListItem baseListItem) {
-		UpdateListAsyncTask task = new UpdateListAsyncTask(activity, reference, constructUrl(baseListItem.key, baseListItem.projectKey));
-		task.execute(baseListItem);
+	public void retrieveList(AllActivities activity, long reference, FolderItem folderItem) {
+		UpdateListAsyncTask task = new UpdateListAsyncTask(activity, reference, constructUrl(folderItem.key, folderItem.projectKey));
+		task.execute(folderItem);
 	}
 
 }

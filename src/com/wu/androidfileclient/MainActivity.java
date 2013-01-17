@@ -1,7 +1,6 @@
 package com.wu.androidfileclient;
 
 import java.io.File;
-import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
@@ -26,7 +25,6 @@ import com.wu.androidfileclient.fetchers.FileUploader;
 import com.wu.androidfileclient.fetchers.FolderLister;
 import com.wu.androidfileclient.fetchers.ItemRemover;
 import com.wu.androidfileclient.fetchers.ProjectLister;
-import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
@@ -41,10 +39,9 @@ import com.wu.androidfileclient.utils.Utilities;
 public class MainActivity extends ListActivity implements AllActivities {
 	
 	private BaseArrayList objectsList                       = new BaseArrayList();
-	private ActionItem goBack                               = new ActionItem();
 	private Credential credential                           = new Credential();
-	private HashMap<FolderItem, FolderItem> previousFolders = new HashMap<FolderItem, FolderItem>();
 	private FolderItem currentFolder                        = new FolderItem();
+	FolderItem initialFolderItem = new FolderItem();
 
 	private ItemRemover itemRemover;
 	private FolderLister folderLister;
@@ -71,11 +68,10 @@ public class MainActivity extends ListActivity implements AllActivities {
     	fileUploader   = new FileUploader(credential);
     	fileDownloader = new FileDownloader(credential);
 
-		goBack.name = "Back";
-    	FolderItem tempFolderItem = new FolderItem();
-		tempFolderItem.key        = "initial";
-		tempFolderItem.projectKey = "cHVibGlj";
-		resetCurrentAndPrevious(tempFolderItem);
+		initialFolderItem.key        = "initial";
+		initialFolderItem.projectKey = "cHVibGlj";
+		initialFolderItem.parent     = null;
+		resetCurrentAndPrevious(initialFolderItem);
 
         if (objectsList == null) objectsList = new BaseArrayList();
         if (objectsList.isEmpty()) loadList(currentFolder);
@@ -90,7 +86,7 @@ public class MainActivity extends ListActivity implements AllActivities {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	    MenuInflater inflater = getMenuInflater();
-	    if (!(objectsList.get(info.position) instanceof ActionItem))
+	    if (!(objectsList.get(info.position).name.equalsIgnoreCase("back")))
 	    	inflater.inflate(R.menu.activity_main_context, menu);
 	}
 
@@ -180,8 +176,6 @@ public class MainActivity extends ListActivity implements AllActivities {
         BaseListItem listItem = filesAdapter.getItem(position);
         if (listItem instanceof FolderItem) {
         	loadList((FolderItem) listItem);
-        } else if (listItem instanceof ActionItem) {
-        	loadList(((ActionItem) listItem).folderItem);
         } else {
 			FileDownloader fileDownloader = new FileDownloader(credential);
 			fileDownloader.download(this, 1, (FileItem) listItem);
@@ -191,8 +185,8 @@ public class MainActivity extends ListActivity implements AllActivities {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
-        	if (currentFolder != goBack.folderItem) {
-        		loadList(goBack.folderItem);
+        	if (currentFolder.parent != null) {
+        		loadList((FolderItem) currentFolder.parent);
         		return true;
         	}
         }
@@ -204,11 +198,7 @@ public class MainActivity extends ListActivity implements AllActivities {
 	}
 
     public void loadList(FolderItem folderItem) {
-    	if (!previousFolders.containsKey(folderItem)) previousFolders.put(folderItem, currentFolder);
     	currentFolder = folderItem;
-
-    	goBack.folderItem = previousFolders.get(currentFolder);
-
     	folderLister.retrieveList(this, 1, currentFolder); 
     }
 
@@ -218,16 +208,15 @@ public class MainActivity extends ListActivity implements AllActivities {
 			for (int i = 0; i < result.size(); i++) {
 				objectsList.add(result.get(i));
 			}
-			if (currentFolder != goBack.folderItem) objectsList.add(0, goBack);
+			FolderItem parentFolder = currentFolder.parent;
+			if (parentFolder != null) parentFolder.name = "Back";
+			if (currentFolder.parent != null) objectsList.add(0, parentFolder);
 	        filesAdapter.notifyDataSetChanged();
 		}
     }
 
     public void resetCurrentAndPrevious(FolderItem startingFolderItem) {
     	currentFolder = startingFolderItem;
-		previousFolders = new HashMap<FolderItem, FolderItem>();
-
-		previousFolders.put(currentFolder, currentFolder);
     }
 
     public void onTaskCancelled(int task, long reference, Object result) {

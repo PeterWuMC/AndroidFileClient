@@ -16,11 +16,16 @@ public class FileItem extends BaseListItem {
 
 	public FileItem(JSONObject jsonObject) {
 		super(jsonObject);
-        	try {
-            	size = jsonObject.getLong("size");
+    	try {
+        	size = jsonObject.getLong("size");
 //        		this is very temporary until a better solution is found
-        		last_modified = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.ENGLISH).parse(jsonObject.getString("last_update"));
-        	} catch (Exception e) {}
+    		last_modified = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.ENGLISH).parse(jsonObject.getString("last_update"));
+    	} catch (Exception e) {}
+	}
+
+	public FileItem(JSONObject jsonObject, FolderItem parent) {
+		this(jsonObject);
+		this.parent = parent;
 	}
 
 	public String ext() {

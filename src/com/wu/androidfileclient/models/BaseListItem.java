@@ -13,7 +13,7 @@ public abstract class BaseListItem implements Serializable {
 	public String key;
 	public String name;
 	public String projectKey;
-
+	public FolderItem parent;
 	
 	public BaseListItem() {}
 	
@@ -24,6 +24,11 @@ public abstract class BaseListItem implements Serializable {
 			key        = jsonObject.getString("key");
 			projectKey = jsonObject.getString("project_key");
 		} catch (Exception e) { }
+	}
+	
+	public BaseListItem(JSONObject jsonObject, FolderItem parent) {
+		this(jsonObject);
+		this.parent = parent;
 	}
 
 	public String toString() {

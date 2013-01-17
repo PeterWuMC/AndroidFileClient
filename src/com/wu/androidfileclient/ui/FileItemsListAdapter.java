@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wu.androidfileclient.R;
-import com.wu.androidfileclient.models.ActionItem;
 import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.FileItem;
@@ -46,7 +45,7 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 			additionalInfo.setVisibility(View.INVISIBLE);
 			sizeView.setText("");
 			lastModifiedView.setText("");
-			if (listItem instanceof ActionItem && listItem.name.equalsIgnoreCase("back")) {
+			if (listItem.name.equalsIgnoreCase("back")) {
 				icon = android.R.drawable.ic_menu_revert;
 			} else if (listItem instanceof FolderItem) {
 				icon = R.drawable.folder;

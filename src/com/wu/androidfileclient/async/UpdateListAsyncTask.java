@@ -15,14 +15,15 @@ import com.wu.androidfileclient.models.FolderItem;
 import com.wu.androidfileclient.utils.HttpHandler;
 import com.wu.androidfileclient.utils.ProgressDialogHandler;
 
-public class UpdateListAsyncTask extends CustomAsyncTask<BaseListItem, Void, BaseArrayList> {
+public class UpdateListAsyncTask extends CustomAsyncTask<FolderItem, Void, BaseArrayList> {
 
 	public UpdateListAsyncTask(AllActivities activity, long reference, String url) {
 		super(activity, reference, url, ProgressDialogHandler.RETRIEVING_DATA, AllActivities.UPDATE_LIST);
     }
 
 	@Override
-	protected BaseArrayList doInBackground(BaseListItem... params) {
+	protected BaseArrayList doInBackground(FolderItem... params) {
+		FolderItem parent       = params[0];
 		BaseArrayList fileArray = new BaseArrayList();
 		HttpHandler httpHandler = new HttpHandler(url);
 		int statusCode          = httpHandler.startGETConnection();
@@ -38,7 +39,7 @@ public class UpdateListAsyncTask extends CustomAsyncTask<BaseListItem, Void, Bas
                 	if (isCancelled()) break;
 
 	                JSONObject jsonObject = files.getJSONObject(i);
-	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject) : new FolderItem(jsonObject);
+	                BaseListItem listItem = jsonObject.getString("type").equalsIgnoreCase("file") ? new FileItem(jsonObject, parent) : new FolderItem(jsonObject, parent);
 	                fileArray.add(listItem);
 				}
 			}

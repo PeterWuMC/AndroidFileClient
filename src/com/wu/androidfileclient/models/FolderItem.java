@@ -12,4 +12,8 @@ public class FolderItem extends BaseListItem {
 	public FolderItem(JSONObject jsonObject) {
 		super(jsonObject);
 	}
+	
+	public FolderItem(JSONObject jsonObject, FolderItem parent) {
+		super(jsonObject, parent);
+	}
 }
