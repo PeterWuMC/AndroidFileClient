@@ -68,6 +68,7 @@ public final class R {
         public static final int android_user_name=0x7f090000;
         public static final int android_user_password=0x7f090002;
         public static final int change_project=0x7f09000f;
+        public static final int copy_public_link=0x7f090016;
         public static final int create_folder=0x7f090011;
         public static final int delete=0x7f090015;
         public static final int explorer_fragment=0x7f090005;
@@ -101,21 +102,22 @@ public final class R {
         public static final int about=0x7f06000c;
         public static final int app_name=0x7f060000;
         public static final int change_project=0x7f060007;
-        public static final int choose_file=0x7f060012;
-        public static final int connection_error_toast=0x7f06000d;
+        public static final int choose_file=0x7f060013;
+        public static final int connection_error_toast=0x7f06000e;
+        public static final int copy_public_link=0x7f06000d;
         public static final int create_folder=0x7f060006;
-        public static final int credential_not_recognised=0x7f06000e;
+        public static final int credential_not_recognised=0x7f06000f;
         public static final int delete=0x7f060009;
         public static final int download=0x7f060005;
-        public static final int empty_directory=0x7f060010;
-        public static final int error_selecting_file=0x7f060013;
+        public static final int empty_directory=0x7f060011;
+        public static final int error_selecting_file=0x7f060014;
         public static final int login=0x7f060004;
-        public static final int no_compatible_application=0x7f06000f;
+        public static final int no_compatible_application=0x7f060010;
         public static final int nothing_found=0x7f060001;
         public static final int open=0x7f060008;
         public static final int password=0x7f060003;
         public static final int refresh=0x7f06000a;
-        public static final int storage_removed=0x7f060011;
+        public static final int storage_removed=0x7f060012;
         public static final int upload=0x7f06000b;
         public static final int user_name=0x7f060002;
     }

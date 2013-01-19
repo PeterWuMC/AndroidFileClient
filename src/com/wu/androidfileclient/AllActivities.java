@@ -21,5 +21,6 @@ public interface AllActivities {
 //	public abstract Context getApplicationContext();
 	public abstract Context getContext();
 	public abstract void runOnUiThread(Runnable runnable);
+	public abstract Object getSystemService (String name);
 
 }

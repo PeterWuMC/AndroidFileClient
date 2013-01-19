@@ -25,6 +25,7 @@ import com.wu.androidfileclient.fetchers.FileUploader;
 import com.wu.androidfileclient.fetchers.FolderLister;
 import com.wu.androidfileclient.fetchers.ItemRemover;
 import com.wu.androidfileclient.fetchers.ProjectLister;
+import com.wu.androidfileclient.fetchers.PublicPath;
 import com.wu.androidfileclient.models.BaseArrayList;
 import com.wu.androidfileclient.models.BaseListItem;
 import com.wu.androidfileclient.models.Credential;
@@ -100,6 +101,10 @@ public class MainActivity extends ListActivity implements AllActivities {
 			switch (item.getItemId()) {
 			case R.id.open:
 				fileDownloader.download(this, 1, fileItem);
+				break;
+			case R.id.copy_public_link:
+				PublicPath publicPath = new PublicPath();
+				Utilities.stringToClipBoard(this, publicPath.generatePublicUrl(fileItem.publicPath));
 				break;
 			case R.id.delete:
 //				TODO: currently only allow to delete file

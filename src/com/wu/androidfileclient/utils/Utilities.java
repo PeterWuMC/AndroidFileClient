@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -104,6 +105,20 @@ public final class Utilities {
 			file = FileUtils.getFile(uri);
 		}
 		return file;
+	}
+
+	@SuppressLint("NewApi")
+	public final static void stringToClipBoard(AllActivities activity, String str) {
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+		    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+		    clipboard.setText(str);
+		} else {
+		    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE); 
+		    android.content.ClipData clip = android.content.ClipData.newPlainText("text label",str);
+		    clipboard.setPrimaryClip(clip);
+		}
+		longToast(activity, "Public link copied into clipboard");
 	}
 
 }

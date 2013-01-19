@@ -12,7 +12,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,6 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 	private Credential credential;
 	private LinkedHashMap<String, Bitmap> bitmapCache = new LinkedHashMap<String, Bitmap>();
 	private HashMap<String, ImageView> imageMap = new HashMap<String, ImageView>();
-	private int position;
 
 	private BaseListItem listItem;
 	private View additionalInfo;
@@ -62,7 +60,6 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
-		this.position = position;
 		if (view == null) {
 			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = vi.inflate(R.layout.file_list_row, null);
@@ -128,8 +125,8 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 		return null;
 	}
 
-	private void setThumbnail(String url, Bitmap bitmap, int position) {
-		if (listView.getFirstVisiblePosition() <= position && listView.getLastVisiblePosition() >= position) imageMap.get(url).setImageBitmap(bitmap);
+	private void setThumbnail(ImageView imageView, Bitmap bitmap, int position) {
+		if (listView.getFirstVisiblePosition() <= position && listView.getLastVisiblePosition() >= position) imageView.setImageBitmap(bitmap);
 	}
 
 	private class BitmapDownloaderTask extends AsyncTask<String, Void, Bitmap> {
@@ -163,7 +160,7 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 			if (bitmap != null && imageViewReference != null) {
 				ImageView imageView = imageViewReference.get();
 //				if (imageView != null) imageView.setImageBitmap(bitmap);
-				if (imageView != null) setThumbnail(url, bitmap, mPosition);
+				if (imageView != null) setThumbnail(imageView, bitmap, mPosition);
 			}
 		}
 	}

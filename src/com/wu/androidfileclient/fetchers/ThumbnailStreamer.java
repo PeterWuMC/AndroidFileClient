@@ -1,9 +1,6 @@
 package com.wu.androidfileclient.fetchers;
 
-import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.async.UpdateListAsyncTask;
 import com.wu.androidfileclient.models.Credential;
-import com.wu.androidfileclient.models.FolderItem;
 
 public class ThumbnailStreamer extends Base {
 

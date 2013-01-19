@@ -11,6 +11,7 @@ public class FileItem extends BaseListItem {
 	private static final long serialVersionUID = -3056032740471401976L;
 	public long size;
 	public Date last_modified;
+	public String publicPath;
 
 	public FileItem() {}
 
@@ -18,6 +19,7 @@ public class FileItem extends BaseListItem {
 		super(jsonObject);
     	try {
         	size = jsonObject.getLong("size");
+        	publicPath = jsonObject.getString("public_path");
 //        		this is very temporary until a better solution is found
     		last_modified = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.ENGLISH).parse(jsonObject.getString("last_update"));
     	} catch (Exception e) {}
