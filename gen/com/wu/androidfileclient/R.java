@@ -63,14 +63,14 @@ public final class R {
         public static final int zip=0x7f02002d;
     }
     public static final class id {
-        public static final int about=0x7f090013;
+        public static final int about=0x7f090011;
         public static final int additional_info=0x7f09000a;
         public static final int android_user_name=0x7f090000;
         public static final int android_user_password=0x7f090002;
-        public static final int change_project=0x7f09000f;
-        public static final int copy_public_link=0x7f090016;
-        public static final int create_folder=0x7f090011;
-        public static final int delete=0x7f090015;
+        public static final int change_project=0x7f09000d;
+        public static final int copy_public_link=0x7f090014;
+        public static final int create_folder=0x7f09000f;
+        public static final int delete=0x7f090013;
         public static final int explorer_fragment=0x7f090005;
         public static final int file_icon=0x7f090006;
         public static final int file_name=0x7f090007;
@@ -78,13 +78,11 @@ public final class R {
         public static final int last_modified=0x7f09000c;
         public static final int login=0x7f090004;
         public static final int name=0x7f090009;
-        public static final int open=0x7f090014;
+        public static final int open=0x7f090012;
         public static final int password=0x7f090003;
-        public static final int refresh=0x7f090010;
+        public static final int refresh=0x7f09000e;
         public static final int size=0x7f09000b;
-        public static final int start=0x7f09000d;
-        public static final int stop=0x7f09000e;
-        public static final int upload=0x7f090012;
+        public static final int upload=0x7f090010;
         public static final int user_name=0x7f090001;
     }
     public static final class layout {

@@ -32,7 +32,6 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderArrayList;
 import com.wu.androidfileclient.models.FolderItem;
-import com.wu.androidfileclient.services.MonitorCameraService;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.AlertDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
@@ -87,7 +86,8 @@ public class MainActivity extends ListActivity implements AllActivities {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
 	    MenuInflater inflater = getMenuInflater();
-	    if (!(objectsList.get(info.position).name.equalsIgnoreCase("back")))
+//	    if (!(objectsList.get(info.position).name.equalsIgnoreCase("back")))
+	    if (objectsList.get(info.position) instanceof FileItem)
 	    	inflater.inflate(R.menu.activity_main_context, menu);
 	}
 
@@ -128,12 +128,12 @@ public class MainActivity extends ListActivity implements AllActivities {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		AlertDialogHandler alertDialog;
 		switch (item.getItemId()) {
-		case R.id.start:
-			startService(new Intent(this, MonitorCameraService.class));
-			break;
-		case R.id.stop:
-			stopService(new Intent(this, MonitorCameraService.class));
-			break;
+//		case R.id.start:
+//			startService(new Intent(this, MonitorCameraService.class));
+//			break;
+//		case R.id.stop:
+//			stopService(new Intent(this, MonitorCameraService.class));
+//			break;
 		case R.id.change_project:
 			projectLister.retrieveList(this, 1);
 			break;
@@ -153,6 +153,9 @@ public class MainActivity extends ListActivity implements AllActivities {
             } catch (ActivityNotFoundException e) {
                 // The reason for the existence of aFileChooser
             }
+        	break;
+        case R.id.about:
+        	Utilities.longToast(this, "Wu's file sharing");
         	break;
         default:
             return super.onOptionsItemSelected(item);
