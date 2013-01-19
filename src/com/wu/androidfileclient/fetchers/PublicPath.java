@@ -1,7 +1,5 @@
 package com.wu.androidfileclient.fetchers;
 
-import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.async.GetProjectAsyncTask;
 import com.wu.androidfileclient.models.Credential;
 
 public class PublicPath extends Base {

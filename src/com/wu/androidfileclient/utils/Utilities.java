@@ -107,7 +107,7 @@ public final class Utilities {
 		return file;
 	}
 	
-	public final static boolean beforeHoneyComb(AllActivities activity) {
+	public final static boolean isBeforeHoneyComb(AllActivities activity) {
 		int sdk = android.os.Build.VERSION.SDK_INT;
 		return sdk < android.os.Build.VERSION_CODES.HONEYCOMB;
 	}
@@ -115,7 +115,7 @@ public final class Utilities {
 	@SuppressLint("NewApi")
 	public final static void stringToClipBoard(AllActivities activity, String str) {
 		
-		if(beforeHoneyComb(activity)) {
+		if(isBeforeHoneyComb(activity)) {
 		    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
 		    clipboard.setText(str);
 		} else {
