@@ -7,8 +7,6 @@ import com.wu.androidfileclient.models.Credential;
 
 public class ItemRemover extends Base{
 
-//	protected static final String PROJECT = "cHVibGlj";
-
 	protected static final String OBJECT = "server_files";
 	protected static final String ACTION = "";
 	protected static final String FORMAT = ".json";
