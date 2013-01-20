@@ -34,13 +34,13 @@ public class Credential implements Serializable {
 	}
 
 	public String getDeviceName() {
-		String manufacturer = Build.MANUFACTURER;
+//		String manufacturer = Build.MANUFACTURER;
 		String model = Build.MODEL;
-		if (model.startsWith(manufacturer)) {
-			return model;
-		} else {
-			return manufacturer + " " + model;
-		}
+//		if (model.startsWith(manufacturer)) {
+		return model;
+//		} else {
+//			return manufacturer + " " + model;
+//		}
 	}
 
 	public String getDeviceId() {
