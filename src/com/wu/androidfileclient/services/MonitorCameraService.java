@@ -1,6 +1,7 @@
 package com.wu.androidfileclient.services;
 
 import java.io.File;
+import java.util.HashMap;
 
 import android.app.Service;
 import android.content.Context;
@@ -14,7 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.wu.androidfileclient.AllActivities;
-import com.wu.androidfileclient.fetchers.FileUploader;
+import com.wu.androidfileclient.fetchers.MobileUploader;
 import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderItem;
@@ -25,7 +26,8 @@ public class MonitorCameraService extends Service implements AllActivities {
 
 	private FileObserver observer; 
 	private Credential credential;
-	private FileUploader fileUploader;
+	private MobileUploader mobileUploader;
+	private HashMap<String, Integer> filesMap = new HashMap<String, Integer>();
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -35,7 +37,7 @@ public class MonitorCameraService extends Service implements AllActivities {
 	@Override
 	public void onCreate() {
 		credential   = Utilities.getCredential(this);
-		fileUploader = new FileUploader(credential);
+		mobileUploader = new MobileUploader(credential);
 	}
 
 	@Override
@@ -51,20 +53,27 @@ public class MonitorCameraService extends Service implements AllActivities {
 		observer = new RecursiveFileObserver(path) {
 			@Override
             public void onEvent(int event, String filePath) {
-				if (event == FileObserver.CREATE) {
-					File file          = new File(filePath);
-					FileItem fileItem  = new FileItem();
-					fileItem.localPath = file.getParentFile().getAbsolutePath() + "/";
-					fileItem.name      = file.getName();
+				switch(event) {
+				case FileObserver.CREATE:
+					filesMap.put(filePath, FileObserver.CREATE);
+					break;
+				case FileObserver.CLOSE_WRITE:
+					if (filesMap.get(filePath) == FileObserver.CREATE) {
+						File file = new File(filePath);
+						
+						FileItem fileItem  = new FileItem();
+						fileItem.localPath = file.getParentFile().getAbsolutePath() + "/";
+						fileItem.name      = file.getName();
 
-			        FolderItem folderItem = new FolderItem();
-					folderItem.key        = Base64.encodeToString(("/mobile/" + credential.getDeviceName()).getBytes(), Base64.DEFAULT).replaceAll("[\n\r]", "");
-					folderItem.projectKey = Base64.encodeToString(credential.getUserName().getBytes(), Base64.DEFAULT).replaceAll("[\n\r]", "");
-
-					if (fileItem.ext().equalsIgnoreCase("jpg")) {
-//						fileUploader.upload(MonitorCameraService.this, 1, false, folderItem, fileItem);
+						if (fileItem.ext().equalsIgnoreCase("jpg")) {
+							Log.d("PETER", fileItem.localPath + fileItem.name);
+							mobileUploader.upload(MonitorCameraService.this, 1, false, fileItem);
+						}
 					}
-				}	
+					filesMap.put(filePath, FileObserver.CLOSE_WRITE);
+
+					break;
+				}
 			}
 		};
 		observer.startWatching();
@@ -78,7 +87,7 @@ public class MonitorCameraService extends Service implements AllActivities {
 	}
 
 	public void onTaskCompleted(int task, long reference, Object result) {Log.d("PETER", "UPLOADED");}
-	public void onTaskCancelled(int task, long reference, Object result) {}
+	public void onTaskCancelled(int task, long reference, Object result) {Log.d("PETER", "CANCELLED");}
 	public Context getContext() { return this; }
 	public void runOnUiThread(Runnable runnable) {}
 

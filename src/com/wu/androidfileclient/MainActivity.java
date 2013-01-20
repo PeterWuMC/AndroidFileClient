@@ -32,6 +32,7 @@ import com.wu.androidfileclient.models.Credential;
 import com.wu.androidfileclient.models.FileItem;
 import com.wu.androidfileclient.models.FolderArrayList;
 import com.wu.androidfileclient.models.FolderItem;
+import com.wu.androidfileclient.services.MonitorCameraService;
 import com.wu.androidfileclient.ui.FileItemsListAdapter;
 import com.wu.androidfileclient.utils.AlertDialogHandler;
 import com.wu.androidfileclient.utils.Utilities;
@@ -128,12 +129,12 @@ public class MainActivity extends ListActivity implements AllActivities {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		AlertDialogHandler alertDialog;
 		switch (item.getItemId()) {
-//		case R.id.start:
-//			startService(new Intent(this, MonitorCameraService.class));
-//			break;
-//		case R.id.stop:
-//			stopService(new Intent(this, MonitorCameraService.class));
-//			break;
+		case R.id.start:
+			startService(new Intent(this, MonitorCameraService.class));
+			break;
+		case R.id.stop:
+			stopService(new Intent(this, MonitorCameraService.class));
+			break;
 		case R.id.change_project:
 			projectLister.retrieveList(this, 1);
 			break;
