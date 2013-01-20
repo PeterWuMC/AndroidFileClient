@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 
 import org.apache.http.HttpStatus;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -58,7 +57,6 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 		this.credential  = credential;
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
@@ -75,7 +73,8 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 
 		if (listItem != null) {
 			typeImage.setImageResource(R.drawable.unknown);
-			nameTextView.setText(listItem.name);
+			String name = (listItem.name.length() > 23) ? listItem.name.substring(0, 20) + "..." : listItem.name;
+			nameTextView.setText(name);
 			sizeView.setText("");
 			additionalInfo.setVisibility(View.INVISIBLE);
 			lastModifiedView.setText("");
