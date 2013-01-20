@@ -211,6 +211,7 @@ public class MainActivity extends ListActivity implements AllActivities {
     }
 
     public void updateList(BaseArrayList result) {
+    	result = result.sorted();
     	if (result != null) {
 			objectsList.clear();
 			for (int i = 0; i < result.size(); i++) {
