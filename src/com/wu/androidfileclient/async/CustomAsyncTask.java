@@ -1,7 +1,5 @@
 package com.wu.androidfileclient.async;
 
-import android.os.AsyncTask;
-
 import com.wu.androidfileclient.AllActivities;
 import com.wu.androidfileclient.R;
 import com.wu.androidfileclient.listeners.CancelTaskOnCancelListener;

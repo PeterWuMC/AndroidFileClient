@@ -8,10 +8,12 @@ import java.util.LinkedHashMap;
 
 import org.apache.http.HttpStatus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +59,7 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 		this.credential  = credential;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
@@ -85,7 +88,9 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 			else if (listItem instanceof FileItem) {
 				additionalInfo.setVisibility(View.VISIBLE);
 				FileItem fileItem = (FileItem) listItem;
-				typeImage.setImageResource(context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName()));
+
+				int resource = context.getResources().getIdentifier(fileItem.ext(), "drawable",  context.getPackageName());
+				if (resource != 0) typeImage.setImageResource(resource);
 
 				sizeView.setText("Size: " + Utilities.humanReadableByteCount(fileItem.size, true));
 				lastModifiedView.setText("Modified: " + Utilities.humanReadableDatesDifferemce(fileItem.last_modified, new Date()));
@@ -95,7 +100,7 @@ public class FileItemsListAdapter extends ArrayAdapter<BaseListItem> {
 
 				Bitmap bitmap = fetchBitmapFromCache(url);
 				if (bitmap == null) {
-					new BitmapDownloaderTask(typeImage, position).execute(url); 
+					new BitmapDownloaderTask(typeImage, position).execute(url);
 				} else {
 					typeImage.setImageBitmap(bitmap);
 				}

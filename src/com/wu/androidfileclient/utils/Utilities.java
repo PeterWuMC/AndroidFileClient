@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore.MediaColumns;
 import android.widget.Toast;
 
@@ -107,15 +108,15 @@ public final class Utilities {
 		return file;
 	}
 	
-	public final static boolean isBeforeHoneyComb(AllActivities activity) {
-		int sdk = android.os.Build.VERSION.SDK_INT;
-		return sdk < android.os.Build.VERSION_CODES.HONEYCOMB;
+	public final static boolean isBeforeHoneyComb() {
+		int sdk = Build.VERSION.SDK_INT;
+		return sdk < Build.VERSION_CODES.HONEYCOMB;
 	}
 
 	@SuppressLint("NewApi")
 	public final static void stringToClipBoard(AllActivities activity, String str) {
 		
-		if(isBeforeHoneyComb(activity)) {
+		if(isBeforeHoneyComb()) {
 		    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
 		    clipboard.setText(str);
 		} else {

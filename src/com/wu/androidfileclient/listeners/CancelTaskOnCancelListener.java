@@ -2,7 +2,8 @@ package com.wu.androidfileclient.listeners;
 
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.os.AsyncTask;
+
+import com.wu.androidfileclient.async.AsyncTask;
 
 public class CancelTaskOnCancelListener implements OnCancelListener {
 	private AsyncTask<?, ?, ?> task;
